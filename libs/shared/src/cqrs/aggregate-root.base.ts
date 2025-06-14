@@ -7,5 +7,6 @@ export abstract class AggregateRootBase<T> extends AggregateRoot {
     Object.assign(this, props);
   }
 
-  validate(): void {} 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  validate(): void {}
 }
