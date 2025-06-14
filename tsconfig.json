@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compileOnSave": false,
+  "files": [],
+  "references": [
+    {
+      "path": "./apps/url-shortener-e2e"
+    },
+    {
+      "path": "./apps/url-shortener"
+    }
+  ]
+}

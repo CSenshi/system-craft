@@ -1,0 +1,26 @@
+{
+  "name": "@system-design-implementations/url-shortener-e2e",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "implicitDependencies": [
+      "@system-design-implementations/url-shortener"
+    ],
+    "targets": {
+      "e2e": {
+        "executor": "@nx/jest:jest",
+        "outputs": [
+          "{projectRoot}/test-output/jest/coverage"
+        ],
+        "options": {
+          "jestConfig": "apps/url-shortener-e2e/jest.config.ts",
+          "passWithNoTests": true
+        },
+        "dependsOn": [
+          "@system-design-implementations/url-shortener:build",
+          "@system-design-implementations/url-shortener:serve"
+        ]
+      }
+    }
+  }
+}
