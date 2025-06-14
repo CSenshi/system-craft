@@ -8,12 +8,18 @@ importers:
 
   .:
     dependencies:
+      '@nestjs-architects/typed-cqrs':
+        specifier: ^2.1.0
+        version: 2.1.0
       '@nestjs/common':
         specifier: ^11.0.0
         version: 11.1.3(reflect-metadata@0.1.14)(rxjs@7.8.2)
       '@nestjs/core':
         specifier: ^11.0.0
         version: 11.1.3(@nestjs/common@11.1.3(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/platform-express@11.1.3)(reflect-metadata@0.1.14)(rxjs@7.8.2)
+      '@nestjs/cqrs':
+        specifier: ^11.0.3
+        version: 11.0.3(@nestjs/common@11.1.3(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/core@11.1.3)(reflect-metadata@0.1.14)(rxjs@7.8.2)
       '@nestjs/platform-express':
         specifier: ^11.0.0
         version: 11.1.3(@nestjs/common@11.1.3(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/core@11.1.3)
@@ -121,6 +127,8 @@ importers:
   apps/url-shortener: {}
 
   apps/url-shortener-e2e: {}
+
+  libs/shared: {}
 
 packages:
 
@@ -963,6 +971,9 @@ packages:
   '@napi-rs/wasm-runtime@0.2.4':
     resolution: {integrity: sha512-9zESzOO5aDByvhIAsOy9TbpZ0Ur2AJbUI7UT73kcUTS2mxAMHOBaa1st/jAymNoCtvrit99kkzT1FZuXVcgfIQ==}
 
+  '@nestjs-architects/typed-cqrs@2.1.0':
+    resolution: {integrity: sha512-2BBF/urpUMkPMrheyu4JaZM2BVY/P0THBgLJRc5NWlEyd+6IhF3e/z+C6tdoBv6Nh23pbKSGIGXOQHPARqhfhg==}
+
   '@nestjs/common@11.1.3':
     resolution: {integrity: sha512-ogEK+GriWodIwCw6buQ1rpcH4Kx+G7YQ9EwuPySI3rS05pSdtQ++UhucjusSI9apNidv+QURBztJkRecwwJQXg==}
     peerDependencies:
@@ -993,6 +1004,14 @@ packages:
         optional: true
       '@nestjs/websockets':
         optional: true
+
+  '@nestjs/cqrs@11.0.3':
+    resolution: {integrity: sha512-2ezBftiXqVfNTzjCrmhazohYhIQzgm8rvM0aKndv73IOOBcVlNuNiQ3HHiHdd4c2w/3MOQDtsGbQHgZUuW6DPw==}
+    peerDependencies:
+      '@nestjs/common': ^10.0.0 || ^11.0.0
+      '@nestjs/core': ^10.0.0 || ^11.0.0
+      reflect-metadata: ^0.1.13 || ^0.2.0
+      rxjs: ^7.2.0
 
   '@nestjs/platform-express@11.1.3':
     resolution: {integrity: sha512-hEDNMlaPiBO72fxxX/CuRQL3MEhKRc/sIYGVoXjrnw6hTxZdezvvM6A95UaLsYknfmcZZa/CdG1SMBZOu9agHQ==}
@@ -6103,6 +6122,8 @@ snapshots:
       '@emnapi/runtime': 1.4.3
       '@tybys/wasm-util': 0.9.0
 
+  '@nestjs-architects/typed-cqrs@2.1.0': {}
+
   '@nestjs/common@11.1.3(reflect-metadata@0.1.14)(rxjs@7.8.2)':
     dependencies:
       file-type: 21.0.0
@@ -6128,6 +6149,13 @@ snapshots:
       uid: 2.0.2
     optionalDependencies:
       '@nestjs/platform-express': 11.1.3(@nestjs/common@11.1.3(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/core@11.1.3)
+
+  '@nestjs/cqrs@11.0.3(@nestjs/common@11.1.3(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/core@11.1.3)(reflect-metadata@0.1.14)(rxjs@7.8.2)':
+    dependencies:
+      '@nestjs/common': 11.1.3(reflect-metadata@0.1.14)(rxjs@7.8.2)
+      '@nestjs/core': 11.1.3(@nestjs/common@11.1.3(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/platform-express@11.1.3)(reflect-metadata@0.1.14)(rxjs@7.8.2)
+      reflect-metadata: 0.1.14
+      rxjs: 7.8.2
 
   '@nestjs/platform-express@11.1.3(@nestjs/common@11.1.3(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/core@11.1.3)':
     dependencies:

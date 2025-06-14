@@ -5,8 +5,10 @@
   "scripts": {},
   "private": true,
   "dependencies": {
+    "@nestjs-architects/typed-cqrs": "^2.1.0",
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0",
+    "@nestjs/cqrs": "^11.0.3",
     "@nestjs/platform-express": "^11.0.0",
     "axios": "^1.6.0",
     "reflect-metadata": "^0.1.13",
