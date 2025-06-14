@@ -124,7 +124,11 @@ importers:
         specifier: ^5.1.4
         version: 5.1.4(webpack@5.99.9)
 
-  apps/url-shortener: {}
+  apps/url-shortener:
+    devDependencies:
+      '@libs/shared':
+        specifier: workspace:*
+        version: link:../../libs/shared
 
   apps/url-shortener-e2e: {}
 
