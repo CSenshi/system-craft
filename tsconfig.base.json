@@ -13,6 +13,7 @@
     "noImplicitOverride": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
+    "strictPropertyInitialization": false,
     "skipLibCheck": true,
     "strict": true,
     "target": "es2022",
