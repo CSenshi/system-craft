@@ -5,3 +5,9 @@ export class UrlNotFoundExceptions extends BaseExceptionCls('URL.NOT_FOUND') {
     super(`Url not found`);
   }
 }
+
+export class InvalidCharacterError extends BaseExceptionCls('URL.INVALID_CHARACTER') {
+  constructor() {
+    super(`Url not found`);
+  }
+}

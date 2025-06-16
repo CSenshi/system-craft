@@ -1,5 +1,7 @@
+import { InvalidCharacterError } from '../exceptions/url.exceptions';
+
 export class NumberHasherService {
-  private readonly ALPHABET =
+  readonly ALPHABET =
     '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   private readonly BASE = this.ALPHABET.length;
 
@@ -33,7 +35,7 @@ export class NumberHasherService {
       const index = this.ALPHABET.indexOf(char);
 
       if (index === -1) {
-        throw new Error(`Invalid character '${char}' in encoded string.`);
+        throw new InvalidCharacterError();
       }
       number = number * this.BASE + index;
     }

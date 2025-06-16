@@ -1,11 +1,8 @@
-import {
-  ArgumentsHost,
-  Catch,
-} from '@nestjs/common';
+import { ArgumentsHost, Catch } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common';
 import { BaseException } from '@libs/shared';
 import { BaseExceptionFilter } from '@nestjs/core';
-import { UrlNotFoundExceptions } from './url.exceptions';
+import { InvalidCharacterError, UrlNotFoundExceptions } from './url.exceptions';
 
 @Catch()
 export class UrlExceptionFilter extends BaseExceptionFilter {
@@ -15,10 +12,12 @@ export class UrlExceptionFilter extends BaseExceptionFilter {
       message: exception.message,
     };
 
-    if (exception instanceof UrlNotFoundExceptions) {
+    if (
+      exception instanceof UrlNotFoundExceptions ||
+      exception instanceof InvalidCharacterError
+    ) {
       return super.catch(new NotFoundException(customMessage), host);
     }
-
 
     return super.catch(exception, host);
   }
