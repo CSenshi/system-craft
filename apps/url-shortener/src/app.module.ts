@@ -3,6 +3,7 @@ import { LoggerModule } from 'nestjs-pino';
 import { CqrsModule } from '@nestjs/cqrs';
 import { UrlModule } from './url/url.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { UnhandledExceptionsListener } from './unhandled-exceptions.listener';
 
 @Module({
   imports: [
@@ -21,5 +22,6 @@ import { PrismaModule } from './prisma/prisma.module';
     }),
     UrlModule,
   ],
+  providers: [UnhandledExceptionsListener],
 })
 export class AppModule {}
