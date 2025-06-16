@@ -4,15 +4,9 @@ import { InjectRedis } from '@nestjs-modules/ioredis';
 
 @Injectable()
 export class RedisCounterService {
-  constructor(
-    @InjectRedis() private readonly redis: Redis,
-  ) { }
+  constructor(@InjectRedis() private readonly redis: Redis) { }
 
   async getNextCount(): Promise<number> {
     return await this.redis.incr('global_counter');
-  }
-
-  async reset(value = 0): Promise<void> {
-    await this.redis.set('global_counter', value);
   }
 } 
