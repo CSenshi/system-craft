@@ -5,7 +5,7 @@ export class HttpRequestParamDto {
   @ApiProperty({
     description: 'The URL to shorten',
     example: 'abc123',
-    format: 'string'
+    format: 'string',
   })
   @IsString()
   @MaxLength(7)

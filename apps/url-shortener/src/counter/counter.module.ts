@@ -6,16 +6,15 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 @Module({
   imports: [
     RedisModule.forRootAsync({
-        imports: [ConfigModule],
-        inject: [ConfigService],
-        useFactory: (configService: ConfigService) => ({
-          type: 'single',
-          host: configService.getOrThrow<string>('REDIS_HOST'),
-        }),
-      }
-    ),
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'single',
+        host: configService.getOrThrow<string>('REDIS_HOST'),
+      }),
+    }),
   ],
   providers: [RedisCounterService],
   exports: [RedisCounterService],
 })
-export class CounterModule { }
+export class CounterModule {}

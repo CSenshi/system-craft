@@ -7,12 +7,14 @@ export class NumberHasherService {
 
   // round to 7 characters
   public encode(number: number, charCount: number): string {
-    if( number < 0) {
+    if (number < 0) {
       throw new Error('Negative numbers are not supported.');
     }
 
     if (number >= Math.pow(this.BASE, charCount)) {
-      throw new Error(`Number ${number} is too large to encode with a length of ${charCount} characters.`);
+      throw new Error(
+        `Number ${number} is too large to encode with a length of ${charCount} characters.`
+      );
     }
     if (number === 0) return this.ALPHABET[0];
 

@@ -8,10 +8,12 @@ import { UrlExceptionFilter } from '../../exceptions/url.exception-filter';
 @ApiTags('url')
 @UseFilters(UrlExceptionFilter)
 export class HttpController {
-  constructor(private readonly queryBus: QueryBus) { }
+  constructor(private readonly queryBus: QueryBus) {}
 
   @Get(':shortUrlId')
-  async redirectToUrl(@Param() params: GetRealUrl.HttpRequestParamDto): Promise<GetRealUrl.HttpResponseDto> {
+  async redirectToUrl(
+    @Param() params: GetRealUrl.HttpRequestParamDto
+  ): Promise<GetRealUrl.HttpResponseDto> {
     const result = await this.queryBus.execute(
       new GetRealUrl.Query({
         shortUrlId: params.shortUrlId,

@@ -6,16 +6,20 @@ import { CommandBus } from '@nestjs/cqrs';
 @Controller('url')
 @ApiTags('url')
 export class HttpController {
-	constructor(private readonly commandBus: CommandBus) { }
+  constructor(private readonly commandBus: CommandBus) {}
 
-	@Post()
-	async shortenUrl(@Body() body: ShortenUrl.HttpRequestBodyDto): Promise<ShortenUrl.HttpResponseDto> {
-		const result = await this.commandBus.execute(new ShortenUrl.Command({
-			url: body.url
-		}));
+  @Post()
+  async shortenUrl(
+    @Body() body: ShortenUrl.HttpRequestBodyDto
+  ): Promise<ShortenUrl.HttpResponseDto> {
+    const result = await this.commandBus.execute(
+      new ShortenUrl.Command({
+        url: body.url,
+      })
+    );
 
-		return new ShortenUrl.HttpResponseDto({
-			shortUrl: result.shortUrl
-		});
-	}
+    return new ShortenUrl.HttpResponseDto({
+      shortUrl: result.shortUrl,
+    });
+  }
 }

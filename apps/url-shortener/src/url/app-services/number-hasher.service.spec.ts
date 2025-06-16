@@ -39,11 +39,7 @@ describe('NumberHasherService', () => {
   });
 
   it('should be reversible for 62^7 and similar large numbers', () => {
-    const testNumbers = [
-      Math.pow(62, 7) - 1,
-      Math.pow(62, 6),
-      Math.pow(62, 5),
-    ];
+    const testNumbers = [Math.pow(62, 7) - 1, Math.pow(62, 6), Math.pow(62, 5)];
     for (const number of testNumbers) {
       const encoded = service.encode(number, 7);
       const decoded = service.decode(encoded);
