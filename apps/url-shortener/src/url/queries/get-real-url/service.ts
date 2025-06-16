@@ -1,4 +1,4 @@
-import { QueryHandler } from '@nestjs/cqrs';
+import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { BaseQuery, BaseDto } from '@libs/shared';
 import { IdObfuscatorService } from '../../app-services/id-obfuscator.service';
 import { NumberHasherService } from '../../app-services/number-hasher.service';
@@ -13,12 +13,12 @@ export class Query extends BaseQuery<Query, QueryOutput> {
 }
 
 @QueryHandler(Query)
-export class Service {
+export class Service implements IQueryHandler<Query, QueryOutput> {
   constructor(
     private readonly idObfuscatorService: IdObfuscatorService,
     private readonly numberHasherService: NumberHasherService,
     private readonly urlRepository: UrlRepository
-  ) {}
+  ) { }
 
   async execute(cmd: Query): Promise<QueryOutput> {
     const id = this.numberHasherService.decode(cmd.shortUrlId);

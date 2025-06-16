@@ -1,4 +1,4 @@
-import { CommandHandler } from '@nestjs/cqrs';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { BaseCommand, BaseDto } from '@libs/shared';
 import { RedisCounterService } from '../../../counter/redis-counter.service';
 import { IdObfuscatorService } from '../../app-services/id-obfuscator.service';
@@ -14,7 +14,7 @@ export class Command extends BaseCommand<Command, CommandOutput> {
 }
 
 @CommandHandler(Command)
-export class Service {
+export class Service implements ICommandHandler<Command, CommandOutput> {
   constructor(
     private readonly counterService: RedisCounterService,
     private readonly idObfuscatorService: IdObfuscatorService,
