@@ -47,6 +47,6 @@ export class Service implements ICommandHandler<Command, CommandOutput> {
 
   private generateShortUrl(encodedId: string): string {
     const baseUrl = process.env.SHORTENER_BASE_URL || 'http://localhost:3000';
-    return `${baseUrl}/${encodedId}`;
+    return `${baseUrl}/l/${encodedId}`;
   }
 }
