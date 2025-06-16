@@ -17,4 +17,4 @@ import { UrlRepository } from './repositories/url.repository';
     NumberHasherService,
   ],
 })
-export class AppModule {}
+export class UrlModule {}

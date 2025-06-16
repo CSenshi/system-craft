@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
 import { LoggerModule } from 'nestjs-pino';
 import { CqrsModule } from '@nestjs/cqrs';
+import { UrlModule } from './url/url.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
+    PrismaModule,
     CqrsModule.forRoot(),
     LoggerModule.forRoot({
       pinoHttp: {
@@ -16,6 +19,7 @@ import { CqrsModule } from '@nestjs/cqrs';
             : undefined,
       },
     }),
+    UrlModule,
   ],
 })
 export class AppModule {}

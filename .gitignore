@@ -44,3 +44,7 @@ Thumbs.db
 .github/instructions/nx.instructions.md
 
 test-output
+
+apps/*/.env
+.vscode
+.cursor
