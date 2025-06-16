@@ -21,10 +21,11 @@ export class Service implements IQueryHandler<Query, QueryOutput> {
     private readonly idObfuscatorService: IdObfuscatorService,
     private readonly numberHasherService: NumberHasherService,
     private readonly urlRepository: UrlRepository
-  ) {}
+  ) { }
 
   async execute(cmd: Query): Promise<QueryOutput> {
-    this.logger.debug({ msg: 'Retrieving real URL for shortUrlId', shortUrlId: cmd.shortUrlId });
+    this.logger.debug({ msg: 'Retrieving real URL for shortUrlId', shortUrlId: cmd.shortUrlId, });
+
     const id = this.numberHasherService.decode(cmd.shortUrlId);
     const obfuscatedId = this.idObfuscatorService.deobfuscate(id);
 

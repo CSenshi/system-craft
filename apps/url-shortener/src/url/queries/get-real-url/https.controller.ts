@@ -4,20 +4,22 @@ import { GetRealUrl } from '.';
 import { QueryBus } from '@nestjs/cqrs';
 import { UrlExceptionFilter } from '../../exceptions/url.exception-filter';
 
-@Controller()
+@Controller('l')
 @ApiTags('url')
 @UseFilters(UrlExceptionFilter)
 export class HttpController {
-	constructor(private readonly queryBus: QueryBus) { }
+  constructor(private readonly queryBus: QueryBus) { }
 
-	@Get('/l/:shortUrlId')
-	async redirectToUrl(@Param() params: GetRealUrl.HttpRequestParamDto): Promise<GetRealUrl.HttpResponseDto> {
-		const result = await this.queryBus.execute(new GetRealUrl.Query({
-			shortUrlId: params.shortUrlId
-		}));
+  @Get(':shortUrlId')
+  async redirectToUrl(@Param() params: GetRealUrl.HttpRequestParamDto): Promise<GetRealUrl.HttpResponseDto> {
+    const result = await this.queryBus.execute(
+      new GetRealUrl.Query({
+        shortUrlId: params.shortUrlId,
+      })
+    );
 
-		return new GetRealUrl.HttpResponseDto({
-			url: result.url
-		});
-	}
+    return new GetRealUrl.HttpResponseDto({
+      url: result.url,
+    });
+  }
 }
