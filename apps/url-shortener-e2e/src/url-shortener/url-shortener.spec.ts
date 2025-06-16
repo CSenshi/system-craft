@@ -44,7 +44,7 @@ describe('URL Shortener API', () => {
   });
 
   it('should handle non-existent shortUrlId', async () => {
-    await expect(api.get('/l/notarealid123')).rejects.toMatchObject({
+    await expect(api.get('/l/notad123')).rejects.toMatchObject({
       response: { status: 404 },
     });
   });
