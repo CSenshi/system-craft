@@ -4,6 +4,7 @@ import { RedisCounterService } from '../../../counter/redis-counter.service';
 import { IdObfuscatorService } from '../../app-services/id-obfuscator.service';
 import { NumberHasherService } from '../../app-services/number-hasher.service';
 import { UrlRepository } from '../../repositories/url.repository';
+import { Logger } from '@nestjs/common';
 
 export class CommandOutput extends BaseDto<CommandOutput> {
   readonly shortUrl: string;
@@ -15,6 +16,8 @@ export class Command extends BaseCommand<Command, CommandOutput> {
 
 @CommandHandler(Command)
 export class Service implements ICommandHandler<Command, CommandOutput> {
+  private readonly logger = new Logger('ShortenUrl.Service');
+
   constructor(
     private readonly counterService: RedisCounterService,
     private readonly idObfuscatorService: IdObfuscatorService,
@@ -23,8 +26,10 @@ export class Service implements ICommandHandler<Command, CommandOutput> {
   ) {}
 
   async execute(cmd: Command): Promise<CommandOutput> {
+    this.logger.debug({ msg: 'Shortening URL', url: cmd.url });
     const result = await this.getNextShortUrl();
 
+    this.logger.debug({ msg: 'Generated short URL', shortUrl: result.url });
     await this.urlRepository.saveUrlMapping(result.id, cmd.url);
 
     return new CommandOutput({
