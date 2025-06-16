@@ -1,6 +1,6 @@
 export * as GetRealUrl from ".";
 
-export * from "./https.request.dto";
-export * from "./https.response.dto";
-export * from "./https.controller";
+export * from "./http.request.dto";
+export * from "./http.response.dto";
+export * from "./http.controller";
 export * from "./service";
