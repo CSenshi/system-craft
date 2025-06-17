@@ -45,7 +45,7 @@ describe('IdObfuscatorService', () => {
         'should throw error for $description',
         ({ value }) => {
           expect(() => service.obfuscate(value)).toThrow();
-        }
+        },
       );
     });
 
@@ -54,7 +54,7 @@ describe('IdObfuscatorService', () => {
         'should throw error for $description',
         ({ value }) => {
           expect(() => service.deobfuscate(value)).toThrow();
-        }
+        },
       );
     });
   });
@@ -92,7 +92,7 @@ describe('IdObfuscatorService', () => {
   describe('Special number patterns', () => {
     describe('powers of 2', () => {
       const powersOf2 = Array.from({ length: 17 }, (_, i) =>
-        Math.pow(2, i)
+        Math.pow(2, i),
       ).filter((power) => power < MAX_VALUE);
 
       it.each(powersOf2)('should be reversible for 2^%d', (power) => {
@@ -119,14 +119,14 @@ describe('IdObfuscatorService', () => {
         'should be reversible for numbers near 62^%d',
         (power) => {
           const testNumbers = [power - 1, power + 1].filter(
-            (n) => n > 0 && n < MAX_VALUE
+            (n) => n > 0 && n < MAX_VALUE,
           );
           for (const id of testNumbers) {
             const obfuscated = service.obfuscate(id);
             const deobfuscated = service.deobfuscate(obfuscated);
             expect(deobfuscated).toBe(id);
           }
-        }
+        },
       );
     });
   });
@@ -135,7 +135,7 @@ describe('IdObfuscatorService', () => {
     it('should be reversible for 1000 random numbers in valid range', () => {
       const randomNumbers = Array.from(
         { length: 1000 },
-        () => Math.floor(Math.random() * (MAX_VALUE - 1)) + 1
+        () => Math.floor(Math.random() * (MAX_VALUE - 1)) + 1,
       );
 
       for (const id of randomNumbers) {

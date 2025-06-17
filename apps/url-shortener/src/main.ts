@@ -2,12 +2,11 @@
  * This is not a production server yet!
  * This is only a minimal backend to get started.
  */
-
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger } from 'nestjs-pino';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
@@ -18,14 +17,14 @@ async function bootstrap() {
       transform: true,
       whitelist: true,
       forbidNonWhitelisted: true,
-    })
+    }),
   );
   app.enableCors();
   app.useLogger(logger);
 
   const document = SwaggerModule.createDocument(
     app,
-    new DocumentBuilder().build()
+    new DocumentBuilder().build(),
   );
   SwaggerModule.setup('docs', app, document);
 

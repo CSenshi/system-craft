@@ -1,7 +1,7 @@
 import { ArgumentsHost, Catch } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common';
-import { BaseException } from '@libs/shared';
 import { BaseExceptionFilter } from '@nestjs/core';
+import { BaseException } from '@libs/shared';
 import { InvalidCharacterError, UrlNotFoundExceptions } from './url.exceptions';
 
 @Catch()

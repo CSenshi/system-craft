@@ -13,7 +13,7 @@ export class NumberHasherService {
 
     if (number >= Math.pow(this.BASE, charCount)) {
       throw new Error(
-        `Number ${number} is too large to encode with a length of ${charCount} characters.`
+        `Number ${number} is too large to encode with a length of ${charCount} characters.`,
       );
     }
     if (number === 0) return this.ALPHABET[0];

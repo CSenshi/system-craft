@@ -1,11 +1,11 @@
+import { Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { BaseCommand, BaseDto } from '@libs/shared';
 import { RedisCounterService } from '../../../counter/redis-counter.service';
 import { IdObfuscatorService } from '../../app-services/id-obfuscator.service';
 import { NumberHasherService } from '../../app-services/number-hasher.service';
 import { UrlRepository } from '../../repositories/url.repository';
-import { Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 
 export class CommandOutput extends BaseDto<CommandOutput> {
   readonly shortUrl: string;
@@ -24,7 +24,7 @@ export class Service implements ICommandHandler<Command, CommandOutput> {
     private readonly idObfuscatorService: IdObfuscatorService,
     private readonly numberHasherService: NumberHasherService,
     private readonly urlRepository: UrlRepository,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
   ) {}
 
   async execute(cmd: Command): Promise<CommandOutput> {
@@ -50,7 +50,7 @@ export class Service implements ICommandHandler<Command, CommandOutput> {
   private generateShortUrl(encodedId: string): string {
     const baseUrl = this.configService.get<string>(
       'SHORTENER_BASE_URL',
-      'http://localhost:3000'
+      'http://localhost:3000',
     );
     return `${baseUrl}/l/${encodedId}`;
   }

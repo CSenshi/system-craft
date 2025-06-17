@@ -1,7 +1,7 @@
 import { Controller, Get, Param, UseFilters } from '@nestjs/common';
+import { QueryBus } from '@nestjs/cqrs';
 import { ApiTags } from '@nestjs/swagger';
 import { GetRealUrl } from '.';
-import { QueryBus } from '@nestjs/cqrs';
 import { UrlExceptionFilter } from '../../exceptions/url.exception-filter';
 
 @Controller('l')
@@ -12,12 +12,12 @@ export class HttpController {
 
   @Get(':shortUrlId')
   async redirectToUrl(
-    @Param() params: GetRealUrl.HttpRequestParamDto
+    @Param() params: GetRealUrl.HttpRequestParamDto,
   ): Promise<GetRealUrl.HttpResponseDto> {
     const result = await this.queryBus.execute(
       new GetRealUrl.Query({
         shortUrlId: params.shortUrlId,
-      })
+      }),
     );
 
     return new GetRealUrl.HttpResponseDto({

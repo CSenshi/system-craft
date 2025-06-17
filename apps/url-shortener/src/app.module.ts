@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { LoggerModule } from 'nestjs-pino';
 import { CqrsModule } from '@nestjs/cqrs';
-import { UrlModule } from './url/url.module';
+import { LoggerModule } from 'nestjs-pino';
 import { PrismaModule } from './prisma/prisma.module';
 import { UnhandledExceptionsListener } from './unhandled-exceptions.listener';
+import { UrlModule } from './url/url.module';
 
 @Module({
   imports: [

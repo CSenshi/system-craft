@@ -21,7 +21,7 @@ export class IdObfuscatorService {
   obfuscate(id: number): number {
     if (!Number.isInteger(id) || id <= 0 || id >= Number(this.MaxValue)) {
       throw new Error(
-        `id must be an integer in the range 0 < id < ${this.MaxValue.toString()}`
+        `id must be an integer in the range 0 < id < ${this.MaxValue.toString()}`,
       );
     }
     return Number((BigInt(id) * this.SECRET) % this.MaxValue);
@@ -34,7 +34,7 @@ export class IdObfuscatorService {
       obfuscatedId >= Number(this.MaxValue)
     ) {
       throw new Error(
-        `obfuscatedId must be an integer in the range 0 < obfuscatedId < ${this.MaxValue.toString()}`
+        `obfuscatedId must be an integer in the range 0 < obfuscatedId < ${this.MaxValue.toString()}`,
       );
     }
     return Number((BigInt(obfuscatedId) * this.INVERSE) % this.MaxValue);
