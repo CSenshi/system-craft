@@ -4,13 +4,13 @@
   "files": [],
   "references": [
     {
-      "path": "./apps/url-shortener-e2e"
-    },
-    {
       "path": "./apps/url-shortener"
     },
     {
       "path": "./libs/shared"
+    },
+    {
+      "path": "./e2e/url-shortener"
     }
   ]
 }

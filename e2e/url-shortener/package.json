@@ -1,5 +1,5 @@
 {
-  "name": "@system-design-implementations/url-shortener-e2e",
+  "name": "@e2e/url-shortener",
   "version": "0.0.1",
   "private": true,
   "nx": {
@@ -13,12 +13,12 @@
           "{projectRoot}/test-output/jest/coverage"
         ],
         "options": {
-          "jestConfig": "apps/url-shortener-e2e/jest.config.ts",
+          "jestConfig": "e2e/url-shortener/jest.config.ts",
           "passWithNoTests": true
         },
         "dependsOn": [
-          "@system-design-implementations/url-shortener:build",
-          "@system-design-implementations/url-shortener:serve"
+          "@apps/url-shortener:build",
+          "@apps/url-shortener:serve"
         ]
       }
     }
