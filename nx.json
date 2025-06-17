@@ -52,7 +52,7 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": ["apps/url-shortener-e2e/**/*"]
+      "exclude": ["e2e/**/*"]
     },
     {
       "plugin": "@nx/js/typescript",
