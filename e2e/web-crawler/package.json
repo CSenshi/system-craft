@@ -1,0 +1,26 @@
+{
+  "name": "@e2e/web-crawler",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "implicitDependencies": [
+      "@apps/web-crawler"
+    ],
+    "targets": {
+      "e2e": {
+        "executor": "@nx/jest:jest",
+        "outputs": [
+          "{projectRoot}/test-output/jest/coverage"
+        ],
+        "options": {
+          "jestConfig": "apps/web-crawler-e2e/jest.config.ts",
+          "passWithNoTests": true
+        },
+        "dependsOn": [
+          "@apps/web-crawler:build",
+          "@apps/web-crawler:serve"
+        ]
+      }
+    }
+  }
+}

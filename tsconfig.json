@@ -2,8 +2,7 @@
   "extends": "./tsconfig.base.json",
   "compileOnSave": false,
   "files": [],
-  "references": [
-    {
+  "references": [{
       "path": "./apps/url-shortener"
     },
     {
@@ -11,6 +10,12 @@
     },
     {
       "path": "./e2e/url-shortener"
+    },
+    {
+      "path": "./e2e/web-crawler"
+    },
+    {
+      "path": "./apps/web-crawler"
     }
   ]
 }
