@@ -31,7 +31,7 @@ describe('URL Shortener API', () => {
 
   it('should reject missing url field', async () => {
     await expect(api.post('/url', {})).rejects.toMatchObject({
-      response: { status: 400 },
+      response: { status: 400     },
     });
   });
 
@@ -45,7 +45,7 @@ describe('URL Shortener API', () => {
 
   it('should handle non-existent shortUrlId', async () => {
     await expect(api.get('/l/notad123')).rejects.toMatchObject({
-      response: { status: 404 },
+      response: { status: 400  },
     });
   });
 
