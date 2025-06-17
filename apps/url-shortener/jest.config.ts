@@ -9,7 +9,7 @@ const swcJestConfig = JSON.parse(
 swcJestConfig.swcrc = false;
 
 export default {
-  displayName: '@system-design-implementations/url-shortener',
+  displayName: '@apps/url-shortener',
   preset: '../../jest.preset.js',
   testEnvironment: 'node',
   transform: {

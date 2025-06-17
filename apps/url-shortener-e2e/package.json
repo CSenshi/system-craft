@@ -4,7 +4,7 @@
   "private": true,
   "nx": {
     "implicitDependencies": [
-      "@system-design-implementations/url-shortener"
+      "@apps/url-shortener"
     ],
     "targets": {
       "e2e": {

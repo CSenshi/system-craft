@@ -1,5 +1,5 @@
 {
-  "name": "@system-design-implementations/url-shortener",
+  "name": "@apps/url-shortener",
   "version": "0.0.1",
   "private": true,
   "nx": {
@@ -28,15 +28,15 @@
           "build"
         ],
         "options": {
-          "buildTarget": "@system-design-implementations/url-shortener:build",
+          "buildTarget": "@apps/url-shortener:build",
           "runBuildTargetDependencies": false
         },
         "configurations": {
           "development": {
-            "buildTarget": "@system-design-implementations/url-shortener:build:development"
+            "buildTarget": "@apps/url-shortener:build:development"
           },
           "production": {
-            "buildTarget": "@system-design-implementations/url-shortener:build:production"
+            "buildTarget": "@apps/url-shortener:build:production"
           }
         }
       },
