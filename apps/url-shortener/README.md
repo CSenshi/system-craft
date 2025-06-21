@@ -46,8 +46,8 @@
 ### **Quick Start**
 ```bash
 # 1. Clone the repository (Needed only 1st time)
-git clone https://github.com/CSenshi/system-design-implementations.git
-cd system-design-implementations
+git clone https://github.com/CSenshi/system-craft.git
+cd system-craft
 
 # 2. Install dependencies (Needed only 1st time)
 pnpm install

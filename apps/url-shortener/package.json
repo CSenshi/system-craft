@@ -61,7 +61,7 @@
         "dependsOn": [
           "build"
         ],
-        "command": "docker build -f apps/url-shortener/Dockerfile . -t system-design-implementations-url-shortener"
+        "command": "docker build -f apps/url-shortener/Dockerfile . -t system-craft-url-shortener"
       },
       "prisma-deploy": {
         "executor": "@nx-tools/nx-prisma:deploy"

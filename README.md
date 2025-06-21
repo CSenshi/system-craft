@@ -1,4 +1,4 @@
-# System Design Implementations (Nx + NestJS Monorepo)
+# System Craft
 
 A collection of backend system design implementations inspired by real-world interview questions.  
 The goal of this project is to serve as an educational resource for developers preparing for system design interviews or studying distributed systems.
