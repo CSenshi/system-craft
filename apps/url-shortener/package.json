@@ -45,6 +45,18 @@
           "passWithNoTests": true
         }
       },
+      "infra:up": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "docker compose -f apps/url-shortener/docker-compose.yml up -d"
+        }
+      },
+      "infra:down": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "docker compose -f apps/url-shortener/docker-compose.yml down"
+        }
+      },
       "docker-build": {
         "dependsOn": [
           "build"
