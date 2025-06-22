@@ -2,7 +2,8 @@
   "extends": "./tsconfig.base.json",
   "compileOnSave": false,
   "files": [],
-  "references": [{
+  "references": [
+    {
       "path": "./apps/url-shortener"
     },
     {
