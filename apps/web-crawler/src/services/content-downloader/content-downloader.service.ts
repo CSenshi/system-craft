@@ -25,14 +25,35 @@ export class ContentDownloaderService {
     });
 
     return {
-      content: response.data,
+      content: this.extractContent(response),
       contentType: this.extractContentType(response, url),
     };
   }
 
+  private extractContent(response: axios.AxiosResponse): string {
+    // 1. Check if the response data is a string
+    if (typeof response.data === 'string') {
+      return response.data;
+    }
+
+    // 2. If it's a Buffer, convert it to string
+    if (Buffer.isBuffer(response.data)) {
+      return response.data.toString('utf-8');
+    }
+
+    // 3. If it's an object, convert it to JSON string
+    if (typeof response.data === 'object') {
+      return JSON.stringify(response.data, null, 2);
+    }
+
+    // 4. Fallback to an empty string if none of the above
+    return response.data?.toString() || '';
+  }
+
   private extractContentType(response: axios.AxiosResponse, url: URL): string {
     // 1. Check if the content type is provided in the response headers
-    const contentTypeHeader = response.headers['Content-Type'];
+    const contentTypeHeader = response.headers['content-type'];
+
     if (contentTypeHeader) {
       return contentTypeHeader.toString().split(';')[0].trim();
     }

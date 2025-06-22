@@ -18,7 +18,7 @@ describe('ContentDownloaderService', () => {
       // Arrange
       mockedAxios.get.mockResolvedValue({
         data: '<html><body>Hello World</body></html>',
-        headers: { 'Content-Type': 'text/html' },
+        headers: { 'content-type': 'text/html' },
       });
 
       // Act
@@ -43,7 +43,7 @@ describe('ContentDownloaderService', () => {
       // Arrange
       mockedAxios.get.mockResolvedValue({
         data: '<html><body>Hello World</body></html>',
-        headers: { 'Content-Type': 'text/html' },
+        headers: { 'content-type': 'text/html' },
       });
 
       // Act
@@ -68,7 +68,7 @@ describe('ContentDownloaderService', () => {
       // Arrange
       mockedAxios.get.mockResolvedValue({
         data: 'body { color: red; }',
-        headers: {}, // No Content-Type header
+        headers: {}, // No content-type header
       });
 
       // Act
@@ -118,11 +118,11 @@ describe('ContentDownloaderService', () => {
       expect(result.contentType).toBe('application/json');
     });
 
-    it('should use Content-Type header when available', async () => {
+    it('should use content-type header when available', async () => {
       // Arrange
       mockedAxios.get.mockResolvedValue({
         data: '{"key": "value"}',
-        headers: { 'Content-Type': 'application/json; charset=utf-8' },
+        headers: { 'content-type': 'application/json; charset=utf-8' },
       });
 
       // Act
