@@ -44,10 +44,23 @@
         "options": {
           "passWithNoTests": true
         }
+      },
+      "infra:up": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "docker compose -f apps/web-crawler/docker-compose.yml up -d"
+        }
+      },
+      "infra:down": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "docker compose -f apps/web-crawler/docker-compose.yml down"
+        }
       }
     }
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.832.0",
     "axios": "^1.10.0"
   }
 }
