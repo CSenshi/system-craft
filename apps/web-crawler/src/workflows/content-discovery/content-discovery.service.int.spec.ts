@@ -186,8 +186,6 @@ describe('ContentDiscovery Integration', () => {
 
   afterAll(async () => {
     // List all objects in the S3 bucket to clean up after tests
-    console.log('Cleaning up S3 bucket...');
-
     const response = await s3Client.send(
       new ListObjectsCommand({
         Bucket: process.env.AWS_S3_CONTENT_BUCKET,
@@ -206,8 +204,6 @@ describe('ContentDiscovery Integration', () => {
           );
         }
       }
-
-      console.log('S3 bucket cleanup completed.');
     }
   });
 });
