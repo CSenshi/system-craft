@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { S3Client } from '@aws-sdk/client-s3';
-import { ContentRepository } from './services/content-repository/content.repository';
-import { SqsModule } from '@ssut/nestjs-sqs';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { ContentDiscoveryService } from './workflows/content-discovery';
+import { S3Client } from '@aws-sdk/client-s3';
+import { SqsModule } from '@ssut/nestjs-sqs';
 import { ContentDownloaderService } from './services/content-downloader/content-downloader.service';
+import { ContentRepository } from './services/content-repository/content.repository';
 import { DnsResolverService } from './services/dns-resolver';
+import { ContentDiscoveryService } from './workflows/content-discovery';
 import { QueueProcessor } from './workflows/content-discovery/content-discovery.queue-producer';
 
 @Module({
@@ -40,4 +40,4 @@ import { QueueProcessor } from './workflows/content-discovery/content-discovery.
     QueueProcessor,
   ],
 })
-export class AppModule { }
+export class AppModule {}

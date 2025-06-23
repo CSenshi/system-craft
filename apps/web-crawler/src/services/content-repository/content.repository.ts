@@ -15,7 +15,7 @@ type ContentCreateType = {
 
 @Injectable()
 export class ContentRepository {
-  constructor(private readonly s3Client: S3Client) { }
+  constructor(private readonly s3Client: S3Client) {}
 
   async create(content: ContentCreateType): Promise<void> {
     const { body, type } = content;

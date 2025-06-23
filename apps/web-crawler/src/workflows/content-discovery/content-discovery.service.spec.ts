@@ -1,8 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ContentDiscoveryService, ContentDiscoveryServiceInput } from './content-discovery.service';
-import { DnsResolverService } from '../../services/dns-resolver/dns-resolver.service';
-import { ContentDownloaderService, ContentDownloaderServiceOut } from '../../services/content-downloader/content-downloader.service';
+import {
+  ContentDownloaderService,
+  ContentDownloaderServiceOut,
+} from '../../services/content-downloader/content-downloader.service';
 import { ContentRepository } from '../../services/content-repository/content.repository';
+import { DnsResolverService } from '../../services/dns-resolver/dns-resolver.service';
+import {
+  ContentDiscoveryService,
+  ContentDiscoveryServiceInput,
+} from './content-discovery.service';
 
 describe('ContentDiscovery', () => {
   let service: ContentDiscoveryService;
@@ -130,15 +136,21 @@ describe('ContentDiscovery', () => {
 
       // Act & Assert
       contentDownloader.download.mockResolvedValue(cssDownloadResult);
-      const cssResult = await service.discover({ url: 'https://example.com/styles.css' });
+      const cssResult = await service.discover({
+        url: 'https://example.com/styles.css',
+      });
       expect(cssResult.contentType).toBe('text/css');
 
       contentDownloader.download.mockResolvedValue(jsDownloadResult);
-      const jsResult = await service.discover({ url: 'https://example.com/script.js' });
+      const jsResult = await service.discover({
+        url: 'https://example.com/script.js',
+      });
       expect(jsResult.contentType).toBe('application/javascript');
 
       contentDownloader.download.mockResolvedValue(jsonDownloadResult);
-      const jsonResult = await service.discover({ url: 'https://example.com/data.json' });
+      const jsonResult = await service.discover({
+        url: 'https://example.com/data.json',
+      });
       expect(jsonResult.contentType).toBe('application/json');
     });
 
@@ -190,7 +202,9 @@ describe('ContentDiscovery', () => {
       dnsResolver.resolveDns.mockRejectedValue(dnsError);
 
       // Act & Assert
-      await expect(service.discover(mockInput)).rejects.toThrow('DNS resolution failed');
+      await expect(service.discover(mockInput)).rejects.toThrow(
+        'DNS resolution failed',
+      );
       expect(contentDownloader.download).not.toHaveBeenCalled();
       expect(contentRepository.create).not.toHaveBeenCalled();
     });
@@ -202,7 +216,9 @@ describe('ContentDiscovery', () => {
       contentDownloader.download.mockRejectedValue(downloadError);
 
       // Act & Assert
-      await expect(service.discover(mockInput)).rejects.toThrow('Download failed');
+      await expect(service.discover(mockInput)).rejects.toThrow(
+        'Download failed',
+      );
       expect(contentRepository.create).not.toHaveBeenCalled();
     });
 
@@ -214,7 +230,9 @@ describe('ContentDiscovery', () => {
       contentRepository.create.mockRejectedValue(repositoryError);
 
       // Act & Assert
-      await expect(service.discover(mockInput)).rejects.toThrow('Repository error');
+      await expect(service.discover(mockInput)).rejects.toThrow(
+        'Repository error',
+      );
     });
   });
-}); 
+});

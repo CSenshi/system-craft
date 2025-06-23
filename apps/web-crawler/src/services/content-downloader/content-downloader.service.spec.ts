@@ -35,7 +35,7 @@ describe('ContentDownloaderService', () => {
         expect.objectContaining({
           headers: { Host: 'example.com' },
           lookup: expect.any(Function),
-        })
+        }),
       );
     });
 
@@ -60,7 +60,7 @@ describe('ContentDownloaderService', () => {
         expect.objectContaining({
           headers: { Host: 'example.com' },
           lookup: expect.any(Function),
-        })
+        }),
       );
     });
 
@@ -164,7 +164,9 @@ describe('ContentDownloaderService', () => {
 
     it('should propagate HTTP errors', async () => {
       // Arrange
-      mockedAxios.get.mockRejectedValue(new Error('Request failed with status code 404'));
+      mockedAxios.get.mockRejectedValue(
+        new Error('Request failed with status code 404'),
+      );
 
       // Act & Assert
       await expect(

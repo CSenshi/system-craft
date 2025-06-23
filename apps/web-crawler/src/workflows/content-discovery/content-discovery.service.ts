@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { DnsResolverService } from '../../services/dns-resolver/dns-resolver.service';
 import { ContentDownloaderService } from '../../services/content-downloader/content-downloader.service';
 import { ContentRepository } from '../../services/content-repository/content.repository';
+import { DnsResolverService } from '../../services/dns-resolver/dns-resolver.service';
 
 export type ContentDiscoveryServiceInput = {
   url: string;
@@ -23,9 +23,13 @@ export class ContentDiscoveryService {
     private readonly contentRepository: ContentRepository,
   ) {}
 
-  async discover(input: ContentDiscoveryServiceInput): Promise<ContentDiscoveryServiceResult> {
+  async discover(
+    input: ContentDiscoveryServiceInput,
+  ): Promise<ContentDiscoveryServiceResult> {
     // 1. Resolve DNS
-    const dnsResult = await this.dnsResolver.resolveDns(new URL(input.url).hostname);
+    const dnsResult = await this.dnsResolver.resolveDns(
+      new URL(input.url).hostname,
+    );
 
     // 2. Download content
     const downloadResult = await this.contentDownloader.download({
@@ -53,7 +57,11 @@ export class ContentDiscoveryService {
   private generateContentName(url: string): string {
     const urlObj = new URL(url);
     const timestamp = Date.now();
-    const path = urlObj.pathname.replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '') || 'index';
+    const path =
+      urlObj.pathname
+        .replace(/[^a-zA-Z0-9]/g, '_')
+        .replace(/_+/g, '_')
+        .replace(/^_|_$/g, '') || 'index';
     return `${urlObj.hostname}_${path}_${timestamp}`;
   }
-} 
+}

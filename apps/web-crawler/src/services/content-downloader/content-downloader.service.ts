@@ -11,7 +11,9 @@ export type ContentDownloaderServiceOut = {
 };
 
 export class ContentDownloaderService {
-  async download(input: ContentDownloaderServiceIn): Promise<ContentDownloaderServiceOut> {
+  async download(
+    input: ContentDownloaderServiceIn,
+  ): Promise<ContentDownloaderServiceOut> {
     const url = new URL(input.url);
     const urlWithIp = url.protocol + '//' + input.ip + url.pathname;
 
@@ -89,4 +91,3 @@ export class ContentDownloaderService {
     return 'text/html';
   }
 }
-
