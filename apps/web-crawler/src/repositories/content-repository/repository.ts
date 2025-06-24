@@ -5,7 +5,7 @@ import {
   S3Client,
 } from '@aws-sdk/client-s3';
 import * as process from 'node:process';
-import { ContentNotFoundException } from './content.repository.exception';
+import { ContentNotFoundException } from './exception';
 
 type ContentCreateType = {
   name: string;

@@ -1,19 +1,19 @@
 import axios from 'axios';
 
-export type ContentDownloaderServiceIn = {
+export type Input = {
   url: string; // full URL with hostname
   ip: string; // resolved IP for that hostname
 };
 
-export type ContentDownloaderServiceOut = {
+export type Output = {
   content: string;
   contentType: string;
 };
 
-export class ContentDownloaderService {
+export class Service {
   async download(
-    input: ContentDownloaderServiceIn,
-  ): Promise<ContentDownloaderServiceOut> {
+    input: Input,
+  ): Promise<Output> {
     const url = new URL(input.url);
     const urlWithIp = url.protocol + '//' + input.ip + url.pathname;
 

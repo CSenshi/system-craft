@@ -2,8 +2,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeleteObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { SqsModule } from '@ssut/nestjs-sqs';
-import { ContentRepository } from '../../services/content-repository/content.repository';
-import { UrlExtractorService } from '../../services/url-extractor/url-extractor.service';
+import { ContentRepository } from '../../repositories/content-repository/repository';
+import { Service } from '../../services/url-extractor/service';
 import { ContentProcessor } from '.';
 
 /**
@@ -53,7 +53,7 @@ describe('ContentProcessing Integration', () => {
           useValue: new S3Client({ forcePathStyle: true }),
         },
         ContentRepository,
-        UrlExtractorService,
+        Service,
       ],
     }).compile();
 

@@ -4,7 +4,7 @@ import { SqsMessageHandler } from '@ssut/nestjs-sqs';
 import { ContentDiscovery } from '.';
 
 @Injectable()
-export class QueueHandler {
+export class QueueConsumer {
   static readonly queueName =
     process.env['AWS_SQS_CONTENT_DISCOVERY_QUEUE_NAME']!;
   private readonly logger = new Logger('ContentDiscoveryQueueProcessor');
@@ -13,7 +13,7 @@ export class QueueHandler {
     private readonly contentDiscoveryService: ContentDiscovery.Service,
   ) {}
 
-  @SqsMessageHandler(QueueHandler.queueName)
+  @SqsMessageHandler(QueueConsumer.queueName)
   public async handleMessage(message: Message) {
     this.logger.log({ messageBody: message.Body });
 

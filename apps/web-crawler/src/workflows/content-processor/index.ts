@@ -1,6 +1,6 @@
 export * as ContentProcessor from '.'
 
-export * from './content-processor.service';
-export * from './content-processor.queue-consumer';
-export * from './content-processor.queue-producer';
-export * from './content-processor.types';
+export * from './service';
+export * from './queue-producer';
+export * from './queue-consumer';
+export * from './types';

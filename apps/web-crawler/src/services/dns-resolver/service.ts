@@ -11,7 +11,7 @@ export type DnsResolveResult = {
   resolverServer: string;
 };
 
-export class DnsResolverService {
+export class Service {
   constructor(private dnsServers: string[]) {}
 
   async resolveDns(hostname: string): Promise<DnsResolveResult> {

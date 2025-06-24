@@ -1,15 +1,11 @@
-import {
-  DnsCanNotResolveError,
-  DnsResolverService,
-  InvalidHostnameError,
-} from '.';
+import { DnsCanNotResolveError, DnsResolver, InvalidHostnameError } from '.';
 
 describe('UrlParserService', () => {
-  let service: DnsResolverService;
+  let service: DnsResolver.Service;
   const dnsServers: string[] = ['1.1.1.1', '8.8.8.8'];
 
   beforeEach(() => {
-    service = new DnsResolverService(dnsServers);
+    service = new DnsResolver.Service(dnsServers);
   });
 
   describe('Basic functionality', () => {

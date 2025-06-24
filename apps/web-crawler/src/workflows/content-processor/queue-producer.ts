@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { SqsService } from '@ssut/nestjs-sqs';
 import crypto from 'node:crypto';
-import { ContentDiscovery } from '.';
+import { ContentProcessor } from '.';
 import { AppConfigService } from '../../config';
 
 @Injectable()
-export class QueueConsumer {
+export class QueueProducer {
   constructor(
     private readonly sqsService: SqsService,
     private readonly appConfigService: AppConfigService,
   ) {}
 
-  public async send(body: ContentDiscovery.JobType) {
+  public async send(body: ContentProcessor.QueueJobType) {
     await this.sqsService.send(
-      this.appConfigService.awsSqsContentDiscoveryQueueName,
+      this.appConfigService.awsSqsContentProcessingQueueName,
       {
         id: crypto.randomUUID(),
         body: body,

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeleteObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import * as process from 'node:process';
-import { ContentRepository } from './content.repository';
+import { ContentRepository } from './repository';
 
 describe('ContentRepository (integration)', () => {
   const testKey = 'integration-test/test-file.txt';

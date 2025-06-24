@@ -1,2 +1,4 @@
-export * from './dns-resolver.service';
-export * from './dns-resolver.exception';
+export * as DnsResolver from '.';
+
+export * from './service';
+export * from './exception';

@@ -4,10 +4,11 @@ import {
   ListObjectsCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
-import { ContentDownloaderService } from '../../services/content-downloader/content-downloader.service';
-import { ContentRepository } from '../../services/content-repository/content.repository';
-import { DnsResolverService } from '../../services/dns-resolver/dns-resolver.service';
+import { ContentDownloader } from '../../services/content-downloader';
+import { ContentRepository } from '../../repositories/content-repository/repository';
+// import { Service } from '../../services/dns-resolver/service';
 import { ContentDiscovery } from '.';
+import { DnsResolver } from '../../services/dns-resolver';
 
 /**
  * Integration Test: ContentDiscovery with LocalStack S3 and Real HTTP
@@ -36,10 +37,10 @@ describe('ContentDiscovery Integration', () => {
           useValue: new S3Client({ forcePathStyle: true }),
         },
         {
-          provide: DnsResolverService,
-          useValue: new DnsResolverService(['8.8.8.8', '1.1.1.1']),
+          provide: DnsResolver.Service,
+          useValue: new DnsResolver.Service(['8.8.8.8', '1.1.1.1']),
         },
-        ContentDownloaderService,
+        ContentDownloader.Service,
         ContentRepository,
       ],
     }).compile();

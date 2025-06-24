@@ -1,12 +1,12 @@
 import { JSDOM } from "jsdom";
 
-export type UrlExtractorInput = {
+export type Input = {
   content: string;
   type: 'html' | 'text';
 };
 
-export class UrlExtractorService {
-  extractUrls(input: UrlExtractorInput): string[] {
+export class Service {
+  extractUrls(input: Input): string[] {
     if (input.type === 'html') {
       return this.extractUrlsFromHtml(input.content);
     }

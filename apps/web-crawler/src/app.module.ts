@@ -3,10 +3,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { S3Client } from '@aws-sdk/client-s3';
 import { SqsModule } from '@ssut/nestjs-sqs';
 import { AppConfigService } from './config';
-import { ContentDownloaderService } from './services/content-downloader/content-downloader.service';
-import { ContentRepository } from './services/content-repository/content.repository';
-import { DnsResolverService } from './services/dns-resolver';
-import { UrlExtractorService } from './services/url-extractor/url-extractor.service';
+import { ContentDownloader } from './services/content-downloader';
+import { ContentRepository } from './repositories/content-repository/repository';
+import { DnsResolver } from './services/dns-resolver';
+import { UrlExtractor } from './services/url-extractor';
 import { ContentDiscovery } from './workflows/content-discovery';
 import { ContentProcessor } from './workflows/content-processor';
 
@@ -37,19 +37,22 @@ import { ContentProcessor } from './workflows/content-processor';
       provide: S3Client,
       useValue: new S3Client({ forcePathStyle: true }),
     },
-    {
-      provide: DnsResolverService,
-      useValue: new DnsResolverService(['8.8.8.8', '1.1.1.1']),
-    },
+    // Workflows
     ContentDiscovery.Service,
+    ContentDiscovery.QueueProducer,
     ContentDiscovery.QueueConsumer,
-    ContentDiscovery.QueueHandler,
     ContentProcessor.Service,
+    ContentProcessor.QueueProducer,
     ContentProcessor.QueueConsumer,
-    ContentProcessor.QueueHandler,
-    ContentDownloaderService,
+    // Services
+    {
+      provide: DnsResolver.Service,
+      useValue: new DnsResolver.Service(['8.8.8.8', '1.1.1.1']),
+    },
+    ContentDownloader.Service,
+    UrlExtractor.Service,
+    // Repositories
     ContentRepository,
-    UrlExtractorService,
   ],
 })
-export class AppModule {}
+export class AppModule { }

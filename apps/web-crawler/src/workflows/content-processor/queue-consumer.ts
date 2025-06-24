@@ -5,7 +5,7 @@ import { ContentProcessor } from '.';
 
 
 @Injectable()
-export class QueueHandler {
+export class QueueConsumer {
   private readonly logger = new Logger('ContentProcessingQueueProcessor');
 
   constructor(

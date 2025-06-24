@@ -1,16 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import {
-  ContentDownloaderService,
-  ContentDownloaderServiceOut,
-} from '../../services/content-downloader/content-downloader.service';
-import { ContentRepository } from '../../services/content-repository/content.repository';
-import { DnsResolverService } from '../../services/dns-resolver';
 import { ContentDiscovery } from '.';
+import { ContentRepository } from '../../repositories/content-repository/repository';
+import { ContentDownloader } from '../../services/content-downloader';
+import { DnsResolver } from '../../services/dns-resolver';
+
 
 describe('ContentDiscovery', () => {
   let service: ContentDiscovery.Service;
-  let dnsResolver: jest.Mocked<DnsResolverService>;
-  let contentDownloader: jest.Mocked<ContentDownloaderService>;
+  let dnsResolver: jest.Mocked<DnsResolver.Service>;
+  let contentDownloader: jest.Mocked<ContentDownloader.Service>;
   let contentRepository: jest.Mocked<ContentRepository>;
 
   beforeEach(async () => {
@@ -31,11 +29,11 @@ describe('ContentDiscovery', () => {
       providers: [
         ContentDiscovery.Service,
         {
-          provide: DnsResolverService,
+          provide: DnsResolver.Service,
           useValue: mockDnsResolver,
         },
         {
-          provide: ContentDownloaderService,
+          provide: ContentDownloader.Service,
           useValue: mockContentDownloader,
         },
         {
@@ -46,8 +44,8 @@ describe('ContentDiscovery', () => {
     }).compile();
 
     service = module.get<ContentDiscovery.Service>(ContentDiscovery.Service);
-    dnsResolver = module.get(DnsResolverService);
-    contentDownloader = module.get(ContentDownloaderService);
+    dnsResolver = module.get(DnsResolver.Service);
+    contentDownloader = module.get(ContentDownloader.Service);
     contentRepository = module.get(ContentRepository);
   });
 
@@ -65,7 +63,7 @@ describe('ContentDiscovery', () => {
       resolverServer: '8.8.8.8',
     };
 
-    const mockDownloadResult: ContentDownloaderServiceOut = {
+    const mockDownloadResult: ContentDownloader.Output = {
       content: '<html><body>Hello World</body></html>',
       contentType: 'text/html',
     };
@@ -113,17 +111,17 @@ describe('ContentDiscovery', () => {
 
     it('should handle different content types from downloader', async () => {
       // Arrange
-      const cssDownloadResult: ContentDownloaderServiceOut = {
+      const cssDownloadResult: ContentDownloader.Output = {
         content: 'body { color: red; }',
         contentType: 'text/css',
       };
 
-      const jsDownloadResult: ContentDownloaderServiceOut = {
+      const jsDownloadResult: ContentDownloader.Output = {
         content: 'console.log("Hello");',
         contentType: 'application/javascript',
       };
 
-      const jsonDownloadResult: ContentDownloaderServiceOut = {
+      const jsonDownloadResult: ContentDownloader.Output = {
         content: '{"key": "value"}',
         contentType: 'application/json',
       };

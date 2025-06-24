@@ -1,15 +1,15 @@
 import axios from 'axios';
-import { ContentDownloaderService } from './content-downloader.service';
+import { ContentDownloader } from '.';
 
 // Mock axios
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('ContentDownloaderService', () => {
-  let service: ContentDownloaderService;
+  let service: ContentDownloader.Service;
 
   beforeEach(() => {
-    service = new ContentDownloaderService();
+    service = new ContentDownloader.Service();
     jest.clearAllMocks();
   });
 

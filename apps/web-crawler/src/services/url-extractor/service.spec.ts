@@ -1,10 +1,10 @@
-import { UrlExtractorService } from './url-extractor.service';
+import { UrlExtractor } from '.';
 
 describe('UrlExtractorService', () => {
-  let service: UrlExtractorService;
+  let service: UrlExtractor.Service;
 
   beforeEach(() => {
-    service = new UrlExtractorService();
+    service = new UrlExtractor.Service();
   });
 
   describe('HTML extraction', () => {

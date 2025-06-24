@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { ContentDownloaderService } from '../../services/content-downloader/content-downloader.service';
-import { ContentRepository } from '../../services/content-repository/content.repository';
-import { DnsResolverService } from '../../services/dns-resolver';
+import { ContentDownloader } from '../../services/content-downloader';
+import { ContentRepository } from '../../repositories/content-repository/repository';
+import { DnsResolver } from '../../services/dns-resolver';
 
 export type ServiceInput = {
   url: string;
@@ -18,8 +18,8 @@ export type ServiceResult = {
 @Injectable()
 export class Service {
   constructor(
-    private readonly dnsResolver: DnsResolverService,
-    private readonly contentDownloader: ContentDownloaderService,
+    private readonly dnsResolver: DnsResolver.Service,
+    private readonly contentDownloader: ContentDownloader.Service,
     private readonly contentRepository: ContentRepository,
   ) { }
 
