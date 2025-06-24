@@ -5,13 +5,10 @@ import {
 } from '../../services/content-downloader/content-downloader.service';
 import { ContentRepository } from '../../services/content-repository/content.repository';
 import { DnsResolverService } from '../../services/dns-resolver/dns-resolver.service';
-import {
-  ContentDiscoveryService,
-  ContentDiscoveryServiceInput,
-} from './content-discovery.service';
+import { ContentDiscovery } from '.';
 
 describe('ContentDiscovery', () => {
-  let service: ContentDiscoveryService;
+  let service: ContentDiscovery.Service;
   let dnsResolver: jest.Mocked<DnsResolverService>;
   let contentDownloader: jest.Mocked<ContentDownloaderService>;
   let contentRepository: jest.Mocked<ContentRepository>;
@@ -32,7 +29,7 @@ describe('ContentDiscovery', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        ContentDiscoveryService,
+        ContentDiscovery.Service,
         {
           provide: DnsResolverService,
           useValue: mockDnsResolver,
@@ -48,7 +45,7 @@ describe('ContentDiscovery', () => {
       ],
     }).compile();
 
-    service = module.get<ContentDiscoveryService>(ContentDiscoveryService);
+    service = module.get<ContentDiscovery.Service>(ContentDiscovery.Service);
     dnsResolver = module.get(DnsResolverService);
     contentDownloader = module.get(ContentDownloaderService);
     contentRepository = module.get(ContentRepository);
@@ -59,7 +56,7 @@ describe('ContentDiscovery', () => {
   });
 
   describe('discover', () => {
-    const mockInput: ContentDiscoveryServiceInput = {
+    const mockInput: ContentDiscovery.ServiceInput = {
       url: 'https://example.com/page.html',
     };
 
@@ -156,7 +153,7 @@ describe('ContentDiscovery', () => {
 
     it('should handle URLs with no pathname', async () => {
       // Arrange
-      const rootInput: ContentDiscoveryServiceInput = {
+      const rootInput: ContentDiscovery.ServiceInput = {
         url: 'https://example.com',
       };
 
@@ -177,7 +174,7 @@ describe('ContentDiscovery', () => {
 
     it('should handle URLs with special characters in pathname', async () => {
       // Arrange
-      const specialInput: ContentDiscoveryServiceInput = {
+      const specialInput: ContentDiscovery.ServiceInput = {
         url: 'https://example.com/path/with/special-chars!@#$%^&*()',
       };
 

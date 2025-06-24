@@ -4,10 +4,7 @@ import { DeleteObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { SqsModule } from '@ssut/nestjs-sqs';
 import { ContentRepository } from '../../services/content-repository/content.repository';
 import { UrlExtractorService } from '../../services/url-extractor/url-extractor.service';
-import {
-  ContentProcessingService,
-  ContentProcessingServiceInput,
-} from './content-processing.service';
+import { ContentProcessor } from '.';
 
 /**
  * Integration Test: ContentProcessing with LocalStack S3 and Real URL Extraction
@@ -21,7 +18,7 @@ import {
  * - E2E tests (e2e/*) - Use real AWS S3 and real processing
  */
 describe('ContentProcessing Integration', () => {
-  let service: ContentProcessingService;
+  let service: ContentProcessor.Service;
   let contentRepository: ContentRepository;
   let s3Client: S3Client;
 
@@ -50,7 +47,7 @@ describe('ContentProcessing Integration', () => {
         }),
       ],
       providers: [
-        ContentProcessingService,
+        ContentProcessor.Service,
         {
           provide: S3Client,
           useValue: new S3Client({ forcePathStyle: true }),
@@ -60,7 +57,7 @@ describe('ContentProcessing Integration', () => {
       ],
     }).compile();
 
-    service = module.get<ContentProcessingService>(ContentProcessingService);
+    service = module.get<ContentProcessor.Service>(ContentProcessor.Service);
     contentRepository = module.get<ContentRepository>(ContentRepository);
     s3Client = module.get<S3Client>(S3Client);
   });
@@ -88,7 +85,7 @@ describe('ContentProcessing Integration', () => {
         type: 'text/html',
       });
 
-      const input: ContentProcessingServiceInput = {
+      const input: ContentProcessor.ServiceInput = {
         contentName,
       };
 
@@ -121,7 +118,7 @@ describe('ContentProcessing Integration', () => {
         type: 'text/plain',
       });
 
-      const input: ContentProcessingServiceInput = {
+      const input: ContentProcessor.ServiceInput = {
         contentName,
       };
 
@@ -158,7 +155,7 @@ describe('ContentProcessing Integration', () => {
         type: 'text/html',
       });
 
-      const input: ContentProcessingServiceInput = {
+      const input: ContentProcessor.ServiceInput = {
         contentName,
       };
 
@@ -195,7 +192,7 @@ describe('ContentProcessing Integration', () => {
         type: 'text/html',
       });
 
-      const input: ContentProcessingServiceInput = {
+      const input: ContentProcessor.ServiceInput = {
         contentName,
       };
 
@@ -219,7 +216,7 @@ describe('ContentProcessing Integration', () => {
         type: undefined as any,
       });
 
-      const input: ContentProcessingServiceInput = {
+      const input: ContentProcessor.ServiceInput = {
         contentName,
       };
 
@@ -235,7 +232,7 @@ describe('ContentProcessing Integration', () => {
   describe('Error Handling Integration', () => {
     it('should handle content not found in S3', async () => {
       // Arrange
-      const input: ContentProcessingServiceInput = {
+      const input: ContentProcessor.ServiceInput = {
         contentName: 'non-existent-content',
       };
 
@@ -263,7 +260,7 @@ describe('ContentProcessing Integration', () => {
         type: 'text/html',
       });
 
-      const input: ContentProcessingServiceInput = {
+      const input: ContentProcessor.ServiceInput = {
         contentName,
       };
 

@@ -6,10 +6,8 @@ import { ContentDownloaderService } from './services/content-downloader/content-
 import { ContentRepository } from './services/content-repository/content.repository';
 import { DnsResolverService } from './services/dns-resolver';
 import { UrlExtractorService } from './services/url-extractor/url-extractor.service';
-import { ContentDiscoveryService } from './workflows/content-discovery';
-import { ContentProcessingService } from './workflows/content-processing';
-import { ContentProcessingQueueProcessor } from './workflows/content-processing';
-import { QueueProcessor } from './workflows/content-discovery/content-discovery.queue-producer';
+import { ContentDiscovery } from './workflows/content-discovery';
+import { ContentProcessor } from './workflows/content-processor';
 
 @Module({
   imports: [
@@ -41,12 +39,12 @@ import { QueueProcessor } from './workflows/content-discovery/content-discovery.
       provide: DnsResolverService,
       useValue: new DnsResolverService(['8.8.8.8', '1.1.1.1']),
     },
-    ContentDiscoveryService,
-    QueueProcessor,
+    ContentDiscovery.Service,
+    ContentDiscovery.QueueConsumer,
+    ContentProcessor.Service,
+    ContentProcessor.QueueProducer,
     ContentDownloaderService,
     ContentRepository,
-    ContentProcessingService,
-    ContentProcessingQueueProcessor,
     UrlExtractorService,
   ],
 })

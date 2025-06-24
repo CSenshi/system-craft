@@ -3,11 +3,11 @@ import { ContentDownloaderService } from '../../services/content-downloader/cont
 import { ContentRepository } from '../../services/content-repository/content.repository';
 import { DnsResolverService } from '../../services/dns-resolver/dns-resolver.service';
 
-export type ContentDiscoveryServiceInput = {
+export type ServiceInput = {
   url: string;
 };
 
-export type ContentDiscoveryServiceResult = {
+export type ServiceResult = {
   url: string;
   resolvedIp: string;
   resolverServer: string;
@@ -16,16 +16,16 @@ export type ContentDiscoveryServiceResult = {
 };
 
 @Injectable()
-export class ContentDiscoveryService {
+export class Service {
   constructor(
     private readonly dnsResolver: DnsResolverService,
     private readonly contentDownloader: ContentDownloaderService,
     private readonly contentRepository: ContentRepository,
-  ) {}
+  ) { }
 
   async discover(
-    input: ContentDiscoveryServiceInput,
-  ): Promise<ContentDiscoveryServiceResult> {
+    input: ServiceInput,
+  ): Promise<ServiceResult> {
     // 1. Resolve DNS
     const dnsResult = await this.dnsResolver.resolveDns(
       new URL(input.url).hostname,

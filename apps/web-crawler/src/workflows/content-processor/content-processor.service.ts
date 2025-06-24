@@ -2,25 +2,25 @@ import { Injectable } from '@nestjs/common';
 import { ContentRepository } from '../../services/content-repository/content.repository';
 import { UrlExtractorService } from '../../services/url-extractor/url-extractor.service';
 
-export type ContentProcessingServiceInput = {
+export type ServiceInput = {
   contentName: string; // S3 object key/name
 };
 
-export type ContentProcessingServiceResult = {
+export type ServiceOutput = {
   contentName: string;
   extractedUrls: string[];
 };
 
 @Injectable()
-export class ContentProcessingService {
+export class Service {
   constructor(
     private readonly contentRepository: ContentRepository,
     private readonly urlExtractor: UrlExtractorService,
-  ) {}
+  ) { }
 
   async process(
-    input: ContentProcessingServiceInput,
-  ): Promise<ContentProcessingServiceResult> {
+    input: ServiceInput,
+  ): Promise<ServiceOutput> {
     // 1. Retrieve content from S3 repository
     const content = await this.contentRepository.get(input.contentName);
 

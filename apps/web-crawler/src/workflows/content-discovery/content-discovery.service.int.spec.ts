@@ -7,10 +7,7 @@ import {
 import { ContentDownloaderService } from '../../services/content-downloader/content-downloader.service';
 import { ContentRepository } from '../../services/content-repository/content.repository';
 import { DnsResolverService } from '../../services/dns-resolver/dns-resolver.service';
-import {
-  ContentDiscoveryService,
-  ContentDiscoveryServiceInput,
-} from './content-discovery.service';
+import { ContentDiscovery } from '.';
 
 /**
  * Integration Test: ContentDiscovery with LocalStack S3 and Real HTTP
@@ -24,7 +21,7 @@ import {
  * - E2E tests (e2e/*) - Use real AWS S3 and real HTTP
  */
 describe('ContentDiscovery Integration', () => {
-  let service: ContentDiscoveryService;
+  let service: ContentDiscovery.Service;
   let contentRepository: ContentRepository;
   let s3Client: S3Client;
 
@@ -33,7 +30,7 @@ describe('ContentDiscovery Integration', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        ContentDiscoveryService,
+        ContentDiscovery.Service,
         {
           provide: S3Client,
           useValue: new S3Client({ forcePathStyle: true }),
@@ -47,7 +44,7 @@ describe('ContentDiscovery Integration', () => {
       ],
     }).compile();
 
-    service = module.get<ContentDiscoveryService>(ContentDiscoveryService);
+    service = module.get<ContentDiscovery.Service>(ContentDiscovery.Service);
     contentRepository = module.get<ContentRepository>(ContentRepository);
     s3Client = module.get<S3Client>(S3Client);
 
@@ -62,7 +59,7 @@ describe('ContentDiscovery Integration', () => {
   describe('Integration Tests', () => {
     it('should discover JSON API and store in LocalStack S3', async () => {
       // Arrange
-      const input: ContentDiscoveryServiceInput = {
+      const input: ContentDiscovery.ServiceInput = {
         url: 'https://httpbin.org/json',
       };
 
@@ -84,7 +81,7 @@ describe('ContentDiscovery Integration', () => {
 
     it('should handle DNS resolution for real domains', async () => {
       // Arrange
-      const input: ContentDiscoveryServiceInput = {
+      const input: ContentDiscovery.ServiceInput = {
         url: 'https://example.com',
       };
 
@@ -99,7 +96,7 @@ describe('ContentDiscovery Integration', () => {
 
     it('should detect content type from URL extension', async () => {
       // Arrange
-      const input: ContentDiscoveryServiceInput = {
+      const input: ContentDiscovery.ServiceInput = {
         url: 'https://httpbin.org/html',
       };
 
@@ -120,7 +117,7 @@ describe('ContentDiscovery Integration', () => {
 
     it('should handle URLs with query parameters and fragments', async () => {
       // Arrange
-      const input: ContentDiscoveryServiceInput = {
+      const input: ContentDiscovery.ServiceInput = {
         url: 'https://httpbin.org/get?param1=value1&param2=value2#fragment',
       };
 
@@ -134,7 +131,7 @@ describe('ContentDiscovery Integration', () => {
 
     it('should handle root URLs correctly', async () => {
       // Arrange
-      const input: ContentDiscoveryServiceInput = {
+      const input: ContentDiscovery.ServiceInput = {
         url: 'https://httpbin.org',
       };
 
@@ -150,7 +147,7 @@ describe('ContentDiscovery Integration', () => {
   describe('Error Handling Integration', () => {
     it('should handle DNS resolution failures', async () => {
       // Arrange
-      const input: ContentDiscoveryServiceInput = {
+      const input: ContentDiscovery.ServiceInput = {
         url: 'https://this-domain-definitely-does-not-exist-12345.com',
       };
 
@@ -160,7 +157,7 @@ describe('ContentDiscovery Integration', () => {
 
     it('should handle HTTP 404 errors', async () => {
       // Arrange
-      const input: ContentDiscoveryServiceInput = {
+      const input: ContentDiscovery.ServiceInput = {
         url: 'https://httpbin.org/status/404',
       };
 
@@ -170,7 +167,7 @@ describe('ContentDiscovery Integration', () => {
 
     it('should handle S3 storage failures', async () => {
       // Arrange
-      const input: ContentDiscoveryServiceInput = {
+      const input: ContentDiscovery.ServiceInput = {
         url: 'https://httpbin.org/html',
       };
 
