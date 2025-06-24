@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ContentRepository } from '../../repositories/content-repository/repository';
 import { UrlExtractor } from '../../services/url-extractor';
+import { QueueProducer } from '../content-discovery';
 
 export type ServiceInput = {
   contentName: string; // S3 object key/name
@@ -16,6 +17,7 @@ export class Service {
   constructor(
     private readonly contentRepository: ContentRepository,
     private readonly urlExtractor: UrlExtractor.Service,
+    private readonly contentDiscoveryQueueProducer: QueueProducer,
   ) { }
 
   async process(
@@ -31,7 +33,9 @@ export class Service {
     });
 
     // 3. Push discovered URLs to content-discovery queue
-    await this.pushUrlsToDiscoveryQueue(extractedUrls);
+    await Promise.all(
+      extractedUrls.map((url) => this.contentDiscoveryQueueProducer.send({ url }))
+    );
 
     return {
       contentName: input.contentName,
@@ -46,9 +50,5 @@ export class Service {
 
     const htmlTypes = ['text/html'];
     return htmlTypes.includes(contentType) ? 'html' : 'text';
-  }
-
-  private async pushUrlsToDiscoveryQueue(urls: string[]): Promise<void> {
-    // ToDO: Implement the actual queue logic
   }
 }

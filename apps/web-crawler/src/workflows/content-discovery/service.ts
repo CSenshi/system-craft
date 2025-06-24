@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { ContentDownloader } from '../../services/content-downloader';
 import { ContentRepository } from '../../repositories/content-repository/repository';
+import { ContentDownloader } from '../../services/content-downloader';
 import { DnsResolver } from '../../services/dns-resolver';
+import { QueueProducer } from '../content-processor';
 
 export type ServiceInput = {
   url: string;
@@ -21,11 +22,10 @@ export class Service {
     private readonly dnsResolver: DnsResolver.Service,
     private readonly contentDownloader: ContentDownloader.Service,
     private readonly contentRepository: ContentRepository,
+    private readonly contentProcessorQueueProducer: QueueProducer,
   ) { }
 
-  async discover(
-    input: ServiceInput,
-  ): Promise<ServiceResult> {
+  async discover(input: ServiceInput): Promise<ServiceResult> {
     // 1. Resolve DNS
     const dnsResult = await this.dnsResolver.resolveDns(
       new URL(input.url).hostname,
@@ -43,6 +43,11 @@ export class Service {
       name: contentName,
       body: downloadResult.content,
       type: downloadResult.contentType,
+    });
+
+    // 4. Process content
+    await this.contentProcessorQueueProducer.send({
+      contentName,
     });
 
     return {
