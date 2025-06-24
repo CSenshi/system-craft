@@ -5,16 +5,14 @@ import { ContentProcessor } from '.';
 
 
 @Injectable()
-export class QueueProducer {
-  static readonly queueName =
-    process.env['AWS_SQS_CONTENT_PROCESSING_QUEUE_NAME']!;
+export class QueueHandler {
   private readonly logger = new Logger('ContentProcessingQueueProcessor');
 
   constructor(
     private readonly contentProcessingService: ContentProcessor.Service,
   ) { }
 
-  @SqsMessageHandler(QueueProducer.queueName)
+  @SqsMessageHandler(process.env['AWS_SQS_CONTENT_PROCESSING_QUEUE_NAME']!)
   public async handleMessage(message: Message) {
     this.logger.log({ messageBody: message.Body });
 

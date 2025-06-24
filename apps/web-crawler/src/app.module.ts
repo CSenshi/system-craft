@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { S3Client } from '@aws-sdk/client-s3';
 import { SqsModule } from '@ssut/nestjs-sqs';
+import { AppConfigService } from './config';
 import { ContentDownloaderService } from './services/content-downloader/content-downloader.service';
 import { ContentRepository } from './services/content-repository/content.repository';
 import { DnsResolverService } from './services/dns-resolver';
@@ -31,6 +32,7 @@ import { ContentProcessor } from './workflows/content-processor';
     }),
   ],
   providers: [
+    AppConfigService,
     {
       provide: S3Client,
       useValue: new S3Client({ forcePathStyle: true }),
@@ -41,11 +43,13 @@ import { ContentProcessor } from './workflows/content-processor';
     },
     ContentDiscovery.Service,
     ContentDiscovery.QueueConsumer,
+    ContentDiscovery.QueueHandler,
     ContentProcessor.Service,
-    ContentProcessor.QueueProducer,
+    ContentProcessor.QueueConsumer,
+    ContentProcessor.QueueHandler,
     ContentDownloaderService,
     ContentRepository,
     UrlExtractorService,
   ],
 })
-export class AppModule { }
+export class AppModule {}

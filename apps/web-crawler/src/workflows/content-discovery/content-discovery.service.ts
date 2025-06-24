@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ContentDownloaderService } from '../../services/content-downloader/content-downloader.service';
 import { ContentRepository } from '../../services/content-repository/content.repository';
-import { DnsResolverService } from '../../services/dns-resolver/dns-resolver.service';
+import { DnsResolverService } from '../../services/dns-resolver';
 
 export type ServiceInput = {
   url: string;

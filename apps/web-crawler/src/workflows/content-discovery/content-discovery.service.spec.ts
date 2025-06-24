@@ -4,7 +4,7 @@ import {
   ContentDownloaderServiceOut,
 } from '../../services/content-downloader/content-downloader.service';
 import { ContentRepository } from '../../services/content-repository/content.repository';
-import { DnsResolverService } from '../../services/dns-resolver/dns-resolver.service';
+import { DnsResolverService } from '../../services/dns-resolver';
 import { ContentDiscovery } from '.';
 
 describe('ContentDiscovery', () => {
@@ -162,7 +162,7 @@ describe('ContentDiscovery', () => {
       contentRepository.create.mockResolvedValue(undefined);
 
       // Act
-      const result = await service.discover(rootInput);
+      await service.discover(rootInput);
 
       // Assert
       expect(contentRepository.create).toHaveBeenCalledWith({
@@ -183,7 +183,7 @@ describe('ContentDiscovery', () => {
       contentRepository.create.mockResolvedValue(undefined);
 
       // Act
-      const result = await service.discover(specialInput);
+      await service.discover(specialInput);
 
       // Assert
       expect(contentRepository.create).toHaveBeenCalledWith({
