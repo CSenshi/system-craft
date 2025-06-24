@@ -5,7 +5,10 @@ import { SqsModule } from '@ssut/nestjs-sqs';
 import { ContentDownloaderService } from './services/content-downloader/content-downloader.service';
 import { ContentRepository } from './services/content-repository/content.repository';
 import { DnsResolverService } from './services/dns-resolver';
+import { UrlExtractorService } from './services/url-extractor/url-extractor.service';
 import { ContentDiscoveryService } from './workflows/content-discovery';
+import { ContentProcessingService } from './workflows/content-processing';
+import { ContentProcessingQueueProcessor } from './workflows/content-processing';
 import { QueueProcessor } from './workflows/content-discovery/content-discovery.queue-producer';
 
 @Module({
@@ -18,6 +21,10 @@ import { QueueProcessor } from './workflows/content-discovery/content-discovery.
           {
             name: cfg.getOrThrow('AWS_SQS_CONTENT_DISCOVERY_QUEUE_NAME'),
             queueUrl: cfg.getOrThrow('AWS_SQS_CONTENT_DISCOVERY_QUEUE_URL'),
+          },
+          {
+            name: cfg.getOrThrow('AWS_SQS_CONTENT_PROCESSING_QUEUE_NAME'),
+            queueUrl: cfg.getOrThrow('AWS_SQS_CONTENT_PROCESSING_QUEUE_URL'),
           },
         ];
 
@@ -35,9 +42,12 @@ import { QueueProcessor } from './workflows/content-discovery/content-discovery.
       useValue: new DnsResolverService(['8.8.8.8', '1.1.1.1']),
     },
     ContentDiscoveryService,
+    QueueProcessor,
     ContentDownloaderService,
     ContentRepository,
-    QueueProcessor,
+    ContentProcessingService,
+    ContentProcessingQueueProcessor,
+    UrlExtractorService,
   ],
 })
-export class AppModule {}
+export class AppModule { }

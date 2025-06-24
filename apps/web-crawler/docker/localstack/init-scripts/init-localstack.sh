@@ -12,3 +12,12 @@ awslocal sqs set-queue-attributes \
 	--attributes '{
 		"RedrivePolicy": "{\"deadLetterTargetArn\":\"arn:aws:sqs:eu-central-1:000000000000:content-discovery-dlq-queue\",\"maxReceiveCount\":\"1\"}"
 	}'
+
+# Create content processing queue
+awslocal sqs create-queue --queue-name content-processing-queue
+awslocal sqs create-queue --queue-name content-processing-dlq-queue
+awslocal sqs set-queue-attributes \
+	--queue-url http://sqs.eu-central-1.localhost.localstack.cloud:4566/000000000000/content-processing-queue \
+	--attributes '{
+		"RedrivePolicy": "{\"deadLetterTargetArn\":\"arn:aws:sqs:eu-central-1:000000000000:content-processing-dlq-queue\",\"maxReceiveCount\":\"1\"}"
+	}'
