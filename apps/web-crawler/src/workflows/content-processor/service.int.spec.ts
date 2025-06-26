@@ -6,6 +6,10 @@ import { ContentRepository } from '../../repositories/content-repository/reposit
 import { Service } from '../../services/url-extractor/service';
 import { ContentProcessor } from '.';
 import { ContentDiscovery } from '../content-discovery';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
+import { CrawlMetadataRepository } from '../../repositories/crawl-metadata-repository/repository';
+import { AppConfigService } from '../../config';
 
 /**
  * Integration Test: ContentProcessing with LocalStack S3 and Real URL Extraction
@@ -21,6 +25,7 @@ import { ContentDiscovery } from '../content-discovery';
 describe('ContentProcessing Integration', () => {
   let service: ContentProcessor.Service;
   let contentRepository: ContentRepository;
+  let crawlMetadataRepository: CrawlMetadataRepository;
   let s3Client: S3Client;
 
   beforeEach(async () => {
@@ -49,10 +54,16 @@ describe('ContentProcessing Integration', () => {
       ],
       providers: [
         ContentProcessor.Service,
+        AppConfigService,
         {
           provide: S3Client,
           useValue: new S3Client({ forcePathStyle: true }),
         },
+        {
+          provide: DynamoDBDocumentClient,
+          useValue: DynamoDBDocumentClient.from(new DynamoDBClient()),
+        },
+        CrawlMetadataRepository,
         ContentRepository,
         Service,
         {
@@ -66,6 +77,9 @@ describe('ContentProcessing Integration', () => {
 
     service = module.get<ContentProcessor.Service>(ContentProcessor.Service);
     contentRepository = module.get<ContentRepository>(ContentRepository);
+    crawlMetadataRepository = module.get<CrawlMetadataRepository>(
+      CrawlMetadataRepository,
+    );
     s3Client = module.get<S3Client>(S3Client);
   });
 
@@ -92,9 +106,23 @@ describe('ContentProcessing Integration', () => {
         type: 'text/html',
       });
 
+
+      // Store crawl metadata
+      await crawlMetadataRepository.create({
+        id: 'test-crawl-id',
+        startUrl: 'http://example.com',
+        domain: 'example.com',
+        protocol: 'http',
+        depth: 0,
+        status: 'pending',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
       const input: ContentProcessor.ServiceInput = {
         contentName,
         currentDepth: 0,
+        crawlId: 'test-crawl-id', // Assuming crawlId is required for processing
       };
 
       // Act
@@ -126,9 +154,22 @@ describe('ContentProcessing Integration', () => {
         type: 'text/plain',
       });
 
+      // Store crawl metadata
+      await crawlMetadataRepository.create({
+        id: 'test-crawl-id',
+        startUrl: 'http://example.com',
+        domain: 'example.com',
+        protocol: 'http',
+        depth: 0,
+        status: 'pending',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
       const input: ContentProcessor.ServiceInput = {
         contentName,
         currentDepth: 0,
+        crawlId: 'test-crawl-id', // Assuming crawlId is required for processing
       };
 
       // Act
@@ -164,9 +205,22 @@ describe('ContentProcessing Integration', () => {
         type: 'text/html',
       });
 
+      // Store crawl metadata
+      await crawlMetadataRepository.create({
+        id: 'test-crawl-id',
+        startUrl: 'http://example.com',
+        domain: 'example.com',
+        protocol: 'http',
+        depth: 0,
+        status: 'pending',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
       const input: ContentProcessor.ServiceInput = {
         contentName,
         currentDepth: 0,
+        crawlId: 'test-crawl-id', // Assuming crawlId is required for processing
       };
 
       // Act
@@ -175,10 +229,10 @@ describe('ContentProcessing Integration', () => {
       // Assert
       expect(result.extractedUrls).toContain('https://example.com/valid');
       expect(result.extractedUrls).toContain('https://test.com/also-valid');
-      expect(result.extractedUrls).toContain('/relative/path');
-      expect(result.extractedUrls).toContain('./another-relative');
-      expect(result.extractedUrls).toContain('ftp://example.com/ftp');
-      expect(result.extractedUrls).toContain('mailto:test@example.com');
+      expect(result.extractedUrls).toContain('http://example.com/relative/path');
+      expect(result.extractedUrls).toContain('http://example.com/./another-relative');
+      expect(result.extractedUrls).not.toContain('ftp://example.com/ftp');
+      expect(result.extractedUrls).not.toContain('mailto:test@example.com');
 
       // But only valid HTTP/HTTPS URLs should be queued
     }, 30000);
@@ -202,9 +256,22 @@ describe('ContentProcessing Integration', () => {
         type: 'text/html',
       });
 
+      // Store crawl metadata
+      await crawlMetadataRepository.create({
+        id: 'test-crawl-id',
+        startUrl: 'http://example.com',
+        domain: 'example.com',
+        protocol: 'http',
+        depth: 0,
+        status: 'pending',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
       const input: ContentProcessor.ServiceInput = {
         contentName,
         currentDepth: 0,
+        crawlId: 'test-crawl-id',
       };
 
       // Act
@@ -227,9 +294,22 @@ describe('ContentProcessing Integration', () => {
         type: undefined as any,
       });
 
+      // Store crawl metadata
+      await crawlMetadataRepository.create({
+        id: 'test-crawl-id',
+        startUrl: 'http://example.com',
+        domain: 'example.com',
+        protocol: 'http',
+        depth: 0,
+        status: 'pending',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
       const input: ContentProcessor.ServiceInput = {
         contentName,
         currentDepth: 0,
+        crawlId: 'test-crawl-id',
       };
 
       // Act
@@ -247,6 +327,7 @@ describe('ContentProcessing Integration', () => {
       const input: ContentProcessor.ServiceInput = {
         contentName: 'non-existent-content',
         currentDepth: 0,
+        crawlId: 'test-crawl-id',
       };
 
       // Act & Assert
@@ -273,9 +354,23 @@ describe('ContentProcessing Integration', () => {
         type: 'text/html',
       });
 
+
+      // Store crawl metadata
+      await crawlMetadataRepository.create({
+        id: 'test-crawl-id',
+        startUrl: 'http://example.com',
+        domain: 'example.com',
+        protocol: 'http',
+        depth: 0,
+        status: 'pending',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+      
       const input: ContentProcessor.ServiceInput = {
         contentName,
         currentDepth: 0,
+        crawlId: 'test-crawl-id', // Assuming crawlId is required for processing
       };
 
       // Act

@@ -3,10 +3,13 @@ import { ContentRepository } from '../../repositories/content-repository/reposit
 import { ContentDownloader } from '../../services/content-downloader';
 import { DnsResolver } from '../../services/dns-resolver';
 import { QueueProducer } from '../content-processor';
+import { CrawlMetadata, CrawlMetadataRepository } from '../../repositories/crawl-metadata-repository/repository';
+import { randomUUID } from 'crypto';
 
 export type ServiceInput = {
   url: string;
   currentDepth: number;
+  crawlId?: string;
 };
 
 export type ServiceResult = {
@@ -23,22 +26,26 @@ export class Service {
     private readonly dnsResolver: DnsResolver.Service,
     private readonly contentDownloader: ContentDownloader.Service,
     private readonly contentRepository: ContentRepository,
+    private readonly crawlMetadataRepository: CrawlMetadataRepository,
     private readonly contentProcessorQueueProducer: QueueProducer,
   ) { }
 
   async discover(input: ServiceInput): Promise<ServiceResult> {
-    // 1. Resolve DNS
+    // 1. Get or Create Crawl Metadata
+    const metadata = await this.getOrCreateCrawlMetadata(input);
+
+    // 2. Resolve DNS
     const dnsResult = await this.dnsResolver.resolveDns(
       new URL(input.url).hostname,
     );
 
-    // 2. Download content
+    // 3. Download content
     const downloadResult = await this.contentDownloader.download({
       url: input.url,
       ip: dnsResult.ip,
     });
 
-    // 3. Save content
+    // 4. Save content
     const contentName = this.generateContentName(input.url);
     await this.contentRepository.create({
       name: contentName,
@@ -46,12 +53,13 @@ export class Service {
       type: downloadResult.contentType,
     });
 
-    // 4. Process content
+    // 5. Process content
     if (input.currentDepth > 0) {
       await this.contentProcessorQueueProducer.send({
         contentName,
         aux: {
           depth: input.currentDepth,
+          crawlId: metadata.id,
         },
       });
     }
@@ -63,6 +71,30 @@ export class Service {
       contentName,
       contentType: downloadResult.contentType,
     };
+  }
+
+  async getOrCreateCrawlMetadata(input: ServiceInput): Promise<CrawlMetadata> {
+    if (input.crawlId) {
+      const metadata = await this.crawlMetadataRepository.get(input.crawlId);
+      if (!metadata) {
+        throw new Error(`Crawl metadata with ID ${input.crawlId} not found`);
+      }
+      return metadata;
+    }
+
+    const newMetadata: CrawlMetadata = {
+      id: randomUUID(),
+      status: 'in_progress',
+      startUrl: input.url,
+      domain: new URL(input.url).hostname,
+      protocol: new URL(input.url).protocol.replace(':', ''),
+      depth: input.currentDepth,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    await this.crawlMetadataRepository.create(newMetadata);
+    return newMetadata;
   }
 
   private generateContentName(url: string): string {

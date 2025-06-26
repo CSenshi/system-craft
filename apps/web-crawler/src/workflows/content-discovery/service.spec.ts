@@ -4,6 +4,7 @@ import { ContentRepository } from '../../repositories/content-repository/reposit
 import { ContentDownloader } from '../../services/content-downloader';
 import { DnsResolver } from '../../services/dns-resolver';
 import { ContentProcessor } from '../content-processor';
+import { CrawlMetadataRepository } from '../../repositories/crawl-metadata-repository/repository';
 
 
 describe('ContentDiscovery', () => {
@@ -45,6 +46,13 @@ describe('ContentDiscovery', () => {
           provide: ContentProcessor.QueueProducer,
           useValue: {
             send: jest.fn(),
+          },
+        },
+        {
+          provide: CrawlMetadataRepository,
+          useValue: {
+            create: jest.fn(),
+            get: jest.fn(),
           },
         },
       ],

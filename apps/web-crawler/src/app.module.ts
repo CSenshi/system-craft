@@ -9,6 +9,9 @@ import { DnsResolver } from './services/dns-resolver';
 import { UrlExtractor } from './services/url-extractor';
 import { ContentDiscovery } from './workflows/content-discovery';
 import { ContentProcessor } from './workflows/content-processor';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
+import { CrawlMetadataRepository } from './repositories/crawl-metadata-repository/repository';
 
 @Module({
   imports: [
@@ -37,6 +40,10 @@ import { ContentProcessor } from './workflows/content-processor';
       provide: S3Client,
       useValue: new S3Client({ forcePathStyle: true }),
     },
+    {
+      provide: DynamoDBDocumentClient,
+      useValue: DynamoDBDocumentClient.from(new DynamoDBClient()),
+    },
     // Workflows
     ContentDiscovery.Service,
     ContentDiscovery.QueueProducer,
@@ -53,6 +60,7 @@ import { ContentProcessor } from './workflows/content-processor';
     UrlExtractor.Service,
     // Repositories
     ContentRepository,
+    CrawlMetadataRepository,
   ],
 })
 export class AppModule { }

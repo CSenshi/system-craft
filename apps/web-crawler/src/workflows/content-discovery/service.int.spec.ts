@@ -9,6 +9,11 @@ import { ContentRepository } from '../../repositories/content-repository/reposit
 import { ContentDiscovery } from '.';
 import { DnsResolver } from '../../services/dns-resolver';
 import { ContentProcessor } from '../content-processor';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
+import { CrawlMetadataRepository } from '../../repositories/crawl-metadata-repository/repository';
+import { AppConfigService } from '../../config';
+import { ConfigModule } from '@nestjs/config';
 
 /**
  * Integration Test: ContentDiscovery with LocalStack S3 and Real HTTP
@@ -30,7 +35,9 @@ describe('ContentDiscovery Integration', () => {
     jest.clearAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
+      imports: [ConfigModule.forRoot()],
       providers: [
+        AppConfigService,
         ContentDiscovery.Service,
         {
           provide: S3Client,
@@ -40,6 +47,11 @@ describe('ContentDiscovery Integration', () => {
           provide: DnsResolver.Service,
           useValue: new DnsResolver.Service(['8.8.8.8', '1.1.1.1']),
         },
+        {
+          provide: DynamoDBDocumentClient,
+          useValue: DynamoDBDocumentClient.from(new DynamoDBClient()),
+        },
+        CrawlMetadataRepository,
         ContentDownloader.Service,
         ContentRepository,
         {

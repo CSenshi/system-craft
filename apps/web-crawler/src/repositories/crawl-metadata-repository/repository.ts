@@ -12,6 +12,7 @@ export type CrawlMetadata = {
   id: string;
   startUrl: string;
   domain: string;
+  protocol: string;
   depth: number;
   status: 'pending' | 'in_progress' | 'completed' | 'failed';
   createdAt: Date;

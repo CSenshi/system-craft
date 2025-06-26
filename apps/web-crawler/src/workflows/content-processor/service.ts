@@ -2,8 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { ContentRepository } from '../../repositories/content-repository/repository';
 import { UrlExtractor } from '../../services/url-extractor';
 import { QueueProducer } from '../content-discovery';
+import { CrawlMetadata, CrawlMetadataRepository } from '../../repositories/crawl-metadata-repository/repository';
 
 export type ServiceInput = {
+  crawlId: string;
   contentName: string; // S3 object key/name
   currentDepth: number; // Current depth in the crawl
 };
@@ -17,6 +19,7 @@ export type ServiceOutput = {
 export class Service {
   constructor(
     private readonly contentRepository: ContentRepository,
+    private readonly crawlMetadataRepository: CrawlMetadataRepository,
     private readonly urlExtractor: UrlExtractor.Service,
     private readonly contentDiscoveryQueueProducer: QueueProducer,
   ) { }
@@ -24,6 +27,12 @@ export class Service {
   async process(
     input: ServiceInput,
   ): Promise<ServiceOutput> {
+    // 1. Get crawl metadata
+    const metadata = await this.crawlMetadataRepository.get(input.crawlId);
+    if (!metadata) {
+      throw new Error(`Crawl metadata with ID ${input.crawlId} not found`);
+    }
+
     // 1. Retrieve content from S3 repository
     const content = await this.contentRepository.get(input.contentName);
 
@@ -31,6 +40,8 @@ export class Service {
     const extractedUrls = this.urlExtractor.extractUrls({
       content: content.body,
       type: this.determineContentType(content.type),
+      domain: metadata.domain,
+      protocol: metadata.protocol,
     });
 
     // 3. Push discovered URLs to content-discovery queue
