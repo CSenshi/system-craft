@@ -2,7 +2,7 @@ services:
   localstack:
     image: localstack/localstack:latest
     environment:
-      - SERVICES=s3,sqs
+      - SERVICES=s3,sqs,dynamodb
       - AWS_DEFAULT_REGION=eu-central-1
       - DEBUG=1
       - AWS_ACCESS_KEY_ID=test

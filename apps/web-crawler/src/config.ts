@@ -30,4 +30,10 @@ export class AppConfigService {
       'AWS_SQS_CONTENT_PROCESSING_QUEUE_URL',
     );
   }
+
+  get awsDynamoDbCrawlMetadataTableName(): string {
+    return this.configService.getOrThrow(
+      'AWS_DYNAMODB_CRAWL_METADATA_TABLE_NAME',
+    );
+  }
 }

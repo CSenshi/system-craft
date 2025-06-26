@@ -21,3 +21,10 @@ awslocal sqs set-queue-attributes \
 	--attributes '{
 		"RedrivePolicy": "{\"deadLetterTargetArn\":\"arn:aws:sqs:eu-central-1:000000000000:content-processor-dlq-queue\",\"maxReceiveCount\":\"1\"}"
 	}'
+
+# Create dynamodb table
+awslocal dynamodb create-table \
+	--table-name crawl-metadata-table \
+	--attribute-definitions AttributeName=id,AttributeType=S \
+	--key-schema AttributeName=id,KeyType=HASH \
+	--billing-mode PAY_PER_REQUEST 
