@@ -63,6 +63,26 @@
         "options": {
           "command": "docker compose -f apps/web-crawler/docker-compose.yml down"
         }
+      },
+      "sqs:clear": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "node",
+          "args": [
+            "apps/web-crawler/scripts/clear-sqs.js"
+          ],
+          "cwd": "."
+        }
+      },
+      "sqs:test-message": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "node",
+          "args": [
+            "apps/web-crawler/scripts/test-sqs-message.js"
+          ],
+          "cwd": "."
+        }
       }
     }
   },
