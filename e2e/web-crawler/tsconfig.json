@@ -7,5 +7,9 @@
     "noImplicitAny": false
   },
   "include": ["jest.config.ts", "src/**/*.ts"],
-  "references": []
+  "references": [
+    {
+      "path": "../../libs/shared"
+    }
+  ]
 }

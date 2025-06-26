@@ -1,7 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import type { Message } from '@aws-sdk/client-sqs';
 import { SqsMessageHandler } from '@ssut/nestjs-sqs';
-import { ContentProcessor } from '.';
+import { ContentProcessor, ZodQueueJobSchema } from '.';
+import { ZodStringToJSONSchema } from '@libs/shared';
 
 
 @Injectable()
@@ -16,7 +17,10 @@ export class QueueConsumer {
   public async handleMessage(message: Message) {
     // this.logger.log({ messageBody: message.Body });
 
-    const body = JSON.parse(message.Body) as ContentProcessor.QueueJobType;
+
+    const body = ZodQueueJobSchema.parse(
+      ZodStringToJSONSchema.parse(message.Body),
+    );
     this.logger.debug(`Processing content: ${body.contentName}`);
     await this.contentProcessingService.process({ contentName: body.contentName });
   }
