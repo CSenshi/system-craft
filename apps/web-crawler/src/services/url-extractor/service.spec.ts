@@ -130,4 +130,45 @@ describe('UrlExtractorService', () => {
       }).toThrow('Unsupported content type: text/new-type');
     });
   });
+
+  describe('Domain handling', () => {
+    it('should format URLs with domain', () => {
+      const htmlContent = `
+        <html>
+          <body>
+            <a href="/relative/path">Relative Link</a>
+            <img src="./image.jpg">
+          </body>
+        </html>
+      `;
+
+      const urls = service.extractUrls({
+        content: htmlContent,
+        type: 'html',
+        domain: 'example.com',
+        protocol: 'https',
+      });
+
+      expect(urls).toEqual([
+        'https://example.com/relative/path',
+        'https://example.com/./image.jpg',
+      ]);
+    });
+
+    it('should handle absolute URLs without domain', () => {
+      const textContent = `
+        Visit https://example.com and http://test.org
+      `;
+
+      const urls = service.extractUrls({
+        content: textContent,
+        type: 'text',
+      });
+
+      expect(urls).toEqual([
+        'https://example.com',
+        'http://test.org',
+      ]);
+    });
+  });
 });

@@ -3,10 +3,18 @@ import { JSDOM } from "jsdom";
 export type Input = {
   content: string;
   type: 'html' | 'text';
+  domain?: string;
+  protocol?: string;
 };
 
 export class Service {
   extractUrls(input: Input): string[] {
+    const urls = this.gatherUrls(input);
+    const formattedUrls = this.formatUrls(urls, input.domain, input.protocol);
+    return formattedUrls;
+  }
+
+  private gatherUrls(input: Input) {
     if (input.type === 'html') {
       return this.extractUrlsFromHtml(input.content);
     }
@@ -56,10 +64,36 @@ export class Service {
     return Array.from(urls);
   }
 
-
   private extractUrlsFromText(content: string): string[] {
     const urlRegex = /https?:\/\/[^\s"'<>]+/g;
     const matches = content.match(urlRegex);
     return matches ? Array.from(new Set(matches)) : [];
+  }
+
+  private formatUrls(urls: string[], domain?: string, protocol?: string): string[] {
+    if (!domain || !protocol) return urls;
+
+    return urls.map(url => {
+      // If the URL is already absolute, return it as is
+      if (/^(https?:\/\/|\/\/)/i.test(url)) {
+        return url;
+      }
+
+      // If the URL starts with '/', prepend the domain
+      if (url.startsWith('/')) {
+        return `${protocol}://${domain}${url}`;
+      }
+
+      // Otherwise, treat it as a relative path and prepend the domain
+      return `${protocol}://${domain}/${url}`;
+    }).filter(url => {
+      // Filter out any malformed URLs
+      try {
+        new URL(url);
+        return true;
+      } catch {
+        return false;
+      }
+    });
   }
 }
