@@ -5,6 +5,7 @@ import { QueueProducer } from '../content-discovery';
 
 export type ServiceInput = {
   contentName: string; // S3 object key/name
+  currentDepth: number; // Current depth in the crawl
 };
 
 export type ServiceOutput = {
@@ -34,7 +35,10 @@ export class Service {
 
     // 3. Push discovered URLs to content-discovery queue
     await Promise.all(
-      extractedUrls.map((url) => this.contentDiscoveryQueueProducer.send({ url }))
+      extractedUrls.map((url) => this.contentDiscoveryQueueProducer.send({
+        url,
+        depth: input.currentDepth - 1, // Decrease depth for next discovery
+      }))
     );
 
     return {

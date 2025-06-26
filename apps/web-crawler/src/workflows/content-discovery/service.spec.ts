@@ -3,6 +3,7 @@ import { ContentDiscovery } from '.';
 import { ContentRepository } from '../../repositories/content-repository/repository';
 import { ContentDownloader } from '../../services/content-downloader';
 import { DnsResolver } from '../../services/dns-resolver';
+import { ContentProcessor } from '../content-processor';
 
 
 describe('ContentDiscovery', () => {
@@ -40,6 +41,12 @@ describe('ContentDiscovery', () => {
           provide: ContentRepository,
           useValue: mockContentRepository,
         },
+        {
+          provide: ContentProcessor.QueueProducer,
+          useValue: {
+            send: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
@@ -56,6 +63,7 @@ describe('ContentDiscovery', () => {
   describe('discover', () => {
     const mockInput: ContentDiscovery.ServiceInput = {
       url: 'https://example.com/page.html',
+      currentDepth: 0,
     };
 
     const mockDnsResult = {
@@ -133,18 +141,21 @@ describe('ContentDiscovery', () => {
       contentDownloader.download.mockResolvedValue(cssDownloadResult);
       const cssResult = await service.discover({
         url: 'https://example.com/styles.css',
+        currentDepth: 0
       });
       expect(cssResult.contentType).toBe('text/css');
 
       contentDownloader.download.mockResolvedValue(jsDownloadResult);
       const jsResult = await service.discover({
         url: 'https://example.com/script.js',
+        currentDepth: 0
       });
       expect(jsResult.contentType).toBe('application/javascript');
 
       contentDownloader.download.mockResolvedValue(jsonDownloadResult);
       const jsonResult = await service.discover({
         url: 'https://example.com/data.json',
+        currentDepth: 0
       });
       expect(jsonResult.contentType).toBe('application/json');
     });
@@ -153,6 +164,7 @@ describe('ContentDiscovery', () => {
       // Arrange
       const rootInput: ContentDiscovery.ServiceInput = {
         url: 'https://example.com',
+        currentDepth: 0,
       };
 
       dnsResolver.resolveDns.mockResolvedValue(mockDnsResult);
@@ -174,6 +186,7 @@ describe('ContentDiscovery', () => {
       // Arrange
       const specialInput: ContentDiscovery.ServiceInput = {
         url: 'https://example.com/path/with/special-chars!@#$%^&*()',
+        currentDepth: 0,
       };
 
       dnsResolver.resolveDns.mockResolvedValue(mockDnsResult);

@@ -6,6 +6,7 @@ import { QueueProducer } from '../content-processor';
 
 export type ServiceInput = {
   url: string;
+  currentDepth: number;
 };
 
 export type ServiceResult = {
@@ -46,9 +47,14 @@ export class Service {
     });
 
     // 4. Process content
-    await this.contentProcessorQueueProducer.send({
-      contentName,
-    });
+    if (input.currentDepth > 0) {
+      await this.contentProcessorQueueProducer.send({
+        contentName,
+        aux: {
+          depth: input.currentDepth,
+        },
+      });
+    }
 
     return {
       url: input.url,

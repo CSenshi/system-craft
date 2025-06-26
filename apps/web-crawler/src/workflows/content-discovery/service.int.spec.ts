@@ -6,9 +6,9 @@ import {
 } from '@aws-sdk/client-s3';
 import { ContentDownloader } from '../../services/content-downloader';
 import { ContentRepository } from '../../repositories/content-repository/repository';
-// import { Service } from '../../services/dns-resolver/service';
 import { ContentDiscovery } from '.';
 import { DnsResolver } from '../../services/dns-resolver';
+import { ContentProcessor } from '../content-processor';
 
 /**
  * Integration Test: ContentDiscovery with LocalStack S3 and Real HTTP
@@ -42,6 +42,12 @@ describe('ContentDiscovery Integration', () => {
         },
         ContentDownloader.Service,
         ContentRepository,
+        {
+          provide: ContentProcessor.QueueProducer,
+          useValue: {
+            send: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
@@ -62,6 +68,7 @@ describe('ContentDiscovery Integration', () => {
       // Arrange
       const input: ContentDiscovery.ServiceInput = {
         url: 'https://httpbin.org/json',
+        currentDepth: 0,
       };
 
       // Act
@@ -84,6 +91,7 @@ describe('ContentDiscovery Integration', () => {
       // Arrange
       const input: ContentDiscovery.ServiceInput = {
         url: 'https://example.com',
+        currentDepth: 0,
       };
 
       // Act
@@ -99,6 +107,7 @@ describe('ContentDiscovery Integration', () => {
       // Arrange
       const input: ContentDiscovery.ServiceInput = {
         url: 'https://httpbin.org/html',
+        currentDepth: 0,
       };
 
       // Act
@@ -120,6 +129,7 @@ describe('ContentDiscovery Integration', () => {
       // Arrange
       const input: ContentDiscovery.ServiceInput = {
         url: 'https://httpbin.org/get?param1=value1&param2=value2#fragment',
+        currentDepth: 0,
       };
 
       // Act
@@ -134,6 +144,7 @@ describe('ContentDiscovery Integration', () => {
       // Arrange
       const input: ContentDiscovery.ServiceInput = {
         url: 'https://httpbin.org',
+        currentDepth: 0,
       };
 
       // Act
@@ -150,6 +161,7 @@ describe('ContentDiscovery Integration', () => {
       // Arrange
       const input: ContentDiscovery.ServiceInput = {
         url: 'https://this-domain-definitely-does-not-exist-12345.com',
+        currentDepth: 0,
       };
 
       // Act & Assert
@@ -160,6 +172,7 @@ describe('ContentDiscovery Integration', () => {
       // Arrange
       const input: ContentDiscovery.ServiceInput = {
         url: 'https://httpbin.org/status/404',
+        currentDepth: 0,
       };
 
       // Act & Assert
@@ -170,6 +183,7 @@ describe('ContentDiscovery Integration', () => {
       // Arrange
       const input: ContentDiscovery.ServiceInput = {
         url: 'https://httpbin.org/html',
+        currentDepth: 0,
       };
 
       // Mock S3 to throw an error by making the repository throw

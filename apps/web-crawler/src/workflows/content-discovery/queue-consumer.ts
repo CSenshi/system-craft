@@ -20,7 +20,7 @@ export class QueueConsumer {
       ZodStringToJSONSchema.parse(message.Body),
     );
 
-    this.logger.debug(`Discovering content from URL: ${body.url}`);
-    await this.contentDiscoveryService.discover({ url: body.url });
+    this.logger.debug(`Discovering content from URL: ${body.url}| Depth: ${body.depth}`);
+    await this.contentDiscoveryService.discover({ url: body.url, currentDepth: body.depth });
   }
 }

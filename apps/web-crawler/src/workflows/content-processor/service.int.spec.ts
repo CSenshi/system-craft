@@ -5,6 +5,7 @@ import { SqsModule } from '@ssut/nestjs-sqs';
 import { ContentRepository } from '../../repositories/content-repository/repository';
 import { Service } from '../../services/url-extractor/service';
 import { ContentProcessor } from '.';
+import { ContentDiscovery } from '../content-discovery';
 
 /**
  * Integration Test: ContentProcessing with LocalStack S3 and Real URL Extraction
@@ -54,6 +55,12 @@ describe('ContentProcessing Integration', () => {
         },
         ContentRepository,
         Service,
+        {
+          provide: ContentDiscovery.QueueProducer,
+          useValue: {
+            send: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
@@ -87,6 +94,7 @@ describe('ContentProcessing Integration', () => {
 
       const input: ContentProcessor.ServiceInput = {
         contentName,
+        currentDepth: 0,
       };
 
       // Act
@@ -120,6 +128,7 @@ describe('ContentProcessing Integration', () => {
 
       const input: ContentProcessor.ServiceInput = {
         contentName,
+        currentDepth: 0,
       };
 
       // Act
@@ -157,6 +166,7 @@ describe('ContentProcessing Integration', () => {
 
       const input: ContentProcessor.ServiceInput = {
         contentName,
+        currentDepth: 0,
       };
 
       // Act
@@ -194,6 +204,7 @@ describe('ContentProcessing Integration', () => {
 
       const input: ContentProcessor.ServiceInput = {
         contentName,
+        currentDepth: 0,
       };
 
       // Act
@@ -218,6 +229,7 @@ describe('ContentProcessing Integration', () => {
 
       const input: ContentProcessor.ServiceInput = {
         contentName,
+        currentDepth: 0,
       };
 
       // Act
@@ -234,6 +246,7 @@ describe('ContentProcessing Integration', () => {
       // Arrange
       const input: ContentProcessor.ServiceInput = {
         contentName: 'non-existent-content',
+        currentDepth: 0,
       };
 
       // Act & Assert
@@ -262,10 +275,11 @@ describe('ContentProcessing Integration', () => {
 
       const input: ContentProcessor.ServiceInput = {
         contentName,
+        currentDepth: 0,
       };
 
       // Act
-      const result = await service.process(input);
+      await service.process(input);
 
       // Assert
     }, 30000);

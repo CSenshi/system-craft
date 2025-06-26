@@ -11,7 +11,7 @@ export class QueueProducer {
     private readonly appConfigService: AppConfigService,
   ) {}
 
-  public async send(body: ContentProcessor.QueueJobType) {
+  public async send(body: ContentProcessor.JobType) {
     await this.sqsService.send(
       this.appConfigService.awsSqsContentProcessingQueueName,
       {

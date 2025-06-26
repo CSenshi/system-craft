@@ -21,7 +21,7 @@ export class QueueConsumer {
     const body = ZodQueueJobSchema.parse(
       ZodStringToJSONSchema.parse(message.Body),
     );
-    this.logger.debug(`Processing content: ${body.contentName}`);
-    await this.contentProcessingService.process({ contentName: body.contentName });
+    this.logger.debug(`Processing content: ${body.contentName} | Depth: ${body.aux.depth}`);
+    await this.contentProcessingService.process({ contentName: body.contentName, currentDepth: body.aux.depth });
   }
 }
