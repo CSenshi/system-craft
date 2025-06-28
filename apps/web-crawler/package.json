@@ -83,6 +83,16 @@
           ],
           "cwd": "."
         }
+      },
+      "sqs:list-dlq": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "node",
+          "args": [
+            "apps/web-crawler/scripts/list-dlq-messages.js"
+          ],
+          "cwd": "."
+        }
       }
     }
   },
