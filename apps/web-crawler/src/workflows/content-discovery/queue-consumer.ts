@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import type { Message } from '@aws-sdk/client-sqs';
-import { SqsMessageHandler } from '@ssut/nestjs-sqs';
+import { SqsConsumerEventHandler, SqsMessageHandler } from '@ssut/nestjs-sqs';
 import { ZodStringToJSONSchema } from '@libs/shared';
 import { ContentDiscovery, ZodQueueJobSchema } from '.';
 
@@ -22,5 +22,20 @@ export class QueueConsumer {
 
     this.logger.debug(`Discovering content from URL: ${body.url}| Depth: ${body.depth}`);
     await this.contentDiscoveryService.discover({ url: body.url, currentDepth: body.depth });
+  }
+
+  @SqsConsumerEventHandler(QueueConsumer.queueName, 'processing_error')
+  public onProcessingError(err: Error, message: Message) {
+    this.logger.error({ err: err.message, type: 'processing_error', message });
+  }
+
+  @SqsConsumerEventHandler(QueueConsumer.queueName, 'error')
+  public onError(err: Error, message: Message) {
+    this.logger.error({ err: err.message, type: 'error', message });
+  }
+
+  @SqsConsumerEventHandler(QueueConsumer.queueName, 'timeout_error')
+  public onTimeoutError(err: Error, message: Message) {
+    this.logger.error({ err: err.message, type: 'timeout_error', message });
   }
 }
