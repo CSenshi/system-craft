@@ -1,9 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ContentRepository } from '../../repositories/content-repository/repository';
-import {
-  CrawlMetadata,
-  CrawlMetadataRepository,
-} from '../../repositories/crawl-metadata-repository/repository';
+import { CrawlMetadataRepository } from '../../repositories/crawl-metadata-repository/repository';
 import { UrlExtractor } from '../../services/url-extractor';
 import { QueueProducer } from '../content-discovery';
 

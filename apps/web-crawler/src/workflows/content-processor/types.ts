@@ -9,3 +9,7 @@ export const ZodQueueJobSchema = z.object({
 });
 
 export type JobType = z.infer<typeof ZodQueueJobSchema>;
+
+export const queueName = process.env[
+  'AWS_SQS_CONTENT_PROCESSING_QUEUE_NAME'
+] as unknown as string;

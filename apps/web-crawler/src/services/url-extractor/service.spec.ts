@@ -125,7 +125,8 @@ describe('UrlExtractorService', () => {
       expect(() => {
         service.extractUrls({
           content: 'some content',
-          type: 'text/new-type' as any,
+          // @ts-expect-error Invalid type for testing
+          type: 'text/new-type',
         });
       }).toThrow('Unsupported content type: text/new-type');
     });

@@ -11,12 +11,6 @@ const client = new SQSClient({
   endpoint: 'http://localhost:4566',
 });
 
-// Default DLQ names
-const DEFAULT_DLQS = [
-  'content-discovery-dlq-queue',
-  'content-processor-dlq-queue',
-];
-
 function getQueueName(queueUrl) {
   const parts = queueUrl.split('/');
   return parts[parts.length - 1];

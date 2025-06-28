@@ -294,7 +294,8 @@ describe('ContentProcessing Integration', () => {
       await contentRepository.create({
         name: contentName,
         body: textContent,
-        type: undefined as any,
+        // @ts-expect-error Intentionally undefined type for testing
+        type: undefined,
       });
 
       // Store crawl metadata
@@ -401,7 +402,7 @@ describe('ContentProcessing Integration', () => {
             Key: contentName,
           }),
         );
-      } catch (error) {
+      } catch {
         // Ignore errors for non-existent objects
       }
     }

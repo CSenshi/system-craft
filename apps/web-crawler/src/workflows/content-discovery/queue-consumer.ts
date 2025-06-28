@@ -2,20 +2,18 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ZodStringToJSONSchema } from '@libs/shared';
 import type { Message } from '@aws-sdk/client-sqs';
 import { SqsConsumerEventHandler, SqsMessageHandler } from '@ssut/nestjs-sqs';
-import { ContentDiscovery, ZodQueueJobSchema } from '.';
+import { ContentDiscovery, ZodQueueJobSchema, queueName } from '.';
 import { ContentAlreadyDiscoveredException } from './exceptions';
 
 @Injectable()
 export class QueueConsumer {
-  static readonly queueName =
-    process.env['AWS_SQS_CONTENT_DISCOVERY_QUEUE_NAME']!;
   private readonly logger = new Logger('Content Discovery');
 
   constructor(
     private readonly contentDiscoveryService: ContentDiscovery.Service,
   ) {}
 
-  @SqsMessageHandler(QueueConsumer.queueName)
+  @SqsMessageHandler(queueName)
   public async handleMessage(message: Message) {
     const body = ZodQueueJobSchema.parse(
       ZodStringToJSONSchema.parse(message.Body),
@@ -38,17 +36,17 @@ export class QueueConsumer {
     }
   }
 
-  @SqsConsumerEventHandler(QueueConsumer.queueName, 'processing_error')
+  @SqsConsumerEventHandler(queueName, 'processing_error')
   public onProcessingError(err: Error, message: Message) {
     this.logger.error({ err: err.message, type: 'processing_error', message });
   }
 
-  @SqsConsumerEventHandler(QueueConsumer.queueName, 'error')
+  @SqsConsumerEventHandler(queueName, 'error')
   public onError(err: Error, message: Message) {
     this.logger.error({ err: err.message, type: 'error', message });
   }
 
-  @SqsConsumerEventHandler(QueueConsumer.queueName, 'timeout_error')
+  @SqsConsumerEventHandler(queueName, 'timeout_error')
   public onTimeoutError(err: Error, message: Message) {
     this.logger.error({ err: err.message, type: 'timeout_error', message });
   }
