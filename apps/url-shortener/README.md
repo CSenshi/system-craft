@@ -8,10 +8,10 @@
 [![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat&logo=redis&logoColor=white)](https://redis.io/)
 [![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
 
-
 ## ✨ **Features**
 
 ### **Core Functionality**
+
 - ✅ **Custom URL Generation** - Base62 encoding with collision handling
 - ✅ **Non-Predictable Short URLs** – Uses a bijection function with a counter to generate non-sequential short URLs
 - ✅ **High-Performance Redirects** - Redis-cached lookups
@@ -22,15 +22,18 @@
 ## 🛠️ **Tech Stack**
 
 ### **Backend**
+
 - **Framework**: [NestJS](https://nestjs.com/) - Progressive Node.js framework
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 
 ### **Data Layer**
+
 - **Primary Database**: [PostgreSQL](https://www.postgresql.org/) - Reliable ACID compliance
 - **ORM**: [Prisma](https://www.prisma.io/) - Next-generation ORM
 - **Caching**: [Redis](https://redis.io/) - High-performance in-memory cache
 
 ### **Development & DevOps**
+
 - **Package Manager**: [pnpm](https://pnpm.io/) - Fast, efficient package management
 - **Containerization**: [Docker](https://www.docker.com/) - Consistent deployment
 - **Testing**: [Jest](https://jestjs.io/) - Comprehensive test suite
@@ -39,11 +42,13 @@
 ## 📦 **Installation & Setup**
 
 ### **Prerequisites**
+
 - Node.js 22+
 - Docker & Docker Compose
 - pnpm
 
 ### **Quick Start**
+
 ```bash
 # 1. Clone the repository (Needed only 1st time)
 git clone https://github.com/CSenshi/system-craft.git
@@ -65,10 +70,10 @@ pnpm nx run @apps/url-shortener:prisma-deploy
 pnpm nx run @apps/url-shortener:serve
 ```
 
-
 ## 🔧 **API Usage**
 
 ### **Shorten a URL**
+
 ```bash
 curl -X POST http://localhost:3000/url \
   -H "Content-Type: application/json" \
@@ -93,6 +98,7 @@ curl -L http://localhost:3000/l/abc123
 ## 🧪 **Testing**
 
 ### **Run Tests**
+
 ```bash
 # Unit tests
 pnpm nx test @apps/url-shortener

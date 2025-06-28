@@ -20,7 +20,6 @@ The goal of this project is to serve as an educational resource for developers p
 - Ticket Booking System (Ticketmaster-like)
 - Ride Sharing System (Uber-like)
 
-
 > 💡 **Implementation suggestions are welcome!**  
 > Feel free to open an issue if you have an idea for a new system design to implement.
 
