@@ -17,19 +17,27 @@ export class Service {
     const url = new URL(input.url);
     const urlWithIp = url.protocol + '//' + input.ip + url.pathname;
 
-    const response = await axios.get(urlWithIp, {
-      headers: {
-        Host: url.hostname, // Set the Host header to the original hostname
-      },
-      lookup: (_hostname, _opts, callback) => {
-        callback(null, input.ip, 4);
-      },
-    });
+    try {
+      const response = await axios.get(urlWithIp, {
+        headers: {
+          Host: url.hostname, // Set the Host header to the original hostname
+        },
+        lookup: (_hostname, _opts, callback) => {
+          callback(null, input.ip, 4);
+        },
+      });
 
-    return {
-      content: this.extractContent(response),
-      contentType: this.extractContentType(response, url),
-    };
+      return {
+        content: this.extractContent(response),
+        contentType: this.extractContentType(response, url),
+      };
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        // Handle Axios-specific errors
+        throw new Error(`Failed to download content from ${input.url}: ${error.message}`);
+      }
+      throw new Error(`An unexpected error occurred while downloading content: ${error}`);
+    }
   }
 
   private extractContent(response: axios.AxiosResponse): string {
