@@ -25,6 +25,7 @@ describe('ContentDiscovery', () => {
     const mockContentRepository = {
       create: jest.fn(),
       get: jest.fn(),
+      exists: jest.fn().mockResolvedValue(false),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -86,9 +87,6 @@ describe('ContentDiscovery', () => {
 
     beforeEach(() => {
       jest.clearAllMocks();
-
-      // Mock Date.now() to return a fixed timestamp
-      jest.spyOn(Date, 'now').mockReturnValue(1640995200000); // 2022-01-01 00:00:00 UTC
     });
 
     afterEach(() => {
@@ -111,7 +109,7 @@ describe('ContentDiscovery', () => {
         ip: mockDnsResult.ip,
       });
       expect(contentRepository.create).toHaveBeenCalledWith({
-        name: 'example.com_page_html_1640995200000',
+        name: 'example.com_page_html',
         body: mockDownloadResult.content,
         type: mockDownloadResult.contentType,
       });
@@ -120,7 +118,7 @@ describe('ContentDiscovery', () => {
         url: mockInput.url,
         resolvedIp: mockDnsResult.ip,
         resolverServer: mockDnsResult.resolverServer,
-        contentName: 'example.com_page_html_1640995200000',
+        contentName: 'example.com_page_html',
         contentType: mockDownloadResult.contentType,
       });
     });
@@ -184,7 +182,7 @@ describe('ContentDiscovery', () => {
 
       // Assert
       expect(contentRepository.create).toHaveBeenCalledWith({
-        name: 'example.com_index_1640995200000',
+        name: 'example.com_index',
         body: mockDownloadResult.content,
         type: mockDownloadResult.contentType,
       });
@@ -206,7 +204,7 @@ describe('ContentDiscovery', () => {
 
       // Assert
       expect(contentRepository.create).toHaveBeenCalledWith({
-        name: 'example.com_path_with_special_chars_1640995200000',
+        name: 'example.com_path_with_special_chars',
         body: mockDownloadResult.content,
         type: mockDownloadResult.contentType,
       });

@@ -3,6 +3,7 @@ import type { Message } from '@aws-sdk/client-sqs';
 import { SqsConsumerEventHandler, SqsMessageHandler } from '@ssut/nestjs-sqs';
 import { ZodStringToJSONSchema } from '@libs/shared';
 import { ContentDiscovery, ZodQueueJobSchema } from '.';
+import { ContentAlreadyDiscoveredException } from './exceptions';
 
 @Injectable()
 export class QueueConsumer {
@@ -21,7 +22,15 @@ export class QueueConsumer {
     );
 
     this.logger.debug(`Discovering content from URL: ${body.url}| Depth: ${body.depth}`);
-    await this.contentDiscoveryService.discover({ url: body.url, currentDepth: body.depth });
+    try {
+      await this.contentDiscoveryService.discover({ url: body.url, currentDepth: body.depth });
+    } catch (error) {
+      if (error instanceof ContentAlreadyDiscoveredException) {
+        return;
+      }
+
+      throw error; // Re-throw other errors to be handled by the error handler
+    }
   }
 
   @SqsConsumerEventHandler(QueueConsumer.queueName, 'processing_error')

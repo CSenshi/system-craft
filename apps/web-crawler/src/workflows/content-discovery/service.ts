@@ -5,6 +5,7 @@ import { DnsResolver } from '../../services/dns-resolver';
 import { QueueProducer } from '../content-processor';
 import { CrawlMetadata, CrawlMetadataRepository } from '../../repositories/crawl-metadata-repository/repository';
 import { randomUUID } from 'crypto';
+import { ContentAlreadyDiscoveredException } from './exceptions';
 
 export type ServiceInput = {
   url: string;
@@ -31,21 +32,26 @@ export class Service {
   ) { }
 
   async discover(input: ServiceInput): Promise<ServiceResult> {
-    // 1. Get or Create Crawl Metadata
+    // 1. Check if url is already processed
+    if (await this.contentRepository.exists(this.generateContentName(input.url))) {
+      throw new ContentAlreadyDiscoveredException(input.url);
+    }
+
+    // 2. Get or Create Crawl Metadata
     const metadata = await this.getOrCreateCrawlMetadata(input);
 
-    // 2. Resolve DNS
+    // 3. Resolve DNS
     const dnsResult = await this.dnsResolver.resolveDns(
       new URL(input.url).hostname,
     );
 
-    // 3. Download content
+    // 4. Download content
     const downloadResult = await this.contentDownloader.download({
       url: input.url,
       ip: dnsResult.ip,
     });
 
-    // 4. Save content
+    // 5. Save content
     const contentName = this.generateContentName(input.url);
     await this.contentRepository.create({
       name: contentName,
@@ -53,7 +59,7 @@ export class Service {
       type: downloadResult.contentType,
     });
 
-    // 5. Process content
+    // 6. Process content
     if (input.currentDepth > 0) {
       await this.contentProcessorQueueProducer.send({
         contentName,
@@ -99,12 +105,11 @@ export class Service {
 
   private generateContentName(url: string): string {
     const urlObj = new URL(url);
-    const timestamp = Date.now();
     const path =
       urlObj.pathname
         .replace(/[^a-zA-Z0-9]/g, '_')
         .replace(/_+/g, '_')
         .replace(/^_|_$/g, '') || 'index';
-    return `${urlObj.hostname}_${path}_${timestamp}`;
+    return `${urlObj.hostname}_${path}`;
   }
 }

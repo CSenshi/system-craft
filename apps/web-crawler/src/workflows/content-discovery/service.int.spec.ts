@@ -14,6 +14,7 @@ import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 import { CrawlMetadataRepository } from '../../repositories/crawl-metadata-repository/repository';
 import { AppConfigService } from '../../config';
 import { ConfigModule } from '@nestjs/config';
+import { ContentAlreadyDiscoveredException } from './exceptions';
 
 /**
  * Integration Test: ContentDiscovery with LocalStack S3 and Real HTTP
@@ -66,9 +67,6 @@ describe('ContentDiscovery Integration', () => {
     service = module.get<ContentDiscovery.Service>(ContentDiscovery.Service);
     contentRepository = module.get<ContentRepository>(ContentRepository);
     s3Client = module.get<S3Client>(S3Client);
-
-    // Mock Date.now() to return a fixed timestamp
-    jest.spyOn(Date, 'now').mockReturnValue(1640995200000);
   });
 
   afterEach(() => {
@@ -88,12 +86,12 @@ describe('ContentDiscovery Integration', () => {
 
       // Assert
       expect(result.url).toBe(input.url);
-      expect(result.contentName).toBe('httpbin.org_json_1640995200000');
+      expect(result.contentName).toBe('httpbin.org_json');
       expect(result.contentType).toBe('application/json');
 
       // Verify JSON content was stored
       const storedContent = await contentRepository.get(
-        'httpbin.org_json_1640995200000',
+        'httpbin.org_json',
       );
       expect(storedContent.body).toContain('"slideshow"');
       expect(storedContent.type).toBe('application/json');
@@ -112,7 +110,7 @@ describe('ContentDiscovery Integration', () => {
       // Assert
       expect(result.resolvedIp).toMatch(/^\d+\.\d+\.\d+\.\d+$/);
       expect(result.resolverServer).toMatch(/^\d+\.\d+\.\d+\.\d+$/);
-      expect(result.contentName).toBe('example.com_index_1640995200000');
+      expect(result.contentName).toBe('example.com_index');
     }, 30000);
 
     it('should detect content type from URL extension', async () => {
@@ -126,12 +124,12 @@ describe('ContentDiscovery Integration', () => {
       const result = await service.discover(input);
 
       // Assert
-      expect(result.contentName).toBe('httpbin.org_html_1640995200000');
+      expect(result.contentName).toBe('httpbin.org_html');
       expect(result.contentType).toBe('text/html');
 
       // Verify content was stored
       const storedContent = await contentRepository.get(
-        'httpbin.org_html_1640995200000',
+        'httpbin.org_html',
       );
       expect(storedContent.body).toBeDefined();
       expect(storedContent.type).toBe('text/html');
@@ -148,7 +146,7 @@ describe('ContentDiscovery Integration', () => {
       const result = await service.discover(input);
 
       // Assert
-      expect(result.contentName).toBe('httpbin.org_get_1640995200000');
+      expect(result.contentName).toBe('httpbin.org_get');
       expect(result.contentType).toBe('application/json');
     }, 30000);
 
@@ -163,7 +161,7 @@ describe('ContentDiscovery Integration', () => {
       const result = await service.discover(input);
 
       // Assert
-      expect(result.contentName).toBe('httpbin.org_index_1640995200000');
+      expect(result.contentName).toBe('httpbin.org_index');
       expect(result.contentType).toBe('text/html');
     }, 30000);
   });
@@ -198,6 +196,8 @@ describe('ContentDiscovery Integration', () => {
         currentDepth: 0,
       };
 
+      // Mock exists to return false so the flow continues to create
+      jest.spyOn(contentRepository, 'exists').mockResolvedValue(false);
       // Mock S3 to throw an error by making the repository throw
       jest
         .spyOn(contentRepository, 'create')
@@ -206,9 +206,52 @@ describe('ContentDiscovery Integration', () => {
       // Act & Assert
       await expect(service.discover(input)).rejects.toThrow('S3 error');
     }, 30000);
+
+    it('should prevent duplicate processing when content already exists in S3', async () => {
+      // Arrange
+      const input: ContentDiscovery.ServiceInput = {
+        url: 'https://httpbin.org/json',
+        currentDepth: 0,
+      };
+
+      // First, process the URL to create content in S3
+      await service.discover(input);
+
+      // Act & Assert - Try to process the same URL again
+      await expect(service.discover(input)).rejects.toThrow(ContentAlreadyDiscoveredException);
+    }, 30000);
+
+    it('should allow processing different URLs even if one already exists', async () => {
+      // Arrange
+      const firstInput: ContentDiscovery.ServiceInput = {
+        url: 'https://httpbin.org/json',
+        currentDepth: 0,
+      };
+
+      const secondInput: ContentDiscovery.ServiceInput = {
+        url: 'https://httpbin.org/html',
+        currentDepth: 0,
+      };
+
+      const thirdInput: ContentDiscovery.ServiceInput = {
+        url: 'https://httpbin.org/get',
+        currentDepth: 0,
+      };
+
+      // Process first URL
+      await service.discover(firstInput);
+      await service.discover(secondInput);
+
+      // Try to process first URL again (should fail)
+      await expect(service.discover(firstInput)).rejects.toThrow(ContentAlreadyDiscoveredException);
+      await expect(service.discover(secondInput)).rejects.toThrow(ContentAlreadyDiscoveredException);
+
+      // Process a new URL that doesn't exist yet
+      await service.discover(thirdInput);
+    }, 30000);
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
     // List all objects in the S3 bucket to clean up after tests
     const response = await s3Client.send(
       new ListObjectsCommand({
