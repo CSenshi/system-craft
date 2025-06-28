@@ -10,7 +10,6 @@
 [![DynamoDB](https://img.shields.io/badge/DynamoDB-4053D6?style=flat&logo=amazon-dynamodb&logoColor=white)](https://aws.amazon.com/dynamodb/)
 [![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
 
-
 ## ✨ **Features**
 
 - ✅ **Distributed Crawling** – Queue-based, scalable URL discovery and processing
@@ -23,10 +22,12 @@
 ## 🛠️ **Tech Stack**
 
 ### **Backend**
+
 - **Framework**: [NestJS](https://nestjs.com/)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 
 ### **Data Layer & Cloud**
+
 - **Content Storage**: [AWS S3](https://aws.amazon.com/s3/)
 - **Metadata**: [AWS DynamoDB](https://aws.amazon.com/dynamodb/)
 - **Queue**: [AWS SQS](https://aws.amazon.com/sqs/)
@@ -34,11 +35,13 @@
 ## 📦 **Installation & Setup**
 
 ### **Prerequisites**
+
 - Node.js 22+
 - Docker & Docker Compose
 - pnpm
 
 ### **Quick Start**
+
 ```bash
 # 1. Clone the repository (Needed only 1st time)
 git clone https://github.com/CSenshi/system-craft.git
@@ -74,6 +77,7 @@ This will enqueue a sample URL for crawling and trigger the full discovery and p
 ## 🧪 **Testing**
 
 ### **Run Tests**
+
 ```bash
 # Unit tests
 pnpm nx test @apps/web-crawler

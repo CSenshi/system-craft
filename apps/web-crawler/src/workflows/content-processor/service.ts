@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { ContentRepository } from '../../repositories/content-repository/repository';
+import {
+  CrawlMetadata,
+  CrawlMetadataRepository,
+} from '../../repositories/crawl-metadata-repository/repository';
 import { UrlExtractor } from '../../services/url-extractor';
 import { QueueProducer } from '../content-discovery';
-import { CrawlMetadata, CrawlMetadataRepository } from '../../repositories/crawl-metadata-repository/repository';
 
 export type ServiceInput = {
   crawlId: string;
@@ -22,11 +25,9 @@ export class Service {
     private readonly crawlMetadataRepository: CrawlMetadataRepository,
     private readonly urlExtractor: UrlExtractor.Service,
     private readonly contentDiscoveryQueueProducer: QueueProducer,
-  ) { }
+  ) {}
 
-  async process(
-    input: ServiceInput,
-  ): Promise<ServiceOutput> {
+  async process(input: ServiceInput): Promise<ServiceOutput> {
     // 1. Get crawl metadata
     const metadata = await this.crawlMetadataRepository.get(input.crawlId);
     if (!metadata) {
@@ -46,10 +47,12 @@ export class Service {
 
     // 3. Push discovered URLs to content-discovery queue
     await Promise.all(
-      extractedUrls.map((url) => this.contentDiscoveryQueueProducer.send({
-        url,
-        depth: input.currentDepth - 1, // Decrease depth for next discovery
-      }))
+      extractedUrls.map((url) =>
+        this.contentDiscoveryQueueProducer.send({
+          url,
+          depth: input.currentDepth - 1, // Decrease depth for next discovery
+        }),
+      ),
     );
 
     return {

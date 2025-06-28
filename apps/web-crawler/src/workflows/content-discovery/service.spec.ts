@@ -1,11 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ContentDiscovery } from '.';
 import { ContentRepository } from '../../repositories/content-repository/repository';
+import { CrawlMetadataRepository } from '../../repositories/crawl-metadata-repository/repository';
 import { ContentDownloader } from '../../services/content-downloader';
 import { DnsResolver } from '../../services/dns-resolver';
 import { ContentProcessor } from '../content-processor';
-import { CrawlMetadataRepository } from '../../repositories/crawl-metadata-repository/repository';
-
 
 describe('ContentDiscovery', () => {
   let service: ContentDiscovery.Service;
@@ -147,21 +146,21 @@ describe('ContentDiscovery', () => {
       contentDownloader.download.mockResolvedValue(cssDownloadResult);
       const cssResult = await service.discover({
         url: 'https://example.com/styles.css',
-        currentDepth: 0
+        currentDepth: 0,
       });
       expect(cssResult.contentType).toBe('text/css');
 
       contentDownloader.download.mockResolvedValue(jsDownloadResult);
       const jsResult = await service.discover({
         url: 'https://example.com/script.js',
-        currentDepth: 0
+        currentDepth: 0,
       });
       expect(jsResult.contentType).toBe('application/javascript');
 
       contentDownloader.download.mockResolvedValue(jsonDownloadResult);
       const jsonResult = await service.discover({
         url: 'https://example.com/data.json',
-        currentDepth: 0
+        currentDepth: 0,
       });
       expect(jsonResult.contentType).toBe('application/json');
     });

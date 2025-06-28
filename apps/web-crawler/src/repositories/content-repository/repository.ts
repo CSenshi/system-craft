@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import {
   GetObjectCommand,
-  PutObjectCommand,
   HeadObjectCommand,
-  S3ServiceException,
+  PutObjectCommand,
   S3Client,
+  S3ServiceException,
 } from '@aws-sdk/client-s3';
 import * as process from 'node:process';
 import { ContentNotFoundException } from './exception';
+
 type ContentCreateType = {
   name: string;
   body: string;
@@ -15,7 +16,7 @@ type ContentCreateType = {
 };
 @Injectable()
 export class ContentRepository {
-  constructor(private readonly s3Client: S3Client) { }
+  constructor(private readonly s3Client: S3Client) {}
 
   async create(content: ContentCreateType): Promise<void> {
     const { body, type } = content;
@@ -60,7 +61,6 @@ export class ContentRepository {
       await this.s3Client.send(new HeadObjectCommand(params));
       return true;
     } catch (error) {
-
       if (S3ServiceException.isInstance(error)) {
         if (error.$metadata?.httpStatusCode === 404) {
           return false;

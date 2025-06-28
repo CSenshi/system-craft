@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { ZodStringToJSONSchema } from '@libs/shared';
 import type { Message } from '@aws-sdk/client-sqs';
 import { SqsConsumerEventHandler, SqsMessageHandler } from '@ssut/nestjs-sqs';
-import { ZodStringToJSONSchema } from '@libs/shared';
 import { ContentDiscovery, ZodQueueJobSchema } from '.';
 import { ContentAlreadyDiscoveredException } from './exceptions';
 
@@ -13,7 +13,7 @@ export class QueueConsumer {
 
   constructor(
     private readonly contentDiscoveryService: ContentDiscovery.Service,
-  ) { }
+  ) {}
 
   @SqsMessageHandler(QueueConsumer.queueName)
   public async handleMessage(message: Message) {
@@ -21,9 +21,14 @@ export class QueueConsumer {
       ZodStringToJSONSchema.parse(message.Body),
     );
 
-    this.logger.debug(`Discovering content from URL: ${body.url}| Depth: ${body.depth}`);
+    this.logger.debug(
+      `Discovering content from URL: ${body.url}| Depth: ${body.depth}`,
+    );
     try {
-      await this.contentDiscoveryService.discover({ url: body.url, currentDepth: body.depth });
+      await this.contentDiscoveryService.discover({
+        url: body.url,
+        currentDepth: body.depth,
+      });
     } catch (error) {
       if (error instanceof ContentAlreadyDiscoveredException) {
         return;

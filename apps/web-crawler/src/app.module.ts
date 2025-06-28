@@ -1,17 +1,17 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { S3Client } from '@aws-sdk/client-s3';
+import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 import { SqsModule } from '@ssut/nestjs-sqs';
 import { AppConfigService } from './config';
-import { ContentDownloader } from './services/content-downloader';
 import { ContentRepository } from './repositories/content-repository/repository';
+import { CrawlMetadataRepository } from './repositories/crawl-metadata-repository/repository';
+import { ContentDownloader } from './services/content-downloader';
 import { DnsResolver } from './services/dns-resolver';
 import { UrlExtractor } from './services/url-extractor';
 import { ContentDiscovery } from './workflows/content-discovery';
 import { ContentProcessor } from './workflows/content-processor';
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
-import { CrawlMetadataRepository } from './repositories/crawl-metadata-repository/repository';
 
 @Module({
   imports: [
@@ -63,4 +63,4 @@ import { CrawlMetadataRepository } from './repositories/crawl-metadata-repositor
     CrawlMetadataRepository,
   ],
 })
-export class AppModule { }
+export class AppModule {}

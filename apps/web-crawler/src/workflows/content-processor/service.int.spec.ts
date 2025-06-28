@@ -1,15 +1,15 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { DeleteObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { SqsModule } from '@ssut/nestjs-sqs';
-import { ContentRepository } from '../../repositories/content-repository/repository';
-import { Service } from '../../services/url-extractor/service';
-import { ContentProcessor } from '.';
-import { ContentDiscovery } from '../content-discovery';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DeleteObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
-import { CrawlMetadataRepository } from '../../repositories/crawl-metadata-repository/repository';
+import { SqsModule } from '@ssut/nestjs-sqs';
+import { ContentProcessor } from '.';
 import { AppConfigService } from '../../config';
+import { ContentRepository } from '../../repositories/content-repository/repository';
+import { CrawlMetadataRepository } from '../../repositories/crawl-metadata-repository/repository';
+import { Service } from '../../services/url-extractor/service';
+import { ContentDiscovery } from '../content-discovery';
 
 /**
  * Integration Test: ContentProcessing with LocalStack S3 and Real URL Extraction
@@ -105,7 +105,6 @@ describe('ContentProcessing Integration', () => {
         body: htmlContent,
         type: 'text/html',
       });
-
 
       // Store crawl metadata
       await crawlMetadataRepository.create({
@@ -229,8 +228,12 @@ describe('ContentProcessing Integration', () => {
       // Assert
       expect(result.extractedUrls).toContain('https://example.com/valid');
       expect(result.extractedUrls).toContain('https://test.com/also-valid');
-      expect(result.extractedUrls).toContain('http://example.com/relative/path');
-      expect(result.extractedUrls).toContain('http://example.com/./another-relative');
+      expect(result.extractedUrls).toContain(
+        'http://example.com/relative/path',
+      );
+      expect(result.extractedUrls).toContain(
+        'http://example.com/./another-relative',
+      );
       expect(result.extractedUrls).not.toContain('ftp://example.com/ftp');
       expect(result.extractedUrls).not.toContain('mailto:test@example.com');
 
@@ -354,7 +357,6 @@ describe('ContentProcessing Integration', () => {
         type: 'text/html',
       });
 
-
       // Store crawl metadata
       await crawlMetadataRepository.create({
         id: 'test-crawl-id',
@@ -366,7 +368,7 @@ describe('ContentProcessing Integration', () => {
         createdAt: new Date(),
         updatedAt: new Date(),
       });
-      
+
       const input: ContentProcessor.ServiceInput = {
         contentName,
         currentDepth: 0,

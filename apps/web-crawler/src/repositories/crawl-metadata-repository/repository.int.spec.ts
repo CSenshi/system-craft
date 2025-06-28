@@ -1,19 +1,19 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigModule } from '@nestjs/config';
+import { Test, TestingModule } from '@nestjs/testing';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import {
-  DynamoDBDocumentClient,
   DeleteCommand,
+  DynamoDBDocumentClient,
   ScanCommand,
 } from '@aws-sdk/lib-dynamodb';
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { CrawlMetadataRepository, CrawlMetadata } from './repository';
 import { AppConfigService } from '../../config';
+import { CrawlMetadata, CrawlMetadataRepository } from './repository';
 
 describe('CrawlMetadataRepository (integration)', () => {
   const testTableName = process.env['AWS_DYNAMODB_CRAWL_METADATA_TABLE_NAME'];
   if (!testTableName) {
     throw new Error(
-      'AWS_DYNAMODB_CRAWL_METADATA_TABLE_NAME environment variable is not set'
+      'AWS_DYNAMODB_CRAWL_METADATA_TABLE_NAME environment variable is not set',
     );
   }
 
@@ -46,7 +46,7 @@ describe('CrawlMetadataRepository (integration)', () => {
           new DeleteCommand({
             TableName: testTableName,
             Key: { crawlId },
-          })
+          }),
         );
       } catch {
         // Ignore errors if item doesn't exist
@@ -65,7 +65,7 @@ describe('CrawlMetadataRepository (integration)', () => {
           ExpressionAttributeValues: {
             ':prefix': 'test-',
           },
-        })
+        }),
       );
 
       if (scanResult.Items) {
@@ -74,7 +74,7 @@ describe('CrawlMetadataRepository (integration)', () => {
             new DeleteCommand({
               TableName: testTableName,
               Key: { crawlId: item.crawlId },
-            })
+            }),
           );
         }
       }
@@ -83,7 +83,9 @@ describe('CrawlMetadataRepository (integration)', () => {
     }
   });
 
-  const createTestMetadata = (overrides: Partial<CrawlMetadata> = {}): CrawlMetadata => {
+  const createTestMetadata = (
+    overrides: Partial<CrawlMetadata> = {},
+  ): CrawlMetadata => {
     const now = new Date();
     return {
       id: `test-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
@@ -115,7 +117,12 @@ describe('CrawlMetadataRepository (integration)', () => {
     });
 
     it('should handle different crawl statuses', async () => {
-      const statuses: CrawlMetadata['status'][] = ['pending', 'in_progress', 'completed', 'failed'];
+      const statuses: CrawlMetadata['status'][] = [
+        'pending',
+        'in_progress',
+        'completed',
+        'failed',
+      ];
 
       for (const status of statuses) {
         const metadata = createTestMetadata({ status });
@@ -146,7 +153,10 @@ describe('CrawlMetadataRepository (integration)', () => {
       const testCases = [
         { startUrl: 'https://example.com', domain: 'example.com' },
         { startUrl: 'https://test.org/path', domain: 'test.org' },
-        { startUrl: 'https://subdomain.example.net', domain: 'subdomain.example.net' },
+        {
+          startUrl: 'https://subdomain.example.net',
+          domain: 'subdomain.example.net',
+        },
         { startUrl: 'https://api.github.com/v3', domain: 'api.github.com' },
       ];
 
@@ -258,7 +268,8 @@ describe('CrawlMetadataRepository (integration)', () => {
     it('should maintain data integrity across create and get operations', async () => {
       const metadata = createTestMetadata({
         id: 'test-integrity-check',
-        startUrl: 'https://complex-domain.com/path/to/page?param=value#fragment',
+        startUrl:
+          'https://complex-domain.com/path/to/page?param=value#fragment',
         domain: 'complex-domain.com',
         depth: 7,
         status: 'in_progress' as const,
@@ -327,11 +338,11 @@ describe('CrawlMetadataRepository (integration)', () => {
               accessKeyId: 'test',
               secretAccessKey: 'test',
             },
-          })
+          }),
         ),
         {
           awsDynamoDbCrawlMetadataTableName: 'non-existent-table',
-        } as AppConfigService
+        } as AppConfigService,
       );
 
       const metadata = createTestMetadata();
@@ -349,11 +360,11 @@ describe('CrawlMetadataRepository (integration)', () => {
               accessKeyId: 'test',
               secretAccessKey: 'test',
             },
-          })
+          }),
         ),
         {
           awsDynamoDbCrawlMetadataTableName: testTableName,
-        } as AppConfigService
+        } as AppConfigService,
       );
 
       const metadata = createTestMetadata();
@@ -418,4 +429,4 @@ describe('CrawlMetadataRepository (integration)', () => {
       expect(result?.depth).toBe(Number.MAX_SAFE_INTEGER);
     });
   });
-}); 
+});

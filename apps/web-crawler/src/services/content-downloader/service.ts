@@ -11,9 +11,7 @@ export type Output = {
 };
 
 export class Service {
-  async download(
-    input: Input,
-  ): Promise<Output> {
+  async download(input: Input): Promise<Output> {
     const url = new URL(input.url);
     const urlWithIp = url.protocol + '//' + input.ip + url.pathname;
 
@@ -34,9 +32,13 @@ export class Service {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         // Handle Axios-specific errors
-        throw new Error(`Failed to download content from ${input.url}: ${error.message}`);
+        throw new Error(
+          `Failed to download content from ${input.url}: ${error.message}`,
+        );
       }
-      throw new Error(`An unexpected error occurred while downloading content: ${error}`);
+      throw new Error(
+        `An unexpected error occurred while downloading content: ${error}`,
+      );
     }
   }
 

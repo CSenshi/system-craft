@@ -1,19 +1,19 @@
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import {
   DeleteObjectCommand,
   ListObjectsCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
-import { ContentDownloader } from '../../services/content-downloader';
-import { ContentRepository } from '../../repositories/content-repository/repository';
+import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 import { ContentDiscovery } from '.';
+import { AppConfigService } from '../../config';
+import { ContentRepository } from '../../repositories/content-repository/repository';
+import { CrawlMetadataRepository } from '../../repositories/crawl-metadata-repository/repository';
+import { ContentDownloader } from '../../services/content-downloader';
 import { DnsResolver } from '../../services/dns-resolver';
 import { ContentProcessor } from '../content-processor';
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
-import { CrawlMetadataRepository } from '../../repositories/crawl-metadata-repository/repository';
-import { AppConfigService } from '../../config';
-import { ConfigModule } from '@nestjs/config';
 import { ContentAlreadyDiscoveredException } from './exceptions';
 
 /**
@@ -90,9 +90,7 @@ describe('ContentDiscovery Integration', () => {
       expect(result.contentType).toBe('application/json');
 
       // Verify JSON content was stored
-      const storedContent = await contentRepository.get(
-        'httpbin.org_json',
-      );
+      const storedContent = await contentRepository.get('httpbin.org_json');
       expect(storedContent.body).toContain('"slideshow"');
       expect(storedContent.type).toBe('application/json');
     }, 30000);
@@ -128,9 +126,7 @@ describe('ContentDiscovery Integration', () => {
       expect(result.contentType).toBe('text/html');
 
       // Verify content was stored
-      const storedContent = await contentRepository.get(
-        'httpbin.org_html',
-      );
+      const storedContent = await contentRepository.get('httpbin.org_html');
       expect(storedContent.body).toBeDefined();
       expect(storedContent.type).toBe('text/html');
     }, 30000);
@@ -218,7 +214,9 @@ describe('ContentDiscovery Integration', () => {
       await service.discover(input);
 
       // Act & Assert - Try to process the same URL again
-      await expect(service.discover(input)).rejects.toThrow(ContentAlreadyDiscoveredException);
+      await expect(service.discover(input)).rejects.toThrow(
+        ContentAlreadyDiscoveredException,
+      );
     }, 30000);
 
     it('should allow processing different URLs even if one already exists', async () => {
@@ -243,8 +241,12 @@ describe('ContentDiscovery Integration', () => {
       await service.discover(secondInput);
 
       // Try to process first URL again (should fail)
-      await expect(service.discover(firstInput)).rejects.toThrow(ContentAlreadyDiscoveredException);
-      await expect(service.discover(secondInput)).rejects.toThrow(ContentAlreadyDiscoveredException);
+      await expect(service.discover(firstInput)).rejects.toThrow(
+        ContentAlreadyDiscoveredException,
+      );
+      await expect(service.discover(secondInput)).rejects.toThrow(
+        ContentAlreadyDiscoveredException,
+      );
 
       // Process a new URL that doesn't exist yet
       await service.discover(thirdInput);

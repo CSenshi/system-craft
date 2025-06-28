@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
+import { randomUUID } from 'crypto';
 import { ContentRepository } from '../../repositories/content-repository/repository';
+import {
+  CrawlMetadata,
+  CrawlMetadataRepository,
+} from '../../repositories/crawl-metadata-repository/repository';
 import { ContentDownloader } from '../../services/content-downloader';
 import { DnsResolver } from '../../services/dns-resolver';
 import { QueueProducer } from '../content-processor';
-import { CrawlMetadata, CrawlMetadataRepository } from '../../repositories/crawl-metadata-repository/repository';
-import { randomUUID } from 'crypto';
 import { ContentAlreadyDiscoveredException } from './exceptions';
 
 export type ServiceInput = {
@@ -29,11 +32,13 @@ export class Service {
     private readonly contentRepository: ContentRepository,
     private readonly crawlMetadataRepository: CrawlMetadataRepository,
     private readonly contentProcessorQueueProducer: QueueProducer,
-  ) { }
+  ) {}
 
   async discover(input: ServiceInput): Promise<ServiceResult> {
     // 1. Check if url is already processed
-    if (await this.contentRepository.exists(this.generateContentName(input.url))) {
+    if (
+      await this.contentRepository.exists(this.generateContentName(input.url))
+    ) {
       throw new ContentAlreadyDiscoveredException(input.url);
     }
 

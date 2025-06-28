@@ -165,10 +165,7 @@ describe('UrlExtractorService', () => {
         type: 'text',
       });
 
-      expect(urls).toEqual([
-        'https://example.com',
-        'http://test.org',
-      ]);
+      expect(urls).toEqual(['https://example.com', 'http://test.org']);
     });
   });
 });

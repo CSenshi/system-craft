@@ -1,9 +1,6 @@
 #!/usr/bin/env node
 
-const {
-  SQSClient,
-  SendMessageCommand
-} = require('@aws-sdk/client-sqs');
+const { SQSClient, SendMessageCommand } = require('@aws-sdk/client-sqs');
 
 const client = new SQSClient({
   endpoint: 'http://localhost:4566',
@@ -12,10 +9,13 @@ const client = new SQSClient({
 // Default test message
 const defaultTestMessage = {
   url: 'https://httpbin.org/',
-  depth: 2
+  depth: 2,
 };
 
-async function sendTestMessage(queueName = 'content-discovery-queue', message = null) {
+async function sendTestMessage(
+  queueName = 'content-discovery-queue',
+  message = null,
+) {
   try {
     const queueUrl = `http://sqs.eu-central-1.localhost.localstack.cloud:4566/000000000000/${queueName}`;
     const messageBody = message || JSON.stringify(defaultTestMessage, null, 2);
@@ -31,7 +31,6 @@ async function sendTestMessage(queueName = 'content-discovery-queue', message = 
     const result = await client.send(command);
     console.log(`✅ Message sent successfully!`);
     console.log(`🆔 Message ID: ${result.MessageId}`);
-
   } catch (error) {
     console.error('❌ Error sending message:', error.message);
     process.exit(1);

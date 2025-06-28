@@ -4,18 +4,22 @@ const {
   SQSClient,
   ListQueuesCommand,
   PurgeQueueCommand,
-  GetQueueAttributesCommand
+  GetQueueAttributesCommand,
 } = require('@aws-sdk/client-sqs');
 
 const client = new SQSClient({
-  endpoint: 'http://localhost:4566'
+  endpoint: 'http://localhost:4566',
 });
 
 async function getQueueMessageCount(queueUrl) {
   try {
     const command = new GetQueueAttributesCommand({
       QueueUrl: queueUrl,
-      AttributeNames: ['ApproximateNumberOfMessages', 'ApproximateNumberOfMessagesNotVisible', 'ApproximateNumberOfMessagesDelayed']
+      AttributeNames: [
+        'ApproximateNumberOfMessages',
+        'ApproximateNumberOfMessagesNotVisible',
+        'ApproximateNumberOfMessagesDelayed',
+      ],
     });
 
     const result = await client.send(command);
@@ -23,19 +27,25 @@ async function getQueueMessageCount(queueUrl) {
 
     return {
       visible: parseInt(attributes.ApproximateNumberOfMessages || '0'),
-      notVisible: parseInt(attributes.ApproximateNumberOfMessagesNotVisible || '0'),
+      notVisible: parseInt(
+        attributes.ApproximateNumberOfMessagesNotVisible || '0',
+      ),
       delayed: parseInt(attributes.ApproximateNumberOfMessagesDelayed || '0'),
-      total: parseInt(attributes.ApproximateNumberOfMessages || '0') +
+      total:
+        parseInt(attributes.ApproximateNumberOfMessages || '0') +
         parseInt(attributes.ApproximateNumberOfMessagesNotVisible || '0') +
-        parseInt(attributes.ApproximateNumberOfMessagesDelayed || '0')
+        parseInt(attributes.ApproximateNumberOfMessagesDelayed || '0'),
     };
   } catch (error) {
-    console.error(`❌ Failed to get message count for ${queueUrl}:`, error.message);
+    console.error(
+      `❌ Failed to get message count for ${queueUrl}:`,
+      error.message,
+    );
     return {
       visible: 0,
       notVisible: 0,
       delayed: 0,
-      total: 0
+      total: 0,
     };
   }
 }
@@ -51,9 +61,7 @@ async function clearAllSQSQueues() {
 
     // List all queues
     const listQueuesCommand = new ListQueuesCommand({});
-    const {
-      QueueUrls
-    } = await client.send(listQueuesCommand);
+    const { QueueUrls } = await client.send(listQueuesCommand);
 
     if (!QueueUrls || QueueUrls.length === 0) {
       console.log('ℹ️  No queues found to clear');
@@ -78,36 +86,34 @@ async function clearAllSQSQueues() {
       queueResults.push({
         queueUrl,
         queueName,
-        messageCount
+        messageCount,
       });
       totalMessagesCleared += messageCount.total;
     }
 
     // Display table rows
-    for (const {
-        queueName,
-        messageCount
-      } of queueResults) {
+    for (const { queueName, messageCount } of queueResults) {
       const name = queueName.padEnd(35);
       const visible = messageCount.visible.toString().padStart(7);
       const inFlight = messageCount.notVisible.toString().padStart(8);
       const delayed = messageCount.delayed.toString().padStart(7);
       const total = messageCount.total.toString().padStart(5);
 
-      console.log(`│ ${name} │ ${visible} │ ${inFlight} │ ${delayed} │ ${total} │`);
+      console.log(
+        `│ ${name} │ ${visible} │ ${inFlight} │ ${delayed} │ ${total} │`,
+      );
     }
 
-    console.log(`└─────────────────────────────────────┴─────────┴──────────┴─────────┴───────┘`);
+    console.log(
+      `└─────────────────────────────────────┴─────────┴──────────┴─────────┴───────┘`,
+    );
 
     // Clear all queues
     console.log('\n🗑️  Clearing queues...');
-    for (const {
-        queueUrl,
-        queueName
-      } of queueResults) {
+    for (const { queueUrl, queueName } of queueResults) {
       try {
         const purgeCommand = new PurgeQueueCommand({
-          QueueUrl: queueUrl
+          QueueUrl: queueUrl,
         });
         await client.send(purgeCommand);
         console.log(`✅ ${queueName}`);
@@ -116,8 +122,9 @@ async function clearAllSQSQueues() {
       }
     }
 
-    console.log(`\n✅ All queues cleared successfully! Total messages cleared: ${totalMessagesCleared}`);
-
+    console.log(
+      `\n✅ All queues cleared successfully! Total messages cleared: ${totalMessagesCleared}`,
+    );
   } catch (error) {
     console.error('❌ Error clearing queues:', error.message);
     process.exit(1);

@@ -1,4 +1,4 @@
-export * as ContentDiscovery from '.'
+export * as ContentDiscovery from '.';
 
 export * from './queue-producer';
 export * from './service';

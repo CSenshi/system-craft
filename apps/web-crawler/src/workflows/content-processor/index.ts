@@ -1,4 +1,4 @@
-export * as ContentProcessor from '.'
+export * as ContentProcessor from '.';
 
 export * from './queue-producer';
 export * from './service';

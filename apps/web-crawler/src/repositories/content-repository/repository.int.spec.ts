@@ -99,13 +99,15 @@ describe('ContentRepository (integration)', () => {
     });
 
     it('should return false for deeply nested non-existing path', async () => {
-      const deepPath = 'integration-test/deeply/nested/path/non-existing-file.txt';
+      const deepPath =
+        'integration-test/deeply/nested/path/non-existing-file.txt';
       const result = await repository.exists(deepPath);
       expect(result).toBe(false);
     });
 
     it('should return false for key with special characters', async () => {
-      const specialKey = 'integration-test/file with spaces and special chars!@#.txt';
+      const specialKey =
+        'integration-test/file with spaces and special chars!@#.txt';
       const result = await repository.exists(specialKey);
       expect(result).toBe(false);
     });

@@ -24,7 +24,7 @@ export class CrawlMetadataRepository {
   constructor(
     private readonly dynamoDbClient: DynamoDBDocumentClient,
     private readonly appConfig: AppConfigService,
-  ) { }
+  ) {}
 
   async create(metadata: CrawlMetadata): Promise<void> {
     const params: PutCommandInput = {
