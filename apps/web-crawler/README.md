@@ -4,6 +4,20 @@
 
 ![Web Crawler Architecture](diagrams/web-crawler.excalidraw.png)
 
+### Key Components
+
+- **Content Discovery Queue Consumer**  
+  [`src/workflows/content-discovery/queue-consumer.ts`](src/workflows/content-discovery/queue-consumer.ts)
+
+- **Content Discovery Service**  
+  [`src/workflows/content-discovery/service.ts`](src/workflows/content-discovery/service.ts)
+
+- **Content Processor Queue Consumer**  
+  [`src/workflows/content-processor/queue-consumer.ts`](src/workflows/content-processor/queue-consumer.ts)
+
+- **Content Processor Service**  
+  [`src/workflows/content-processor/service.ts`](src/workflows/content-processor/service.ts)
+
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=flat&logo=nestjs&logoColor=white)](https://nestjs.com/)
 [![AWS S3](https://img.shields.io/badge/AWS%20S3-569A31?style=flat&logo=amazon-aws&logoColor=white)](https://aws.amazon.com/s3/)

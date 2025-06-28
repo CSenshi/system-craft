@@ -13,7 +13,7 @@ The goal of this project is to serve as an educational resource for developers p
 ## 📦 Current Implementations
 
 - [**URL Shortener**](apps/url-shortener)
-- [**Web Crawler**](apps/web-crawler) (in progress)
+- [**Web Crawler**](apps/web-crawler)
 
 ## 🛠 Planned Implementations
 
