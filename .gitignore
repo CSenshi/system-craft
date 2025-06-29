@@ -46,5 +46,6 @@ Thumbs.db
 test-output
 
 apps/*/.env
+e2e/*/.env
 .vscode
 .cursor

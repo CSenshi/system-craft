@@ -1,0 +1,113 @@
+{
+  "name": "@apps/web-crawler",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "targets": {
+      "build": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "webpack-cli build",
+          "args": [
+            "node-env=production"
+          ]
+        },
+        "configurations": {
+          "development": {
+            "args": [
+              "node-env=development"
+            ]
+          }
+        }
+      },
+      "serve": {
+        "continuous": true,
+        "executor": "@nx/js:node",
+        "defaultConfiguration": "development",
+        "dependsOn": [
+          "build"
+        ],
+        "options": {
+          "buildTarget": "@apps/web-crawler:build",
+          "runBuildTargetDependencies": false
+        },
+        "configurations": {
+          "development": {
+            "buildTarget": "@apps/web-crawler:build:development"
+          },
+          "production": {
+            "buildTarget": "@apps/web-crawler:build:production"
+          }
+        }
+      },
+      "test": {
+        "options": {
+          "passWithNoTests": true
+        }
+      },
+      "test:int": {
+        "executor": "@nx/jest:jest",
+        "options": {
+          "jestConfig": "apps/web-crawler/jest.int.config.ts",
+          "passWithNoTests": true
+        }
+      },
+      "infra:up": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "docker compose -f apps/web-crawler/docker-compose.yml up -d"
+        }
+      },
+      "infra:down": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "docker compose -f apps/web-crawler/docker-compose.yml down"
+        }
+      },
+      "sqs:clear": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "node",
+          "args": [
+            "apps/web-crawler/scripts/clear-sqs.js"
+          ],
+          "cwd": "."
+        }
+      },
+      "sqs:test-message": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "node",
+          "args": [
+            "apps/web-crawler/scripts/test-sqs-message.js"
+          ],
+          "cwd": "."
+        }
+      },
+      "sqs:list-dlq": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "node",
+          "args": [
+            "apps/web-crawler/scripts/list-dlq-messages.js"
+          ],
+          "cwd": "."
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.835.0",
+    "@aws-sdk/client-s3": "^3.832.0",
+    "@aws-sdk/client-sqs": "^3.831.0",
+    "@aws-sdk/lib-dynamodb": "^3.835.0",
+    "@nestjs/microservices": "^11.1.3",
+    "@ssut/nestjs-sqs": "^3.0.1",
+    "axios": "^1.10.0",
+    "jsdom": "^26.1.0",
+    "zod": "^3.25.67"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^21.1.7"
+  }
+}

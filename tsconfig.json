@@ -11,6 +11,12 @@
     },
     {
       "path": "./e2e/url-shortener"
+    },
+    {
+      "path": "./e2e/web-crawler"
+    },
+    {
+      "path": "./apps/web-crawler"
     }
   ]
 }
