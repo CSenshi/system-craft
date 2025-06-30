@@ -24,6 +24,12 @@ labels: bug
 1. ...
 2. ...
 
+## Expected Result
+<!-- Describe what you expected to happen. For example: "The shortened URL should redirect to the original URL." -->
+
+## Actual Result
+<!-- Describe what actually happened. Include error messages, logs, or screenshots if possible. For example: "The shortened URL returns a 404 error." -->
+
 ## Environment
 **Please run the following command and paste the output below:**
 ```bash
@@ -36,6 +42,3 @@ pnpm nx report
 (paste output here)
 ```
 </details>
-
-## Motivation
-<!-- Why is this bug important to fix? What impact does it have? --> 
