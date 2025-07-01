@@ -1,16 +1,18 @@
-import { Module, DynamicModule } from '@nestjs/common';
+import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RedisModule } from '@nestjs-modules/ioredis';
-import { RedisCounterService } from './implementations/redis-counter.service';
 import { PrismaModule } from '../prisma/prisma.module';
 import { CounterService } from './counter.service';
 import { PostgresCounterService } from './implementations/postgres-counter.service';
+import { RedisCounterService } from './implementations/redis-counter.service';
 
-type CounterModuleOptions = {
-  provider: 'redis';
-} | {
-  provider: 'pg';
-};
+type CounterModuleOptions =
+  | {
+      provider: 'redis';
+    }
+  | {
+      provider: 'pg';
+    };
 
 @Module({})
 export class CounterModule {
@@ -28,9 +30,7 @@ export class CounterModule {
   static pgCounterModule(): DynamicModule {
     return {
       module: CounterModule,
-      imports: [
-        PrismaModule,
-      ],
+      imports: [PrismaModule],
       providers: [
         {
           provide: CounterService,
@@ -58,7 +58,7 @@ export class CounterModule {
       providers: [
         {
           provide: CounterService,
-          useClass: RedisCounterService
+          useClass: RedisCounterService,
         },
       ],
       exports: [CounterService],

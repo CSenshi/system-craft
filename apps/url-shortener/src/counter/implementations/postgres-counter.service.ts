@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { CounterService } from '../counter.service';
+import { getNextShortUrlId } from '@prisma/client/sql';
 import { PrismaService } from '../../prisma/prisma.service';
-import { getNextShortUrlId } from '@prisma/client/sql'
+import { CounterService } from '../counter.service';
 
 @Injectable()
 export class PostgresCounterService extends CounterService {
@@ -10,9 +10,9 @@ export class PostgresCounterService extends CounterService {
   }
 
   async getNextCount(): Promise<number> {
-    const result = await this.prisma.$queryRawTyped(getNextShortUrlId())
+    const result = await this.prisma.$queryRawTyped(getNextShortUrlId());
     const nextSequenceNum = result[0].nextval;
 
     return Number(nextSequenceNum);
   }
-} 
+}

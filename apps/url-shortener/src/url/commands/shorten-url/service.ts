@@ -2,10 +2,10 @@ import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { BaseCommand, BaseDto } from '@libs/shared';
+import { CounterService } from '../../../counter/counter.service';
 import { IdObfuscatorService } from '../../app-services/id-obfuscator.service';
 import { NumberHasherService } from '../../app-services/number-hasher.service';
 import { UrlRepository } from '../../repositories/url.repository';
-import { CounterService } from '../../../counter/counter.service';
 
 export class CommandOutput extends BaseDto<CommandOutput> {
   readonly shortUrl: string;
