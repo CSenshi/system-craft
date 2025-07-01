@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["typedSql"]
 }
 
 datasource db {
@@ -8,7 +9,7 @@ datasource db {
 }
 
 model ShortendUrls {
-  id  BigInt    @id
+  id  BigInt @id
   url String
 
   @@map("shortend_urls")

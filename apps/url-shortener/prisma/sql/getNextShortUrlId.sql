@@ -1,0 +1,1 @@
+SELECT nextval('next_shortend_urls_id_seq');
