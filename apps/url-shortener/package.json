@@ -45,6 +45,13 @@
           "passWithNoTests": true
         }
       },
+      "test:int": {
+        "executor": "@nx/jest:jest",
+        "options": {
+          "jestConfig": "apps/url-shortener/jest.int.config.ts",
+          "passWithNoTests": true
+        }
+      },
       "infra:up": {
         "executor": "nx:run-commands",
         "options": {
