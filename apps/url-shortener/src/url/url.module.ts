@@ -8,7 +8,10 @@ import { GetRealUrl } from './queries/get-real-url';
 import { UrlRepository } from './repositories/url.repository';
 
 @Module({
-  imports: [CounterModule, ConfigModule.forRoot()],
+  imports: [
+    CounterModule.forRoot({ provider: 'pg' }),
+    ConfigModule.forRoot()
+  ],
   controllers: [ShortenUrl.HttpController, GetRealUrl.HttpController],
   providers: [
     ShortenUrl.Service,
@@ -18,4 +21,4 @@ import { UrlRepository } from './repositories/url.repository';
     NumberHasherService,
   ],
 })
-export class UrlModule {}
+export class UrlModule { }

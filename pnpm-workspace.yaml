@@ -1,4 +1,15 @@
 packages:
-  - 'apps/*'
-  - 'libs/*'
-  - 'e2e/*'
+  - apps/*
+  - libs/*
+  - e2e/*
+ignoredBuiltDependencies:
+  - '@nestjs/core'
+  - '@parcel/watcher'
+  - '@scarf/scarf'
+  - '@swc/core'
+  - nestjs-pino
+  - nx
+onlyBuiltDependencies:
+  - '@prisma/client'
+  - '@prisma/engines'
+  - prisma
