@@ -1,8 +1,8 @@
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { RedisModule } from '@nestjs-modules/ioredis';
-import { RedisCounterService } from './redis-counter.service';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Redis } from 'ioredis';
+import { RedisCounterService } from './redis-counter.service';
 
 describe('RedisCounterService (integration)', () => {
   let service: RedisCounterService;
@@ -56,7 +56,7 @@ function getRedisConnectionToken(): string {
    * As RedisModule does not export a connection token,
    * we create a custom injection token for the default connection.
    * This allows us to inject the Redis client in tests.
-   * 
+   *
    * Code is taken from:
    * https://github.com/nest-modules/ioredis/blob/fbc152514e8b90cb855c7c9f652d0460b18edf3c/lib/redis.utils.ts#L13C17-L13C40
    * function: `getRedisConnectionToken`

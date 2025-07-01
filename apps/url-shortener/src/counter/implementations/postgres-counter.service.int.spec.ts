@@ -29,4 +29,4 @@ describe('PostgresCounterService (integration)', () => {
       last = curr;
     }
   });
-}); 
+});

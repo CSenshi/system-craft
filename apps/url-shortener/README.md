@@ -103,8 +103,8 @@ curl -L http://localhost:3000/l/abc123
 # Unit tests
 pnpm nx test @apps/url-shortener
 
-# Test coverage
-pnpm nx test @apps/url-shortener --coverage
+# Integration tests
+pnpm nx test:int @apps/url-shortener
 
 # E2E tests
 pnpm nx e2e @e2e/url-shortener
