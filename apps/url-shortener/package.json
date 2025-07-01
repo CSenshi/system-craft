@@ -45,6 +45,13 @@
           "passWithNoTests": true
         }
       },
+      "test:int": {
+        "executor": "@nx/jest:jest",
+        "options": {
+          "jestConfig": "apps/url-shortener/jest.int.config.ts",
+          "passWithNoTests": true
+        }
+      },
       "infra:up": {
         "executor": "nx:run-commands",
         "options": {
@@ -70,7 +77,14 @@
         "executor": "@nx-tools/nx-prisma:format"
       },
       "prisma-generate": {
-        "executor": "@nx-tools/nx-prisma:generate"
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "prisma generate",
+          "args": [
+            "--sql"
+          ],
+          "cwd": "apps/url-shortener"
+        }
       },
       "prisma-migrate": {
         "executor": "@nx-tools/nx-prisma:migrate"

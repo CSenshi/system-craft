@@ -2,7 +2,7 @@ import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { BaseCommand, BaseDto } from '@libs/shared';
-import { RedisCounterService } from '../../../counter/redis-counter.service';
+import { CounterService } from '../../../counter/counter.service';
 import { IdObfuscatorService } from '../../app-services/id-obfuscator.service';
 import { NumberHasherService } from '../../app-services/number-hasher.service';
 import { UrlRepository } from '../../repositories/url.repository';
@@ -20,7 +20,7 @@ export class Service implements ICommandHandler<Command, CommandOutput> {
   private readonly logger = new Logger('ShortenUrl.Service');
 
   constructor(
-    private readonly counterService: RedisCounterService,
+    private readonly counterService: CounterService,
     private readonly idObfuscatorService: IdObfuscatorService,
     private readonly numberHasherService: NumberHasherService,
     private readonly urlRepository: UrlRepository,
