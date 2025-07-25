@@ -1,36 +1,32 @@
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { RedisModule } from '@nestjs-modules/ioredis';
-import { Redis } from 'ioredis';
+import { RedisClientModule } from '@nestjs-redis/client';
 import { RedisCounterService } from './redis-counter.service';
 
 describe('RedisCounterService (integration)', () => {
   let service: RedisCounterService;
-  let redis: Redis;
+  let module: TestingModule;
 
   beforeAll(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       imports: [
         ConfigModule.forRoot({ isGlobal: true }),
-        RedisModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (configService: ConfigService) => ({
-            type: 'single',
-            host: configService.getOrThrow<string>('REDIS_HOST'),
-          }),
+        RedisClientModule.forRoot({
+          type: 'client',
+          options: {
+            url: process.env.REDIS_URL,
+          },
         }),
       ],
       providers: [RedisCounterService],
     }).compile();
     service = module.get(RedisCounterService);
 
-    redis = module.get<Redis>(getRedisConnectionToken());
+    await module.init();
   });
 
   afterAll(async () => {
-    // Note: Redis needs to be closed after tests because otherwise jest will hang
-    await redis.quit();
+    await module.close();
   });
 
   it('should increment and return the counter', async () => {
@@ -50,19 +46,3 @@ describe('RedisCounterService (integration)', () => {
     }
   });
 });
-
-function getRedisConnectionToken(): string {
-  /**
-   * As RedisModule does not export a connection token,
-   * we create a custom injection token for the default connection.
-   * This allows us to inject the Redis client in tests.
-   *
-   * Code is taken from:
-   * https://github.com/nest-modules/ioredis/blob/fbc152514e8b90cb855c7c9f652d0460b18edf3c/lib/redis.utils.ts#L13C17-L13C40
-   * function: `getRedisConnectionToken`
-   */
-  const REDIS_MODULE_CONNECTION = 'default';
-  const REDIS_MODULE_CONNECTION_TOKEN = 'IORedisModuleConnectionToken';
-  const injectionToken = `${REDIS_MODULE_CONNECTION}_${REDIS_MODULE_CONNECTION_TOKEN}`;
-  return injectionToken;
-}
