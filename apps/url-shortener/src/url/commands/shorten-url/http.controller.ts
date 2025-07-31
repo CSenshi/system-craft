@@ -1,6 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { ApiTags } from '@nestjs/swagger';
+import { Throttle, seconds } from '@nestjs/throttler';
 import { ShortenUrl } from '.';
 
 @Controller('url')
@@ -9,6 +10,7 @@ export class HttpController {
   constructor(private readonly commandBus: CommandBus) {}
 
   @Post()
+  @Throttle({ default: { limit: 100, ttl: seconds(1) } })
   async shortenUrl(
     @Body() body: ShortenUrl.HttpRequestBodyDto,
   ): Promise<ShortenUrl.HttpResponseDto> {

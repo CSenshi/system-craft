@@ -1,18 +1,12 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { RedisClientModule } from '@nestjs-redis/client';
+import { RedisModule } from '@nestjs-redis/client';
 import { PrismaModule } from '../prisma/prisma.module';
 import { CounterService } from './counter.service';
 import { PostgresCounterService } from './implementations/postgres-counter.service';
 import { RedisCounterService } from './implementations/redis-counter.service';
 
-type CounterModuleOptions =
-  | {
-      provider: 'redis';
-    }
-  | {
-      provider: 'pg';
-    };
+type CounterModuleOptions = { provider: 'redis' } | { provider: 'pg' };
 
 @Module({})
 export class CounterModule {
@@ -45,7 +39,7 @@ export class CounterModule {
     return {
       module: CounterModule,
       imports: [
-        RedisClientModule.forRootAsync({
+        RedisModule.forRootAsync({
           imports: [ConfigModule],
           inject: [ConfigService],
           useFactory: (configService: ConfigService) => ({

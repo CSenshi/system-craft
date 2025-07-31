@@ -1,8 +1,9 @@
 services:
   redis:
-    image: redis:8-alpine
+    image: redis/redis-stack:latest
     ports:
       - '6379:6379'
+      - '8001:8001'
 
   db:
     image: postgres:17-alpine
