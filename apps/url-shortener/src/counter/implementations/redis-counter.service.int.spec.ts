@@ -1,6 +1,6 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { RedisClientModule } from '@nestjs-redis/client';
+import { RedisModule } from '@nestjs-redis/kit';
 import { RedisCounterService } from './redis-counter.service';
 
 describe('RedisCounterService (integration)', () => {
@@ -11,7 +11,7 @@ describe('RedisCounterService (integration)', () => {
     module = await Test.createTestingModule({
       imports: [
         ConfigModule.forRoot({ isGlobal: true }),
-        RedisClientModule.forRootAsync({
+        RedisModule.forRootAsync({
           imports: [ConfigModule],
           inject: [ConfigService],
           useFactory: (configService: ConfigService) => ({

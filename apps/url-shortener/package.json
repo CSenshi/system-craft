@@ -116,6 +116,8 @@
     }
   },
   "dependencies": {
+    "@nestjs-redis/kit": "0.10.0",
+    "redis": "^5.6.1",
     "@nestjs/throttler": "^6.4.0"
   }
 }

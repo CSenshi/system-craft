@@ -1,6 +1,6 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { RedisModule } from '@nestjs-redis/client';
+import { RedisModule } from '@nestjs-redis/kit';
 import { PrismaModule } from '../prisma/prisma.module';
 import { CounterService } from './counter.service';
 import { PostgresCounterService } from './implementations/postgres-counter.service';

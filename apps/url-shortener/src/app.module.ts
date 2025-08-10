@@ -1,9 +1,13 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ThrottlerGuard, ThrottlerModule, seconds } from '@nestjs/throttler';
-import { RedisThrottlerStorage } from '@nestjs-redis/throttler-storage';
+import {
+  Redis,
+  RedisModule,
+  RedisThrottlerStorage,
+  RedisToken,
+} from '@nestjs-redis/kit';
 import { LoggerModule } from 'nestjs-pino';
 import { PrismaModule } from './prisma/prisma.module';
 import { UnhandledExceptionsListener } from './unhandled-exceptions.listener';
@@ -25,14 +29,13 @@ import { UrlModule } from './url/url.module';
       },
     }),
     ThrottlerModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        // Throttler are updated per controller see http.controllers
+      imports: [
+        RedisModule.forRoot({ options: { url: process.env['REDIS_HOST'] } }),
+      ],
+      inject: [RedisToken()],
+      useFactory: (redis: Redis) => ({
         throttlers: [{ limit: 1, ttl: seconds(10) }],
-        storage: RedisThrottlerStorage.fromClientOptions({
-          url: configService.getOrThrow<string>('REDIS_HOST'),
-        }),
+        storage: new RedisThrottlerStorage(redis),
       }),
     }),
     UrlModule,

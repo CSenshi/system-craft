@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRedis, type Redis } from '@nestjs-redis/client';
+import { InjectRedis, type Redis } from '@nestjs-redis/kit';
 import { CounterService } from '../counter.service';
 
 @Injectable()
