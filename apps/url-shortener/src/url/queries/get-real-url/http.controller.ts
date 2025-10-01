@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseFilters } from '@nestjs/common';
+import { Controller, Get, Param, Res, UseFilters } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { ApiTags } from '@nestjs/swagger';
 import { Throttle, seconds } from '@nestjs/throttler';
@@ -15,15 +15,14 @@ export class HttpController {
   @Throttle({ default: { limit: 2_000, ttl: seconds(10) } })
   async redirectToUrl(
     @Param() params: GetRealUrl.HttpRequestParamDto,
-  ): Promise<GetRealUrl.HttpResponseDto> {
+    @Res({ passthrough: true }) res: any,
+  ): Promise<void> {
     const result = await this.queryBus.execute(
       new GetRealUrl.Query({
         shortUrlId: params.shortUrlId,
       }),
     );
 
-    return new GetRealUrl.HttpResponseDto({
-      url: result.url,
-    });
+    res.redirect(result.url, 302);
   }
 }
