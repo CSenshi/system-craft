@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { getNextShortUrlId } from '@prisma/client/sql';
-import { PrismaService } from '../../prisma/prisma.service';
-import { CounterService } from '../counter.service';
+import { PrismaService } from '../../../prisma/prisma.service';
+import { CounterService } from '../../counter.service';
 
 @Injectable()
 export class PostgresCounterService extends CounterService {

@@ -1,0 +1,2 @@
+export const COUNTER_BATCH_SIZE = Symbol('COUNTER_BATCH_SIZE');
+export const DEFAULT_COUNTER_BATCH_SIZE = 1000;
