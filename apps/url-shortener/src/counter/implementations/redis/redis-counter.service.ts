@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRedis, type Redis } from '@nestjs-redis/kit';
-import { CounterService } from '../counter.service';
+import { CounterService } from '../../counter.service';
 
 @Injectable()
 export class RedisCounterService extends CounterService {
