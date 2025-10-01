@@ -18,9 +18,12 @@ describe('URL Shortener API', () => {
   });
 
   it('should retrieve the original URL using the shortUrlId', async () => {
-    const res = await api.get(`${shortUrlId}`);
-    expect(res.status).toBe(200);
-    expect(res.data.url).toBe(validUrl);
+    const res = await api.get(`${shortUrlId}`, {
+      maxRedirects: 0,
+      validateStatus: () => true,
+    });
+    expect(res.status).toBe(302);
+    expect(res.headers.location).toBe(validUrl);
   });
 
   it('should reject invalid URLs', async () => {
