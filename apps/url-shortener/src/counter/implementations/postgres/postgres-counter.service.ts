@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { getNextShortUrlId } from '@prisma/client/sql';
+import { getNextShortUrlId } from '../../../prisma/generated/sql';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { CounterService } from '../../counter.service';
 
