@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '../../../prisma/generated/client';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { COUNTER_BATCH_SIZE } from '../../counter.constants';
 import { BatchCounterService } from '../base/batch-counter.service';

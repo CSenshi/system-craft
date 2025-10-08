@@ -1,6 +1,8 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["typedSql"]
+  provider        = "prisma-client"
+  output          = "../src/prisma/generated"
+  engineType      = "client"
+  moduleFormat    = "cjs"
 }
 
 datasource db {
