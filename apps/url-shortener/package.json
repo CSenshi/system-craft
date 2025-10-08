@@ -77,14 +77,7 @@
         "executor": "@nx-tools/nx-prisma:format"
       },
       "prisma-generate": {
-        "executor": "nx:run-commands",
-        "options": {
-          "command": "prisma generate",
-          "args": [
-            "--sql"
-          ],
-          "cwd": "apps/url-shortener"
-        }
+        "executor": "@nx-tools/nx-prisma:generate"
       },
       "prisma-migrate": {
         "executor": "@nx-tools/nx-prisma:migrate"

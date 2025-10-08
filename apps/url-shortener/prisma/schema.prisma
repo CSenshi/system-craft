@@ -3,7 +3,6 @@ generator client {
   output          = "../src/prisma/generated"
   engineType      = "client"
   moduleFormat    = "cjs"
-  previewFeatures = ["typedSql"]
 }
 
 datasource db {
