@@ -1,0 +1,66 @@
+{
+  "name": "@system-craft/url-shortener",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "targets": {
+      "build": {
+        "executor": "@nx/esbuild:esbuild",
+        "outputs": [
+          "{options.outputPath}"
+        ],
+        "defaultConfiguration": "production",
+        "options": {
+          "platform": "node",
+          "outputPath": "perf/url-shortener/dist",
+          "format": [
+            "cjs"
+          ],
+          "bundle": false,
+          "main": "perf/url-shortener/src/main.ts",
+          "tsConfig": "perf/url-shortener/tsconfig.app.json",
+          "assets": [
+            "perf/url-shortener/src/assets"
+          ],
+          "esbuildOptions": {
+            "sourcemap": true,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        },
+        "configurations": {
+          "development": {},
+          "production": {
+            "esbuildOptions": {
+              "sourcemap": false,
+              "outExtension": {
+                ".js": ".js"
+              }
+            }
+          }
+        }
+      },
+      "serve": {
+        "continuous": true,
+        "executor": "@nx/js:node",
+        "defaultConfiguration": "development",
+        "dependsOn": [
+          "build"
+        ],
+        "options": {
+          "buildTarget": "@system-craft/url-shortener:build",
+          "runBuildTargetDependencies": false
+        },
+        "configurations": {
+          "development": {
+            "buildTarget": "@system-craft/url-shortener:build:development"
+          },
+          "production": {
+            "buildTarget": "@system-craft/url-shortener:build:production"
+          }
+        }
+      }
+    }
+  }
+}
