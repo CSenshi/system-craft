@@ -50,3 +50,4 @@ e2e/*/.env
 .vscode
 .cursor
 apps/url-shortener/src/prisma/generated/*
+k6
