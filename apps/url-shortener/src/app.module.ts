@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
 import { CqrsModule } from '@nestjs/cqrs';
-import { ThrottlerGuard, ThrottlerModule, seconds } from '@nestjs/throttler';
+import { ThrottlerModule, seconds } from '@nestjs/throttler';
 import {
   Redis,
   RedisModule,
@@ -21,7 +20,7 @@ import { UrlModule } from './url/url.module';
       pinoHttp: {
         base: {},
         autoLogging: false,
-        level: 'debug',
+        level: 'error',
         transport:
           process.env['NODE_ENV'] !== 'production'
             ? { target: 'pino-pretty' }
@@ -42,10 +41,10 @@ import { UrlModule } from './url/url.module';
   ],
   providers: [
     UnhandledExceptionsListener,
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: ThrottlerGuard,
+    // },
   ],
 })
 export class AppModule {}
