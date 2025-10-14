@@ -2,6 +2,36 @@
 
 > **Production-ready URL shortening service similar to Bitly or TinyURL**
 
+![Url Shortener Architecture](diagrams/url-shortener.excalidraw.png)
+
+## Key Components
+
+### Shortening
+
+- **URL Shortening Service**  
+  [`src/url/commands/shorten-url/service.ts`](src/url/commands/shorten-url/service.ts)
+
+- **Counter Service(s)**
+
+  - [`redis-counter.service.ts`](src/counter/implementations/redis/redis-counter.service.ts)
+  - [`redis-batch-counter.service.ts`](src/counter/implementations/redis/redis-batch-counter.service.ts)
+  - [`postgres-counter.service.ts`](src/counter/implementations/postgres/postgres-counter.service.ts)
+  - [`postgres-batch-counter.service.ts`](src/counter/implementations/postgres/postgres-batch-counter.service.ts)
+
+- **ID Obfuscation Service**  
+  [`src/url/app-services/id-obfuscator.service.ts`](src/url/app-services/id-obfuscator.service.ts)
+
+- **Number Hashing Service**  
+  [`src/url/app-services/number-hasher.service.ts`](src/url/app-services/number-hasher.service.ts)
+
+- **URL Repository**  
+  [`src/url/repositories/url.repository.ts`](src/url/repositories/url.repository.ts)
+
+### Retrieval
+
+- **URL Retrieval Service**  
+  [`src/url/queries/get-real-url/service.ts`](src/url/queries/get-real-url/service.ts)
+
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=flat&logo=nestjs&logoColor=white)](https://nestjs.com/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
