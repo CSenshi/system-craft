@@ -55,13 +55,15 @@
       "infra:up": {
         "executor": "nx:run-commands",
         "options": {
-          "command": "docker compose -f apps/url-shortener/docker-compose.yml up -d"
+          "command": "docker compose -f docker-compose.yml up -d",
+          "cwd": "apps/url-shortener"
         }
       },
       "infra:down": {
         "executor": "nx:run-commands",
         "options": {
-          "command": "docker compose -f apps/url-shortener/docker-compose.yml down"
+          "command": "docker compose -f docker-compose.yml down",
+          "cwd": "apps/url-shortener"
         }
       },
       "docker-build": {
@@ -109,7 +111,7 @@
     }
   },
   "dependencies": {
-    "@nestjs-redis/kit": "0.10.0",
+    "@nestjs-redis/kit": "0.10.1",
     "redis": "^5.6.1",
     "@nestjs/throttler": "^6.4.0"
   }

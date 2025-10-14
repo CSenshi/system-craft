@@ -1,27 +1,30 @@
 import { Module } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
 import { CqrsModule } from '@nestjs/cqrs';
-import { ThrottlerGuard, ThrottlerModule, seconds } from '@nestjs/throttler';
+import { ThrottlerModule, seconds } from '@nestjs/throttler';
 import {
-  Redis,
   RedisModule,
   RedisThrottlerStorage,
   RedisToken,
 } from '@nestjs-redis/kit';
 import { LoggerModule } from 'nestjs-pino';
+import { RedisClientType } from 'redis';
 import { PrismaModule } from './prisma/prisma.module';
 import { UnhandledExceptionsListener } from './unhandled-exceptions.listener';
 import { UrlModule } from './url/url.module';
 
 @Module({
   imports: [
+    RedisModule.forRoot({
+      options: { url: process.env['REDIS_HOST'] },
+      isGlobal: true,
+    }),
     PrismaModule,
     CqrsModule.forRoot(),
     LoggerModule.forRoot({
       pinoHttp: {
         base: {},
         autoLogging: false,
-        level: 'debug',
+        level: 'error',
         transport:
           process.env['NODE_ENV'] !== 'production'
             ? { target: 'pino-pretty' }
@@ -29,23 +32,21 @@ import { UrlModule } from './url/url.module';
       },
     }),
     ThrottlerModule.forRootAsync({
-      imports: [
-        RedisModule.forRoot({ options: { url: process.env['REDIS_HOST'] } }),
-      ],
       inject: [RedisToken()],
-      useFactory: (redis: Redis) => ({
+      useFactory: (redis: any) => ({
         throttlers: [{ limit: 1, ttl: seconds(10) }],
         storage: new RedisThrottlerStorage(redis),
       }),
     }),
     UrlModule,
   ],
+  controllers: [],
   providers: [
     UnhandledExceptionsListener,
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: ThrottlerGuard,
+    // },
   ],
 })
 export class AppModule {}
