@@ -47,6 +47,7 @@ test-output
 
 apps/*/.env
 e2e/*/.env
+perf/*/.env
 .vscode
 .cursor
 apps/url-shortener/src/prisma/generated/*

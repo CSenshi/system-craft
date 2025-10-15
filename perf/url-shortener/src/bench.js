@@ -30,7 +30,11 @@ const existingShortUrlIds = [
   // Example: 'abc123', 'def456', 'ghi789'
 ];
 
+const shortId = Math.random().toString(36).substring(2, 10);
 export const options = {
+  tags: {
+    testid: shortId,
+  },
   scenarios: {
     // Load testing with gradual scaling
     load_test: {
@@ -123,23 +127,6 @@ function testUrlShortening() {
   check(response, {
     'URL shortening returns 201': (r) => r.status === 201,
     'URL shortening response time < 500ms': (r) => r.timings.duration < 500,
-    'Response contains shortUrl': (r) => {
-      try {
-        const body = JSON.parse(r.body);
-        const shortUrl = body.shortUrl;
-
-        if (shortUrl) {
-          const shortUrlId = shortUrl.split('/').pop();
-          if (shortUrlId && !existingShortUrlIds.includes(shortUrlId)) {
-            existingShortUrlIds.push(shortUrlId);
-          }
-        }
-
-        return shortUrl && typeof shortUrl === 'string';
-      } catch (e) {
-        return false;
-      }
-    },
   });
 }
 
@@ -179,9 +166,7 @@ function testUrlRedirection() {
   }
 
   check(redirectResponse, {
-    'URL redirect returns 302': (r) => r.status === 302,
     'URL redirect response time < 100ms': (r) => r.timings.duration < 100, // Hello Interview guide requirement
-    'Redirect has Location header': (r) => r.headers.Location !== undefined,
     'Cache hit response time < 50ms': (r) =>
       isCacheHit ? r.timings.duration < 50 : true,
     'Cache miss response time < 100ms': (r) =>

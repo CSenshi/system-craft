@@ -4,16 +4,30 @@
   "private": true,
   "nx": {
     "targets": {
+      "infra:up": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "docker compose -f docker-compose.yml up -d",
+          "cwd": "perf/url-shortener"
+        }
+      },
+      "infra:down": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "docker compose -f docker-compose.yml down",
+          "cwd": "perf/url-shortener"
+        }
+      },
       "setup": {
         "executor": "nx:run-commands",
         "options": {
-          "command": "docker run --rm -it -e GOOS=darwin -u \"$(id -u):$(id -g)\" -v \"${PWD}:/xk6\" grafana/xk6 build v0.45.1 --with github.com/grafana/xk6-dashboard@latest"
+          "command": "docker run --rm -it -e GOOS=darwin -u \"$(id -u):$(id -g)\" -v \"${PWD}:/xk6\" grafana/xk6 build v0.45.1 --with github.com/grafana/xk6-dashboard@latest --with github.com/grafana/xk6-output-influxdb"
         }
       },
       "bench": {
         "executor": "nx:run-commands",
         "options": {
-          "command": "./k6 run ./perf/url-shortener/src/bench.js --out dashboard"
+          "command": "./k6 run --out experimental-prometheus-rw ./perf/url-shortener/src/bench.js"
         }
       }
     }

@@ -1,0 +1,9 @@
+global:
+  scrape_interval: 5s # How frequently to scrape targets by default
+  evaluation_interval: 5s # How frequently to evaluate rules
+scrape_configs:
+  - job_name: 'k6' # Configuration to scrape k6 metrics
+    static_configs:
+      - targets: ['k6:6565'] # k6's metrics endpoint (using Docker service name)
+    scrape_interval: 1s # More frequent scraping for k6 during tests
+    metrics_path: /metrics # Path where metrics are exposed
