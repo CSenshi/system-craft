@@ -7,7 +7,6 @@ import {
   RedisToken,
 } from '@nestjs-redis/kit';
 import { LoggerModule } from 'nestjs-pino';
-import { RedisClientType } from 'redis';
 import { PrismaModule } from './prisma/prisma.module';
 import { UnhandledExceptionsListener } from './unhandled-exceptions.listener';
 import { UrlModule } from './url/url.module';
