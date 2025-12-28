@@ -28,7 +28,10 @@
         "executor": "nx:run-commands",
         "options": {
           "command": "./k6 run --out experimental-prometheus-rw ./perf/url-shortener/src/bench.js"
-        }
+        },
+        "dependsOn": [
+          "@apps/url-shortener:serve"
+        ]
       }
     }
   }

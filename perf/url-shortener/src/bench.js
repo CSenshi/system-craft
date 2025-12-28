@@ -41,6 +41,7 @@ export const options = {
       executor: 'ramping-vus',
       startVUs: 0,
       stages: [
+        { duration: '3s', target: 0 },
         // 50 users (~100 req/s)
         { duration: '30s', target: 50 },
         // 100 users (~200 req/s)
