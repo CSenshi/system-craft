@@ -12,7 +12,6 @@
   [`src/url/commands/shorten-url/service.ts`](src/url/commands/shorten-url/service.ts)
 
 - **Counter Service(s)**
-
   - [`redis-counter.service.ts`](src/counter/implementations/redis/redis-counter.service.ts)
   - [`redis-batch-counter.service.ts`](src/counter/implementations/redis/redis-batch-counter.service.ts)
   - [`postgres-counter.service.ts`](src/counter/implementations/postgres/postgres-counter.service.ts)

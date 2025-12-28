@@ -166,7 +166,7 @@ describe('Web Crawler E2E - SQS Message Processing', () => {
         const htmlContent = await htmlResponse.Body?.transformToString();
         const htmlValid = Boolean(
           htmlContent?.includes('<html>') &&
-            htmlResponse.ContentType === 'text/html',
+          htmlResponse.ContentType === 'text/html',
         );
 
         // Verify XML content
@@ -180,7 +180,7 @@ describe('Web Crawler E2E - SQS Message Processing', () => {
         const xmlContent = await xmlResponse.Body?.transformToString();
         const xmlValid = Boolean(
           xmlContent?.includes('<?xml') &&
-            xmlResponse.ContentType === 'application/xml',
+          xmlResponse.ContentType === 'application/xml',
         );
 
         return htmlValid && xmlValid;

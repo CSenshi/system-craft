@@ -73,7 +73,11 @@
         "command": "docker build -f apps/url-shortener/Dockerfile . -t system-craft-url-shortener"
       },
       "prisma-deploy": {
-        "executor": "@nx-tools/nx-prisma:deploy"
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "pnpm prisma migrate deploy",
+          "cwd": "apps/url-shortener"
+        }
       },
       "prisma-format": {
         "executor": "@nx-tools/nx-prisma:format"
@@ -111,8 +115,8 @@
     }
   },
   "dependencies": {
-    "@nestjs-redis/kit": "0.10.1",
-    "redis": "^5.6.1",
+    "@nestjs-redis/kit": "0.13.2",
+    "redis": "^5.10.0",
     "@nestjs/throttler": "^6.4.0"
   }
 }
