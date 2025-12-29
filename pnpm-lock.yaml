@@ -198,6 +198,19 @@ importers:
         specifier: ^6.0.1
         version: 6.0.1(webpack@5.104.1)
 
+  apps/rate-limiter:
+    dependencies:
+      '@nestjs-redis/kit':
+        specifier: 0.13.2
+        version: 0.13.2(@nestjs/common@11.1.10(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.10)(@nestjs/websockets@11.1.6)(redis@5.10.0)(rxjs@7.8.2)(socket.io-adapter@2.5.6)
+      redis:
+        specifier: ^5.10.0
+        version: 5.10.0
+    devDependencies:
+      '@nestjs/testing':
+        specifier: ^11.0.0
+        version: 11.1.10(@nestjs/common@11.1.10(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.10)(@nestjs/microservices@11.1.10)(@nestjs/platform-express@11.1.10)
+
   apps/url-shortener:
     dependencies:
       '@nestjs-redis/kit':
@@ -243,6 +256,8 @@ importers:
       '@types/jsdom':
         specifier: ^21.1.7
         version: 21.1.7
+
+  e2e/rate-limiter: {}
 
   e2e/url-shortener:
     dependencies:
