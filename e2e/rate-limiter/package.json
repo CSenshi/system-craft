@@ -1,0 +1,26 @@
+{
+  "name": "@apps/rate-limiter-e2e",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "implicitDependencies": [
+      "@apps/rate-limiter"
+    ],
+    "targets": {
+      "e2e": {
+        "executor": "@nx/jest:jest",
+        "outputs": [
+          "{projectRoot}/test-output/jest/coverage"
+        ],
+        "options": {
+          "jestConfig": "e2e/rate-limiter/jest.config.cts",
+          "passWithNoTests": true
+        },
+        "dependsOn": [
+          "@apps/rate-limiter:build",
+          "@apps/rate-limiter:serve"
+        ]
+      }
+    }
+  }
+}

@@ -17,6 +17,12 @@
     },
     {
       "path": "./apps/web-crawler"
+    },
+    {
+      "path": "./apps/rate-limiter"
+    },
+    {
+      "path": "./e2e/rate-limiter"
     }
   ]
 }
