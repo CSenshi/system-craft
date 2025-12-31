@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { RedisModule } from '@nestjs-redis/kit';
 import { FixedWindowAlgorithm } from './algorithms/fixed-window';
+import { SlidingWindowLogAlgorithm } from './algorithms/sliding-window-log';
 
 @Module({
   imports: [
@@ -9,6 +10,7 @@ import { FixedWindowAlgorithm } from './algorithms/fixed-window';
       isGlobal: true,
     }),
   ],
-  providers: [FixedWindowAlgorithm],
+  providers: [FixedWindowAlgorithm, SlidingWindowLogAlgorithm],
+  exports: [FixedWindowAlgorithm, SlidingWindowLogAlgorithm],
 })
 export class RateLimiterModule {}
