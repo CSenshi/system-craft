@@ -8,7 +8,7 @@ local limit = tonumber(ARGV[1])
 local windowSeconds = tonumber(ARGV[2])
 
 -- Calculate window start
-local now = tonumber(redis.call('TIME')[1])
+local now = redis.call('TIME')[1]
 local windowStart = math.floor(now / windowSeconds) * windowSeconds
 
 -- Build Redis key

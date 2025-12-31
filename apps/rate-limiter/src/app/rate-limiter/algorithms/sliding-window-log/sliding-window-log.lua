@@ -20,8 +20,7 @@ local allowed = currentCount < limit
 if allowed then
     -- Generate unique field key using precise timestamp
     local time = redis.call('TIME')
-    local nowPrecise = tonumber(time[1]) + (tonumber(time[2]) / 1000000)
-    local fieldKey = tostring(nowPrecise)
+    local fieldKey = time[1] + (time[2] / 1000000)
 
     -- Add request to hash (value is empty string, only the field key matters)
     redis.call('HSET', key, fieldKey, '')
