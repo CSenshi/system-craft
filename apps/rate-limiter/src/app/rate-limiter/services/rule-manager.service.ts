@@ -1,4 +1,9 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  OnModuleInit,
+} from '@nestjs/common';
 import { RateLimitRule } from '../rate-limiter.types';
 
 /**
@@ -32,7 +37,12 @@ export class RuleManagerService implements OnModuleInit {
     this.logger.log(`Initialized with ${this.rules.size} rules`);
   }
 
-  getRule(ruleId: string): RateLimitRule | undefined {
-    return this.rules.get(ruleId);
+  getRule(ruleId: string): RateLimitRule {
+    const rule = this.rules.get(ruleId);
+    if (!rule) {
+      throw new NotFoundException(`Rate limit rule not found: ${ruleId}`);
+    }
+
+    return rule;
   }
 }
