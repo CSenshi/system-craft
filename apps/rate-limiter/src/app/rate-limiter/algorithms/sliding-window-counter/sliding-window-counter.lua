@@ -1,7 +1,7 @@
 -- Sliding Window Counter (Cloudflare-style)
 -- Uses 2 periods: current and previous, with weighted counting
 -- KEYS[1] = identifier, ARGV[1] = limit, ARGV[2] = windowSeconds
--- Returns: {allowed}
+-- Returns: {allowed, remaining, resetTime}
 local identifier = KEYS[1]
 local limit = tonumber(ARGV[1])
 local windowSeconds = tonumber(ARGV[2])
@@ -27,6 +27,11 @@ local allowed = (weightedCount + 1) <= limit
 if allowed then
     redis.call('HINCRBY', key, currentPeriod, 1)
     redis.call('HEXPIRE', key, windowSeconds, 'FIELDS', 1, currentPeriod)
+    weightedCount = weightedCount + 1
 end
 
-return {allowed}
+-- Calculate return values
+local remaining = math.max(0, limit - weightedCount)
+local resetTime = ((currentPeriod + 1) * windowSeconds) * 1000
+
+return {allowed , remaining, resetTime}

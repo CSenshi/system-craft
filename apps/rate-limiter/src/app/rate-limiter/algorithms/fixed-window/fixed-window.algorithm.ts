@@ -4,9 +4,10 @@ import { readFile } from 'fs/promises';
 import { join } from 'path';
 import type { RedisClientType } from 'redis';
 import { RateLimitConfig, RateLimitResult } from '../../rate-limiter.types';
+import { IRateLimitAlgorithm } from '../base';
 
 @Injectable()
-export class FixedWindowAlgorithm implements OnModuleInit {
+export class FixedWindowAlgorithm implements OnModuleInit, IRateLimitAlgorithm {
   private scriptSha: string;
 
   constructor(@InjectRedis() private readonly redis: RedisClientType) {}

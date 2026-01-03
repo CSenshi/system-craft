@@ -4,9 +4,12 @@ import { readFile } from 'fs/promises';
 import { join } from 'path';
 import type { RedisClientType } from 'redis';
 import { RateLimitConfig, RateLimitResult } from '../../rate-limiter.types';
+import { IRateLimitAlgorithm } from '../base';
 
 @Injectable()
-export class SlidingWindowCounterAlgorithm implements OnModuleInit {
+export class SlidingWindowCounterAlgorithm
+  implements OnModuleInit, IRateLimitAlgorithm
+{
   private scriptSha: string;
 
   constructor(@InjectRedis() private readonly redis: RedisClientType) {}
@@ -24,15 +27,15 @@ export class SlidingWindowCounterAlgorithm implements OnModuleInit {
     const result = (await this.redis.evalSha(this.scriptSha, {
       keys: [identifier],
       arguments: [config.limit.toString(), config.windowSeconds.toString()],
-    })) as [number];
+    })) as [number, number, number];
 
-    const [allowedNum] = result;
+    const [allowedNum, remaining, resetTime] = result;
 
     return {
       allowed: allowedNum === 1,
       limit: config.limit,
-      remaining: 0,
-      resetTime: 0,
+      remaining,
+      resetTime,
     };
   }
 }

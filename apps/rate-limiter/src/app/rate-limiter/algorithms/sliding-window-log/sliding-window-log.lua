@@ -29,9 +29,10 @@ if allowed then
     redis.call('HEXPIRE', key, windowSeconds, 'FIELDS', 1, fieldKey)
 end
 
--- Calculate remaining requests
+-- Calculate return values
 local finalCount = allowed and (currentCount + 1) or currentCount
 local remaining = math.max(0, limit - finalCount)
+local resetTime = (now + windowSeconds) * 1000
 
 -- Return all values as a table
-return {allowed, remaining}
+return {allowed, remaining, resetTime}
