@@ -7,16 +7,16 @@
 ### Algorithms
 
 - **Fixed Window Algorithm**  
-  [`src/app/rate-limiter/algorithms/fixed-window`](src/app/rate-limiter/algorithms/fixed-window/fixed-window.script.ts)
+  [`src/rate-limiter/algorithms/fixed-window`](src/rate-limiter/algorithms/fixed-window/fixed-window.script.ts)
 
 - **Sliding Window Log Algorithm**  
-  [`src/app/rate-limiter/algorithms/sliding-window-log`](src/app/rate-limiter/algorithms/sliding-window-log/sliding-window-log.script.ts)
+  [`src/rate-limiter/algorithms/sliding-window-log`](src/rate-limiter/algorithms/sliding-window-log/sliding-window-log.script.ts)
 
 - **Sliding Window Counter Algorithm**  
-  [`src/app/rate-limiter/algorithms/sliding-window-counter`](src/app/rate-limiter/algorithms/sliding-window-counter/sliding-window-counter.script.ts)
+  [`src/rate-limiter/algorithms/sliding-window-counter`](src/rate-limiter/algorithms/sliding-window-counter/sliding-window-counter.script.ts)
 
 - **Token Bucket Algorithm**  
-  [`src/app/rate-limiter/algorithms/token-bucket`](src/app/rate-limiter/algorithms/token-bucket/token-bucket.script.ts)
+  [`src/rate-limiter/algorithms/token-bucket`](src/rate-limiter/algorithms/token-bucket/token-bucket.script.ts)
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=flat&logo=nestjs&logoColor=white)](https://nestjs.com/)
