@@ -41,14 +41,15 @@ export class RateLimitGuard implements CanActivate {
 
   /**
    * Set rate limit headers on the HTTP response.
+   * According to RFC 6585, X-RateLimit-Reset should be a Unix timestamp (seconds since epoch).
    */
   private setRateLimitHeaders(
     context: ExecutionContext,
     { limit, remaining, resetTime }: RateLimitResult,
   ): void {
     const response = context.switchToHttp().getResponse();
-    response.setHeader('X-RateLimit-Limit', limit.toString());
-    response.setHeader('X-RateLimit-Remaining', remaining.toString());
-    response.setHeader('X-RateLimit-Reset', new Date(resetTime).toString());
+    response.setHeader('X-RateLimit-Limit', limit);
+    response.setHeader('X-RateLimit-Remaining', remaining);
+    response.setHeader('X-RateLimit-Reset', Math.floor(resetTime / 1000));
   }
 }
