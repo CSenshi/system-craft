@@ -1,14 +1,14 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { RedisModule, RedisToken } from '@nestjs-redis/kit';
-import type { RedisClientType } from 'redis';
+import type { RedisClusterType } from 'redis';
 import { RateLimitConfig } from '../../rate-limiter.types';
 import { SlidingWindowCounterAlgorithm } from './sliding-window-counter.algorithm';
 
 describe('SlidingWindowCounterAlgorithm (integration)', () => {
   let service: SlidingWindowCounterAlgorithm;
   let module: TestingModule;
-  let redis: RedisClientType;
+  let redis: RedisClusterType;
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
@@ -17,7 +17,12 @@ describe('SlidingWindowCounterAlgorithm (integration)', () => {
           imports: [ConfigModule.forRoot({ isGlobal: true })],
           inject: [ConfigService],
           useFactory: (configService: ConfigService) => ({
-            options: { url: configService.getOrThrow<string>('REDIS_HOST') },
+            type: 'cluster',
+            options: {
+              rootNodes: [
+                { url: configService.getOrThrow<string>('REDIS_HOST') },
+              ],
+            },
           }),
         }),
       ],
@@ -27,7 +32,7 @@ describe('SlidingWindowCounterAlgorithm (integration)', () => {
     service = module.get<SlidingWindowCounterAlgorithm>(
       SlidingWindowCounterAlgorithm,
     );
-    redis = module.get<RedisClientType>(RedisToken());
+    redis = module.get<RedisClusterType>(RedisToken());
     await module.init();
   });
 

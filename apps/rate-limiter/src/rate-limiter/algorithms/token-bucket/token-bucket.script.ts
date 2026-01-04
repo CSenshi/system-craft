@@ -5,11 +5,9 @@
 // Returns: {allowed, remaining, resetTime}
 
 export const TOKEN_BUCKET_SCRIPT = `
-local identifier = KEYS[1]
+local key = KEYS[1]
 local limit = tonumber(ARGV[1])
 local windowSeconds = tonumber(ARGV[2])
-
-local key = 'rate-limit-bucket:' .. identifier
 local now = redis.call('TIME')[1]
 
 -- Get current bucket state

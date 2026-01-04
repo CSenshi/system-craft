@@ -1,21 +1,18 @@
-// Lua script for Sliding Window Log algorithm using Redis Hash + HEXPIRE
+// Lua script for Sliding Window Log algorithm using Redis Hash
 // KEYS[1] = identifier
 // ARGV[1] = limit (max requests)
 // ARGV[2] = windowSeconds (time window in seconds)
 // Returns: {allowed, remaining, resetTime}
 
 export const SLIDING_WINDOW_LOG_SCRIPT = `
-local identifier = KEYS[1]
+local key = KEYS[1]
 local limit = tonumber(ARGV[1])
 local windowSeconds = tonumber(ARGV[2])
-
--- Build Redis key for hash
-local key = 'rate-limit-log:' .. identifier
 
 -- Count current requests in the window (only non-expired fields remain)
 -- Note: HEXPIRE automatically removes expired fields, so HLEN only counts active requests
 local currentCount = redis.call('HLEN', key)
-
+    
 -- Check if request should be allowed
 local allowed = currentCount < limit
 

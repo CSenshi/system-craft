@@ -1,5 +1,9 @@
+# ToDo: Use redis cluster 8
 services:
-  redis:
-    image: redis:latest
+  redis-cluster:
+    image: grokzen/redis-cluster:7.0.10
+    environment:
+      - IP=0.0.0.0
+      - INITIAL_PORT=7010
     ports:
-      - '6379:6379'
+      - '7010-7015:7010-7015'

@@ -1,14 +1,14 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { RedisModule, RedisToken } from '@nestjs-redis/kit';
-import type { RedisClientType } from 'redis';
+import type { RedisClusterType } from 'redis';
 import { RateLimitConfig } from '../../rate-limiter.types';
 import { TokenBucketAlgorithm } from './token-bucket.algorithm';
 
 describe('TokenBucketAlgorithm (integration)', () => {
   let service: TokenBucketAlgorithm;
   let module: TestingModule;
-  let redis: RedisClientType;
+  let redis: RedisClusterType;
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
@@ -17,7 +17,12 @@ describe('TokenBucketAlgorithm (integration)', () => {
           imports: [ConfigModule.forRoot({ isGlobal: true })],
           inject: [ConfigService],
           useFactory: (configService: ConfigService) => ({
-            options: { url: configService.getOrThrow<string>('REDIS_HOST') },
+            type: 'cluster',
+            options: {
+              rootNodes: [
+                { url: configService.getOrThrow<string>('REDIS_HOST') },
+              ],
+            },
           }),
         }),
       ],
@@ -25,7 +30,7 @@ describe('TokenBucketAlgorithm (integration)', () => {
     }).compile();
 
     service = module.get<TokenBucketAlgorithm>(TokenBucketAlgorithm);
-    redis = module.get<RedisClientType>(RedisToken());
+    redis = module.get<RedisClusterType>(RedisToken());
     await module.init();
   });
 

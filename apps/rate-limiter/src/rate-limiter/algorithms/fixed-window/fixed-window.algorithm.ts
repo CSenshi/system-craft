@@ -1,28 +1,28 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRedis } from '@nestjs-redis/kit';
-import type { RedisClientType } from 'redis';
+import type { RedisClusterType } from 'redis';
 import { RateLimitConfig, RateLimitResult } from '../../rate-limiter.types';
-import { IRateLimitAlgorithm } from '../base';
+import { IRateLimitAlgorithm, exectRedisScriptSha } from '../base';
 import { FIXED_WINDOW_SCRIPT } from './fixed-window.script';
 
 @Injectable()
-export class FixedWindowAlgorithm implements OnModuleInit, IRateLimitAlgorithm {
-  private scriptSha: string;
+export class FixedWindowAlgorithm implements IRateLimitAlgorithm {
+  private scriptMeta = { sha: null, script: FIXED_WINDOW_SCRIPT };
 
-  constructor(@InjectRedis() private readonly redis: RedisClientType) {}
-
-  async onModuleInit() {
-    this.scriptSha = await this.redis.scriptLoad(FIXED_WINDOW_SCRIPT);
-  }
+  constructor(@InjectRedis() private readonly redis: RedisClusterType) {}
 
   async increment(
     identifier: string,
     config: RateLimitConfig,
   ): Promise<RateLimitResult> {
-    const result = (await this.redis.evalSha(this.scriptSha, {
-      keys: [identifier],
-      arguments: [config.limit.toString(), config.windowSeconds.toString()],
-    })) as [number, number, number];
+    const key = `rate-limit:{${identifier}}`;
+
+    const result = await exectRedisScriptSha<[number, number, number]>(
+      this.redis,
+      this.scriptMeta,
+      [key],
+      [config.limit.toString(), config.windowSeconds.toString()],
+    );
 
     const [resetTime, allowedNum, remaining] = result;
 

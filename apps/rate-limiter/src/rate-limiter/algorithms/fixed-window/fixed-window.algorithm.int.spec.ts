@@ -1,14 +1,14 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { RedisModule, RedisToken } from '@nestjs-redis/kit';
-import type { RedisClientType } from 'redis';
+import type { RedisClusterType } from 'redis';
 import { RateLimitConfig } from '../../rate-limiter.types';
 import { FixedWindowAlgorithm } from './fixed-window.algorithm';
 
 describe('FixedWindowAlgorithm (integration)', () => {
   let service: FixedWindowAlgorithm;
   let module: TestingModule;
-  let redis: RedisClientType;
+  let redis: RedisClusterType;
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
@@ -17,7 +17,12 @@ describe('FixedWindowAlgorithm (integration)', () => {
           imports: [ConfigModule.forRoot({ isGlobal: true })],
           inject: [ConfigService],
           useFactory: (configService: ConfigService) => ({
-            options: { url: configService.getOrThrow<string>('REDIS_HOST') },
+            type: 'cluster',
+            options: {
+              rootNodes: [
+                { url: configService.getOrThrow<string>('REDIS_HOST') },
+              ],
+            },
           }),
         }),
       ],
@@ -25,7 +30,7 @@ describe('FixedWindowAlgorithm (integration)', () => {
     }).compile();
 
     service = module.get<FixedWindowAlgorithm>(FixedWindowAlgorithm);
-    redis = module.get<RedisClientType>(RedisToken());
+    redis = module.get<RedisClusterType>(RedisToken());
     await module.init();
   });
 

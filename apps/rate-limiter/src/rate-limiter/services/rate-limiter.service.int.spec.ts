@@ -2,7 +2,7 @@ import { NotFoundException } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { RedisModule, RedisToken } from '@nestjs-redis/kit';
-import type { RedisClientType } from 'redis';
+import type { RedisClusterType } from 'redis';
 import { FixedWindowAlgorithm } from '../algorithms/fixed-window';
 import { SlidingWindowCounterAlgorithm } from '../algorithms/sliding-window-counter';
 import { SlidingWindowLogAlgorithm } from '../algorithms/sliding-window-log';
@@ -14,7 +14,7 @@ import { RuleManagerService } from './rule-manager.service';
 describe('RateLimiterService (integration)', () => {
   let service: RateLimiterService;
   let module: TestingModule;
-  let redis: RedisClientType;
+  let redis: RedisClusterType;
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
@@ -23,7 +23,12 @@ describe('RateLimiterService (integration)', () => {
           imports: [ConfigModule.forRoot({ isGlobal: true })],
           inject: [ConfigService],
           useFactory: (configService: ConfigService) => ({
-            options: { url: configService.getOrThrow<string>('REDIS_HOST') },
+            type: 'cluster',
+            options: {
+              rootNodes: [
+                { url: configService.getOrThrow<string>('REDIS_HOST') },
+              ],
+            },
           }),
         }),
       ],
@@ -39,7 +44,7 @@ describe('RateLimiterService (integration)', () => {
     }).compile();
 
     service = module.get<RateLimiterService>(RateLimiterService);
-    redis = module.get<RedisClientType>(RedisToken());
+    redis = module.get<RedisClusterType>(RedisToken());
     await module.init();
   });
 

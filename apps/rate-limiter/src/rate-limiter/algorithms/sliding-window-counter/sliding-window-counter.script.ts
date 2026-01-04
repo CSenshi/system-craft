@@ -5,11 +5,9 @@
 // Returns: {allowed, remaining, resetTime}
 
 export const SLIDING_WINDOW_COUNTER_SCRIPT = `
-local identifier = KEYS[1]
+local key = KEYS[1]
 local limit = tonumber(ARGV[1])
 local windowSeconds = tonumber(ARGV[2])
-
-local key = 'rate-limit-counter:' .. identifier
 local now = redis.call('TIME')[1]
 
 -- Calculate current period (like Cloudflare's sampling period)

@@ -14,7 +14,8 @@ import { RuleManagerService } from './services/rule-manager.service';
 @Module({
   imports: [
     RedisModule.forRoot({
-      options: { url: process.env['REDIS_HOST'] || 'redis://localhost:6379' },
+      type: 'cluster',
+      options: { rootNodes: [{ url: 'redis://localhost:7010' }] },
       isGlobal: true,
     }),
   ],
