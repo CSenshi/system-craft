@@ -86,6 +86,20 @@
           "jestConfig": "apps/rate-limiter/jest.int.config.ts",
           "passWithNoTests": true
         }
+      },
+      "infra:up": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "docker compose -f docker-compose.yml up -d",
+          "cwd": "apps/rate-limiter"
+        }
+      },
+      "infra:down": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "docker compose -f docker-compose.yml down",
+          "cwd": "apps/rate-limiter"
+        }
       }
     }
   },
