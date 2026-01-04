@@ -29,14 +29,6 @@ describe('TokenBucketAlgorithm (integration)', () => {
     await module.init();
   });
 
-  beforeEach(async () => {
-    // Clear Redis database before each test for isolation
-    const keys = await redis.keys('rate-limit-bucket:*');
-    if (keys.length > 0) {
-      await redis.del(keys);
-    }
-  });
-
   afterAll(async () => {
     await module.close();
   });
@@ -48,7 +40,7 @@ describe('TokenBucketAlgorithm (integration)', () => {
     };
 
     it('should allow requests within limit', async () => {
-      const identifier = 'test-user-1';
+      const identifier = 'tb-test-user-1';
       const results = [];
       for (let i = 0; i < 5; i++) {
         const result = await service.increment(identifier, config);
@@ -66,7 +58,7 @@ describe('TokenBucketAlgorithm (integration)', () => {
     });
 
     it('should deny requests when bucket is empty', async () => {
-      const identifier = 'test-user-2';
+      const identifier = 'tb-test-user-2';
       // Exhaust all tokens
       for (let i = 0; i < config.limit; i++) {
         const result = await service.increment(identifier, config);
@@ -80,7 +72,7 @@ describe('TokenBucketAlgorithm (integration)', () => {
     });
 
     it('should refill tokens over time', async () => {
-      const identifier = 'test-user-3';
+      const identifier = 'tb-test-user-3';
       const config: RateLimitConfig = {
         limit: 10,
         windowSeconds: 5, // 10 tokens refill in 5 seconds = 2 tokens/second
@@ -119,19 +111,19 @@ describe('TokenBucketAlgorithm (integration)', () => {
       };
 
       // Exhaust limit for user-1
-      await service.increment('user-1', config);
-      await service.increment('user-1', config);
-      const user1Denied = await service.increment('user-1', config);
+      await service.increment('tb-user-1', config);
+      await service.increment('tb-user-1', config);
+      const user1Denied = await service.increment('tb-user-1', config);
       expect(user1Denied.allowed).toBe(false);
 
       // user-2 should still be allowed
-      const user2Allowed = await service.increment('user-2', config);
+      const user2Allowed = await service.increment('tb-user-2', config);
       expect(user2Allowed.allowed).toBe(true);
       expect(user2Allowed.remaining).toBe(1);
     });
 
     it('should return correct reset time', async () => {
-      const identifier = 'test-user-4';
+      const identifier = 'tb-test-user-4';
       const result = await service.increment(identifier, config);
       const now = Date.now();
 
@@ -142,7 +134,7 @@ describe('TokenBucketAlgorithm (integration)', () => {
     });
 
     it('should handle concurrent requests', async () => {
-      const identifier = 'test-user-5';
+      const identifier = 'tb-test-user-5';
       const config: RateLimitConfig = {
         limit: 10,
         windowSeconds: 10,

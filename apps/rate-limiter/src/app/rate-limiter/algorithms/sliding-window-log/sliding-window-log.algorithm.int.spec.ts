@@ -29,15 +29,6 @@ describe('SlidingWindowLogAlgorithm (integration)', () => {
     await module.init();
   });
 
-  beforeEach(async () => {
-    // Clear Redis database before each test for isolation
-    // Delete all rate-limit keys to ensure test isolation
-    const keys = await redis.keys('rate-limit-log:*');
-    if (keys.length > 0) {
-      await redis.del(keys);
-    }
-  });
-
   afterAll(async () => {
     await module.close();
   });
@@ -49,7 +40,7 @@ describe('SlidingWindowLogAlgorithm (integration)', () => {
     };
 
     it('should allow requests within limit', async () => {
-      const identifier = 'test-user-1';
+      const identifier = 'swl-test-user-1';
       const results = [];
       for (let i = 0; i < 5; i++) {
         const result = await service.increment(identifier, config);
@@ -67,7 +58,7 @@ describe('SlidingWindowLogAlgorithm (integration)', () => {
     });
 
     it('should deny requests when limit is exceeded', async () => {
-      const identifier = 'test-user-2';
+      const identifier = 'swl-test-user-2';
       // Make requests up to the limit
       for (let i = 0; i < config.limit; i++) {
         const result = await service.increment(identifier, config);
@@ -81,7 +72,7 @@ describe('SlidingWindowLogAlgorithm (integration)', () => {
     });
 
     it('should accurately track sliding window', async () => {
-      const identifier = 'test-user-3';
+      const identifier = 'swl-test-user-3';
       const config: RateLimitConfig = {
         limit: 3,
         windowSeconds: 5,
@@ -111,7 +102,7 @@ describe('SlidingWindowLogAlgorithm (integration)', () => {
     }, 15000);
 
     it('should reset after window expires', async () => {
-      const identifier = 'test-user-4';
+      const identifier = 'swl-test-user-4';
       const config: RateLimitConfig = {
         limit: 2,
         windowSeconds: 2, // 2 second window for faster testing
@@ -139,19 +130,19 @@ describe('SlidingWindowLogAlgorithm (integration)', () => {
       };
 
       // Exhaust limit for user-1
-      await service.increment('user-1', config);
-      await service.increment('user-1', config);
-      const user1Denied = await service.increment('user-1', config);
+      await service.increment('swl-user-1', config);
+      await service.increment('swl-user-1', config);
+      const user1Denied = await service.increment('swl-user-1', config);
       expect(user1Denied.allowed).toBe(false);
 
       // user-2 should still be allowed
-      const user2Allowed = await service.increment('user-2', config);
+      const user2Allowed = await service.increment('swl-user-2', config);
       expect(user2Allowed.allowed).toBe(true);
       expect(user2Allowed.remaining).toBe(1);
     });
 
     it('should handle concurrent requests', async () => {
-      const identifier = 'test-user-6';
+      const identifier = 'swl-test-user-6';
       const config: RateLimitConfig = {
         limit: 10,
         windowSeconds: 10,

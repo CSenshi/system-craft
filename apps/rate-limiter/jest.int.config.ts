@@ -18,5 +18,4 @@ export default {
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: 'test-output/jest/coverage',
   testMatch: ['**/*.int.spec.ts'],
-  maxWorkers: 1, // Run tests serially to avoid Redis state interference
 };

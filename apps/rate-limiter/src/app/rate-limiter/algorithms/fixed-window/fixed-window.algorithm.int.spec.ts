@@ -29,11 +29,6 @@ describe('FixedWindowAlgorithm (integration)', () => {
     await module.init();
   });
 
-  beforeEach(async () => {
-    // Clear Redis database before each test for isolation
-    await redis.flushDb();
-  });
-
   afterAll(async () => {
     await module.close();
   });
@@ -45,7 +40,7 @@ describe('FixedWindowAlgorithm (integration)', () => {
     };
 
     it('should allow requests within limit', async () => {
-      const identifier = 'test-user-1';
+      const identifier = 'fw-test-user-1';
       const results = [];
       for (let i = 0; i < 3; i++) {
         const result = await service.increment(identifier, config);
@@ -63,7 +58,7 @@ describe('FixedWindowAlgorithm (integration)', () => {
     });
 
     it('should deny requests when limit is exceeded', async () => {
-      const identifier = 'test-user-2';
+      const identifier = 'fw-test-user-2';
       // Make requests up to the limit
       for (let i = 0; i < config.limit; i++) {
         const result = await service.increment(identifier, config);
@@ -77,7 +72,7 @@ describe('FixedWindowAlgorithm (integration)', () => {
     });
 
     it('should reset after window expires', async () => {
-      const identifier = 'test-user-3';
+      const identifier = 'fw-test-user-3';
       const config: RateLimitConfig = {
         limit: 2,
         windowSeconds: 2, // 2 second window for faster testing
@@ -105,19 +100,19 @@ describe('FixedWindowAlgorithm (integration)', () => {
       };
 
       // Exhaust limit for user-1
-      await service.increment('user-1', config);
-      await service.increment('user-1', config);
-      const user1Denied = await service.increment('user-1', config);
+      await service.increment('fw-user-1', config);
+      await service.increment('fw-user-1', config);
+      const user1Denied = await service.increment('fw-user-1', config);
       expect(user1Denied.allowed).toBe(false);
 
       // user-2 should still be allowed
-      const user2Allowed = await service.increment('user-2', config);
+      const user2Allowed = await service.increment('fw-user-2', config);
       expect(user2Allowed.allowed).toBe(true);
       expect(user2Allowed.remaining).toBe(1);
     });
 
     it('should return correct reset time', async () => {
-      const identifier = 'test-user-4';
+      const identifier = 'fw-test-user-4';
       const result = await service.increment(identifier, config);
       const now = Date.now();
 
@@ -128,7 +123,7 @@ describe('FixedWindowAlgorithm (integration)', () => {
     });
 
     it('should handle concurrent requests', async () => {
-      const identifier = 'test-user-5';
+      const identifier = 'fw-test-user-5';
       const config: RateLimitConfig = {
         limit: 10,
         windowSeconds: 10,
