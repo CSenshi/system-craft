@@ -4,7 +4,13 @@ import {
   NotFoundException,
   OnModuleInit,
 } from '@nestjs/common';
-import { RateLimitRule } from '../rate-limiter.types';
+import { AlgorithmType } from '../rate-limiter.types';
+
+export interface RateLimitRule {
+  algorithm: AlgorithmType;
+  limit: number;
+  windowSeconds: number;
+}
 
 /**
  * Service for managing rate limiting rules.
