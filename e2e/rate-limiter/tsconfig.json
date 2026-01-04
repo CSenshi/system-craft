@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "out-tsc/@apps/rate-limiter-e2e",
+    "outDir": "out-tsc/@e2e/rate-limiter",
     "esModuleInterop": true,
     "noUnusedLocals": false,
     "noImplicitAny": false
