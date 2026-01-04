@@ -1,8 +1,10 @@
--- Lua script for Sliding Window Log algorithm using Redis Hash + HEXPIRE
--- KEYS[1] = identifier
--- ARGV[1] = limit (max requests)
--- ARGV[2] = windowSeconds (time window in seconds)
--- Returns: {allowed, remaining}
+// Lua script for Sliding Window Log algorithm using Redis Hash + HEXPIRE
+// KEYS[1] = identifier
+// ARGV[1] = limit (max requests)
+// ARGV[2] = windowSeconds (time window in seconds)
+// Returns: {allowed, remaining, resetTime}
+
+export const SLIDING_WINDOW_LOG_SCRIPT = `
 local identifier = KEYS[1]
 local limit = tonumber(ARGV[1])
 local windowSeconds = tonumber(ARGV[2])
@@ -17,10 +19,12 @@ local currentCount = redis.call('HLEN', key)
 -- Check if request should be allowed
 local allowed = currentCount < limit
 
+local time = redis.call('TIME')
+local now = time[1]
+
 if allowed then
     -- Generate unique field key using precise timestamp
-    local time = redis.call('TIME')
-    local fieldKey = time[1] + (time[2] / 1000000)
+    local fieldKey = now + (time[2] / 1000000)
 
     -- Add request to hash (value is empty string, only the field key matters)
     redis.call('HSET', key, fieldKey, '')
@@ -35,4 +39,4 @@ local remaining = math.max(0, limit - finalCount)
 local resetTime = (now + windowSeconds) * 1000
 
 -- Return all values as a table
-return {allowed, remaining, resetTime}
+return {allowed and 1 or 0, remaining, resetTime}`;

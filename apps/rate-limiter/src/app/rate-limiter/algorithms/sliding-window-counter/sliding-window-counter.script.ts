@@ -1,7 +1,10 @@
--- Sliding Window Counter (Cloudflare-style)
--- Uses 2 periods: current and previous, with weighted counting
--- KEYS[1] = identifier, ARGV[1] = limit, ARGV[2] = windowSeconds
--- Returns: {allowed, remaining, resetTime}
+// Sliding Window Counter (Cloudflare-style)
+// KEYS[1] = identifier
+// ARGV[1] = limit
+// ARGV[2] = windowSeconds
+// Returns: {allowed, remaining, resetTime}
+
+export const SLIDING_WINDOW_COUNTER_SCRIPT = `
 local identifier = KEYS[1]
 local limit = tonumber(ARGV[1])
 local windowSeconds = tonumber(ARGV[2])
@@ -14,8 +17,8 @@ local currentPeriod = math.floor(now / windowSeconds)
 local previousPeriod = currentPeriod - 1
 
 -- Get counts for current and previous periods
-local currentCount = redis.call('HGET', key, currentPeriod) or '0'
-local previousCount = redis.call('HGET', key, previousPeriod) or '0'
+local currentCount = tonumber(redis.call('HGET', key, currentPeriod) or '0')
+local previousCount = tonumber(redis.call('HGET', key, previousPeriod) or '0')
 
 -- Calculate elapsed time in current period
 local elapsed = now % windowSeconds
@@ -34,4 +37,4 @@ end
 local remaining = math.max(0, limit - weightedCount)
 local resetTime = ((currentPeriod + 1) * windowSeconds) * 1000
 
-return {allowed , remaining, resetTime}
+return {allowed and 1 or 0, remaining, resetTime}`;

@@ -1,10 +1,9 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRedis } from '@nestjs-redis/kit';
-import { readFile } from 'fs/promises';
-import { join } from 'path';
 import type { RedisClientType } from 'redis';
 import { RateLimitConfig, RateLimitResult } from '../../rate-limiter.types';
 import { IRateLimitAlgorithm } from '../base';
+import { FIXED_WINDOW_SCRIPT } from './fixed-window.script';
 
 @Injectable()
 export class FixedWindowAlgorithm implements OnModuleInit, IRateLimitAlgorithm {
@@ -13,9 +12,7 @@ export class FixedWindowAlgorithm implements OnModuleInit, IRateLimitAlgorithm {
   constructor(@InjectRedis() private readonly redis: RedisClientType) {}
 
   async onModuleInit() {
-    const scriptPath = join(__dirname, 'fixed-window.lua');
-    const script = await readFile(scriptPath, 'utf-8');
-    this.scriptSha = await this.redis.scriptLoad(script);
+    this.scriptSha = await this.redis.scriptLoad(FIXED_WINDOW_SCRIPT);
   }
 
   async increment(

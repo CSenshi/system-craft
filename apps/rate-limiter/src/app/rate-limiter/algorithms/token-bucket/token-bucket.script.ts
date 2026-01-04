@@ -1,8 +1,10 @@
--- Token Bucket algorithm using Redis Hash
--- KEYS[1] = identifier
--- ARGV[1] = limit (bucket capacity)
--- ARGV[2] = windowSeconds (time to refill bucket completely)
--- Returns: {allowed, remaining, resetTime}
+// Token Bucket algorithm using Redis Hash
+// KEYS[1] = identifier
+// ARGV[1] = limit (bucket capacity)
+// ARGV[2] = windowSeconds (time to refill bucket completely)
+// Returns: {allowed, remaining, resetTime}
+
+export const TOKEN_BUCKET_SCRIPT = `
 local identifier = KEYS[1]
 local limit = tonumber(ARGV[1])
 local windowSeconds = tonumber(ARGV[2])
@@ -43,5 +45,5 @@ redis.call('EXPIRE', key, windowSeconds * 2)  -- Expire after 2x window for clea
 local remaining = tokens
 local resetTime = (now + (limit - tokens) / refillRate) * 1000
 
-return {allowed, remaining, resetTime}
-
+return {allowed and 1 or 0, remaining, resetTime}
+`;

@@ -1,8 +1,10 @@
--- Lua script that handles all rate limiting logic atomically
--- KEYS[1] = identifier
--- ARGV[1] = limit (max requests)
--- ARGV[2] = windowSeconds (time window in seconds)
--- Returns: {resetTime, allowed, remaining}
+// Lua script that handles all rate limiting logic atomically
+// KEYS[1] = identifier
+// ARGV[1] = limit (max requests)
+// ARGV[2] = windowSeconds (time window in seconds)
+// Returns: {resetTime, allowed, remaining}
+
+export const FIXED_WINDOW_SCRIPT = `
 local identifier = KEYS[1]
 local limit = tonumber(ARGV[1])
 local windowSeconds = tonumber(ARGV[2])
@@ -27,4 +29,4 @@ local resetTime = (windowStart + windowSeconds) * 1000
 local allowed = count <= limit
 local remaining = math.max(0, limit - count)
 
-return {resetTime, allowed, remaining}
+return {resetTime, allowed and 1 or 0, remaining}`;

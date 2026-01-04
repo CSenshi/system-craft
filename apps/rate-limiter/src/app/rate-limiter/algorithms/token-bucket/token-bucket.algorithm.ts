@@ -1,10 +1,9 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRedis } from '@nestjs-redis/kit';
-import { readFile } from 'fs/promises';
-import { join } from 'path';
 import type { RedisClientType } from 'redis';
 import { RateLimitConfig, RateLimitResult } from '../../rate-limiter.types';
 import { IRateLimitAlgorithm } from '../base';
+import { TOKEN_BUCKET_SCRIPT } from './token-bucket.script';
 
 @Injectable()
 export class TokenBucketAlgorithm implements OnModuleInit, IRateLimitAlgorithm {
@@ -13,9 +12,7 @@ export class TokenBucketAlgorithm implements OnModuleInit, IRateLimitAlgorithm {
   constructor(@InjectRedis() private readonly redis: RedisClientType) {}
 
   async onModuleInit() {
-    const scriptPath = join(__dirname, 'token-bucket.lua');
-    const script = await readFile(scriptPath, 'utf-8');
-    this.scriptSha = await this.redis.scriptLoad(script);
+    this.scriptSha = await this.redis.scriptLoad(TOKEN_BUCKET_SCRIPT);
   }
 
   async increment(

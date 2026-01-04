@@ -1,10 +1,9 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRedis } from '@nestjs-redis/kit';
-import { readFile } from 'fs/promises';
-import { join } from 'path';
 import type { RedisClientType } from 'redis';
 import { RateLimitConfig, RateLimitResult } from '../../rate-limiter.types';
 import { IRateLimitAlgorithm } from '../base';
+import { SLIDING_WINDOW_LOG_SCRIPT } from './sliding-window-log.script';
 
 @Injectable()
 export class SlidingWindowLogAlgorithm
@@ -15,9 +14,7 @@ export class SlidingWindowLogAlgorithm
   constructor(@InjectRedis() private readonly redis: RedisClientType) {}
 
   async onModuleInit() {
-    const scriptPath = join(__dirname, 'sliding-window-log.lua');
-    const script = await readFile(scriptPath, 'utf-8');
-    this.scriptSha = await this.redis.scriptLoad(script);
+    this.scriptSha = await this.redis.scriptLoad(SLIDING_WINDOW_LOG_SCRIPT);
   }
 
   async increment(
