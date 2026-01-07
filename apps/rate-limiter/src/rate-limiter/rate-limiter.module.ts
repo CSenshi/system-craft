@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RedisModule } from '@nestjs-redis/kit';
 import { FixedWindowAlgorithm } from './algorithms/fixed-window';
 import { SlidingWindowCounterAlgorithm } from './algorithms/sliding-window-counter';
@@ -13,10 +14,16 @@ import { RuleManagerService } from './services/rule-manager.service';
 
 @Module({
   imports: [
-    RedisModule.forRoot({
-      type: 'cluster',
-      options: { rootNodes: [{ url: 'redis://localhost:7010' }] },
-      isGlobal: true,
+    RedisModule.forRootAsync({
+      imports: [ConfigModule.forRoot()],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'cluster',
+        options: {
+          rootNodes: [{ url: configService.getOrThrow('REDIS_HOST') }],
+        },
+        isGlobal: true,
+      }),
     }),
   ],
   controllers: [RateLimitController],
