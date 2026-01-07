@@ -14,6 +14,7 @@ The goal of this project is to serve as an educational resource for developers p
 
 - [**URL Shortener**](apps/url-shortener)
 - [**Web Crawler**](apps/web-crawler)
+- [**Rate Limiter**](apps/rate-limiter)
 
 ## 🛠 Planned Implementations
 
