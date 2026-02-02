@@ -115,7 +115,8 @@
     }
   },
   "dependencies": {
-    "@nestjs-redis/kit": "0.13.2",
+    "@nestjs-redis/client": "1.0.0-0",
+    "@nestjs-redis/throttler-storage": "1.0.0-0",
     "redis": "^5.10.0",
     "@nestjs/throttler": "^6.4.0"
   }

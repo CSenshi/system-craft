@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRedis, type Redis } from '@nestjs-redis/kit';
+import { InjectRedis } from '@nestjs-redis/client';
+import type { RedisClientType } from 'redis';
 import { CounterService } from '../../counter.service';
 
 @Injectable()
 export class RedisCounterService extends CounterService {
-  constructor(@InjectRedis() private readonly redis: Redis) {
+  constructor(@InjectRedis() private readonly redis: RedisClientType) {
     super();
   }
 

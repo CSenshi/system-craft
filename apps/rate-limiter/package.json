@@ -104,7 +104,7 @@
     }
   },
   "dependencies": {
-    "@nestjs-redis/kit": "0.13.2",
+    "@nestjs-redis/client": "1.0.0-0",
     "redis": "^5.10.0"
   },
   "devDependencies": {

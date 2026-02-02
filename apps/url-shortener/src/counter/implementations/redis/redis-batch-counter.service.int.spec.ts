@@ -1,6 +1,6 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { RedisModule } from '@nestjs-redis/kit';
+import { RedisModule } from '@nestjs-redis/client';
 import { COUNTER_BATCH_SIZE } from '../../counter.constants';
 import { RedisBatchCounterService } from './redis-batch-counter.service';
 

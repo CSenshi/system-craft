@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { RedisModule } from '@nestjs-redis/kit';
+import { RedisModule } from '@nestjs-redis/client';
 import { FixedWindowAlgorithm } from './algorithms/fixed-window';
 import { SlidingWindowCounterAlgorithm } from './algorithms/sliding-window-counter';
 import { SlidingWindowLogAlgorithm } from './algorithms/sliding-window-log';

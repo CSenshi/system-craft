@@ -1,12 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { InjectRedis, type Redis } from '@nestjs-redis/kit';
+import { InjectRedis } from '@nestjs-redis/client';
+import type { RedisClientType } from 'redis';
 import { COUNTER_BATCH_SIZE } from '../../counter.constants';
 import { BatchCounterService } from '../base/batch-counter.service';
 
 @Injectable()
 export class RedisBatchCounterService extends BatchCounterService {
   constructor(
-    @InjectRedis() private readonly redis: Redis,
+    @InjectRedis() private readonly redis: RedisClientType,
     @Inject(COUNTER_BATCH_SIZE) batchSize: number,
   ) {
     super(batchSize);

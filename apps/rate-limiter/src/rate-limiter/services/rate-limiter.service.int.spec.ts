@@ -1,7 +1,7 @@
 import { NotFoundException } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { RedisModule, RedisToken } from '@nestjs-redis/kit';
+import { RedisModule, RedisToken } from '@nestjs-redis/client';
 import type { RedisClusterType } from 'redis';
 import { FixedWindowAlgorithm } from '../algorithms/fixed-window';
 import { SlidingWindowCounterAlgorithm } from '../algorithms/sliding-window-counter';

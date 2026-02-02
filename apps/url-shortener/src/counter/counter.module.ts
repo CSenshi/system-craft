@@ -1,6 +1,6 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { RedisModule } from '@nestjs-redis/kit';
+import { RedisModule } from '@nestjs-redis/client';
 import { PrismaModule } from '../prisma/prisma.module';
 import {
   COUNTER_BATCH_SIZE,

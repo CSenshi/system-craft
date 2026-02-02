@@ -9,6 +9,7 @@
   "dependencies": {
     "@fastify/static": "^9.0.0",
     "@nestjs-architects/typed-cqrs": "^2.1.0",
+    "@nestjs-redis/streams-transporter": "^0.0.1",
     "@nestjs/cache-manager": "^3.1.0",
     "@nestjs/common": "^11.1.10",
     "@nestjs/config": "^4.0.2",

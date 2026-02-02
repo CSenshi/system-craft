@@ -1,6 +1,6 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { RedisModule } from '@nestjs-redis/kit';
+import { RedisModule } from '@nestjs-redis/client';
 import { RateLimitConfig } from '../../rate-limiter.types';
 import { SlidingWindowLogAlgorithm } from './sliding-window-log.algorithm';
 

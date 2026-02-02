@@ -9,6 +9,7 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { RedisStreamClient } from '@nestjs-redis/streams-transporter';
 import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
 
@@ -20,6 +21,8 @@ async function bootstrap() {
   );
   const logger = app.get(Logger);
 
+  const c = new RedisStreamClient();
+  console.log(c);
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

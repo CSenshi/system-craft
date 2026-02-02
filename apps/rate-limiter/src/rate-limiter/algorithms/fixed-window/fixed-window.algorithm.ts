@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRedis } from '@nestjs-redis/kit';
+import { InjectRedis } from '@nestjs-redis/client';
 import type { RedisClusterType } from 'redis';
 import { RateLimitConfig, RateLimitResult } from '../../rate-limiter.types';
 import { IRateLimitAlgorithm, exectRedisScriptSha } from '../base';

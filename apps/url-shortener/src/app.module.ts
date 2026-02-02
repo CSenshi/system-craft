@@ -1,11 +1,8 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ThrottlerModule, seconds } from '@nestjs/throttler';
-import {
-  RedisModule,
-  RedisThrottlerStorage,
-  RedisToken,
-} from '@nestjs-redis/kit';
+import { RedisModule, RedisToken } from '@nestjs-redis/client';
+import { RedisThrottlerStorage } from '@nestjs-redis/throttler-storage';
 import { LoggerModule } from 'nestjs-pino';
 import { PrismaModule } from './prisma/prisma.module';
 import { UnhandledExceptionsListener } from './unhandled-exceptions.listener';
