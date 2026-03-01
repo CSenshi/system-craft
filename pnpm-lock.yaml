@@ -13,9 +13,6 @@ importers:
       '@nestjs-architects/typed-cqrs':
         specifier: ^2.1.0
         version: 2.1.0
-      '@nestjs-redis/streams-transporter':
-        specifier: ^0.0.1
-        version: 0.0.1(@nestjs/common@11.1.10(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.10)(@nestjs/websockets@11.1.6)(cache-manager@7.2.4)(ioredis@5.6.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/cache-manager':
         specifier: ^3.1.0
         version: 3.1.0(@nestjs/common@11.1.10(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.10)(cache-manager@7.2.4)(keyv@5.5.5)(rxjs@7.8.2)
@@ -2679,15 +2676,6 @@ packages:
       '@nestjs/common': ^9.0.0 || ^10.0.0 || ^11.0.0
       '@nestjs/core': ^9.0.0 || ^10.0.0 || ^11.0.0
       redis: ^5.0.0
-
-  '@nestjs-redis/streams-transporter@0.0.1':
-    resolution:
-      {
-        integrity: sha512-wOiarElYcEoZr/WKjS+ZjzakmPMCcYI2eMQNtNIhvPGzFeFeutsx3LzRSRbvMOpOyNPDII0MxfSqtetpJNsBmA==,
-      }
-    engines: { node: '>=18.0.0', npm: '>=8.0.0' }
-    peerDependencies:
-      '@nestjs/common': ^9.0.0 || ^10.0.0 || ^11.0.0
 
   '@nestjs-redis/throttler-storage@1.0.0-0':
     resolution:
@@ -14555,26 +14543,6 @@ snapshots:
       redis: 5.10.0
       tslib: 2.8.1
 
-  '@nestjs-redis/streams-transporter@0.0.1(@nestjs/common@11.1.10(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.10)(@nestjs/websockets@11.1.6)(cache-manager@7.2.4)(ioredis@5.6.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)':
-    dependencies:
-      '@nestjs/common': 11.1.10(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
-      '@nestjs/microservices': 11.1.12(@nestjs/common@11.1.10(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.10)(@nestjs/websockets@11.1.6)(cache-manager@7.2.4)(ioredis@5.6.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
-      redis: 5.10.0
-      tslib: 2.8.1
-    transitivePeerDependencies:
-      - '@grpc/grpc-js'
-      - '@nestjs/core'
-      - '@nestjs/websockets'
-      - amqp-connection-manager
-      - amqplib
-      - cache-manager
-      - ioredis
-      - kafkajs
-      - mqtt
-      - nats
-      - reflect-metadata
-      - rxjs
-
   '@nestjs-redis/throttler-storage@1.0.0-0(@nestjs/common@11.1.10(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))':
     dependencies:
       '@nestjs/common': 11.1.10(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -14683,6 +14651,7 @@ snapshots:
       '@nestjs/websockets': 11.1.6(@nestjs/common@11.1.10(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.10)(@nestjs/platform-socket.io@11.1.6)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       cache-manager: 7.2.4
       ioredis: 5.6.1
+    optional: true
 
   '@nestjs/platform-express@11.1.10(@nestjs/common@11.1.10(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.10)':
     dependencies:
