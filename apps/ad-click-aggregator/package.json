@@ -79,6 +79,27 @@
         "options": {
           "passWithNoTests": true
         }
+      },
+      "test:int": {
+        "executor": "@nx/jest:jest",
+        "options": {
+          "jestConfig": "apps/ad-click-aggregator/jest.int.config.ts",
+          "passWithNoTests": true
+        }
+      },
+      "infra:up": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "docker compose -f docker-compose.yml up -d",
+          "cwd": "apps/ad-click-aggregator"
+        }
+      },
+      "infra:down": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "docker compose -f docker-compose.yml down",
+          "cwd": "apps/ad-click-aggregator"
+        }
       }
     }
   },
