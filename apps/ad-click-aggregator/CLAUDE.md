@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Reference
 
 This app follows the Hello Interview article: https://www.hellointerview.com/learn/system-design/problem-breakdowns/ad-click-aggregator
-Consult it for design decisions, requirements, and architecture choices before implementing features.
+The full article is saved at [docs/hellointerview-article.md](docs/hellointerview-article.md) — read it for design decisions, deep dives, and architecture rationale.
 
 ## Commands
 
