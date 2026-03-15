@@ -23,6 +23,12 @@
     },
     {
       "path": "./e2e/rate-limiter"
+    },
+    {
+      "path": "./apps/ad-click-aggregator-e2e"
+    },
+    {
+      "path": "./apps/ad-click-aggregator"
     }
   ]
 }

@@ -1,0 +1,26 @@
+{
+  "name": "@e2e/ad-click-aggregator",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "implicitDependencies": [
+      "@apps/ad-click-aggregator"
+    ],
+    "targets": {
+      "e2e": {
+        "executor": "@nx/jest:jest",
+        "outputs": [
+          "{projectRoot}/test-output/jest/coverage"
+        ],
+        "options": {
+          "jestConfig": "apps/ad-click-aggregator-e2e/jest.config.cts",
+          "passWithNoTests": true
+        },
+        "dependsOn": [
+          "@apps/ad-click-aggregator:build",
+          "@apps/ad-click-aggregator:serve"
+        ]
+      }
+    }
+  }
+}

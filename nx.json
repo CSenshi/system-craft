@@ -52,7 +52,7 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": ["e2e/**/*"]
+      "exclude": ["e2e/**/*", "apps/ad-click-aggregator-e2e/**/*"]
     },
     {
       "plugin": "@nx/js/typescript",
