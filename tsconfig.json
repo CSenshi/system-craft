@@ -25,10 +25,10 @@
       "path": "./e2e/rate-limiter"
     },
     {
-      "path": "./apps/ad-click-aggregator-e2e"
+      "path": "./apps/ad-click-aggregator"
     },
     {
-      "path": "./apps/ad-click-aggregator"
+      "path": "./e2e/ad-click-aggregator"
     }
   ]
 }
