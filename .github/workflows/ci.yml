@@ -49,3 +49,53 @@ jobs:
       # - run: pnpm exec nx-cloud record -- echo Hello World
       # Nx Affected runs only tasks affected by the changes in this PR/commit. Learn more: https://nx.dev/ci/features/affected
       - run: pnpm exec nx affected -t lint test build
+
+  chaos:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [url-shortener, rate-limiter, web-crawler]
+    name: chaos / ${{ matrix.app }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: tree:0
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Start chaos infrastructure
+        run: docker compose -f apps/${{ matrix.app }}/docker-compose.chaos.yml up -d --wait
+        timeout-minutes: 3
+
+      - name: Wait for Toxiproxy
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8474/version > /dev/null 2>&1; then
+              echo "Toxiproxy is ready"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "Toxiproxy failed to start"
+          docker compose -f apps/${{ matrix.app }}/docker-compose.chaos.yml logs
+          exit 1
+
+      - name: Run chaos tests
+        run: npx jest --config apps/${{ matrix.app }}/jest.chaos.config.ts --runInBand --forceExit
+        timeout-minutes: 5
+
+      - name: Teardown
+        if: always()
+        run: docker compose -f apps/${{ matrix.app }}/docker-compose.chaos.yml down -v
