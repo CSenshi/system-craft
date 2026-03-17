@@ -29,7 +29,7 @@
           "watchDepsName": "watch-deps"
         }
       },
-      "exclude": ["libs/shared/*"]
+      "exclude": ["libs/shared/*", "libs/chaos/*"]
     },
     {
       "plugin": "@nx/webpack/plugin",
@@ -56,7 +56,7 @@
     },
     {
       "plugin": "@nx/js/typescript",
-      "include": ["libs/shared/*"],
+      "include": ["libs/shared/*", "libs/chaos/*"],
       "options": {
         "typecheck": {
           "targetName": "typecheck"

@@ -23,6 +23,9 @@
     },
     {
       "path": "./e2e/rate-limiter"
+    },
+    {
+      "path": "./libs/chaos"
     }
   ]
 }

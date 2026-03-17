@@ -71,6 +71,9 @@ importers:
       '@eslint/js':
         specifier: ^9.39.2
         version: 9.39.2
+      '@libs/chaos':
+        specifier: workspace:*
+        version: link:libs/chaos
       '@libs/shared':
         specifier: workspace:*
         version: link:libs/shared
@@ -283,6 +286,8 @@ importers:
       '@libs/shared':
         specifier: workspace:*
         version: link:../../libs/shared
+
+  libs/chaos: {}
 
   libs/shared:
     dependencies:

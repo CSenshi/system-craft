@@ -52,6 +52,18 @@
           "passWithNoTests": true
         }
       },
+      "chaos": {
+        "executor": "nx:run-commands",
+        "options": {
+          "commands": [
+            "docker compose -f docker-compose.chaos.yml up -d",
+            "npx jest --config jest.chaos.config.ts --runInBand --forceExit",
+            "docker compose -f docker-compose.chaos.yml down"
+          ],
+          "cwd": "apps/web-crawler",
+          "parallel": false
+        }
+      },
       "infra:up": {
         "executor": "nx:run-commands",
         "options": {

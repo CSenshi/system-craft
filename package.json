@@ -30,6 +30,7 @@
     "@commitlint/cli": "^20.2.0",
     "@commitlint/config-conventional": "^20.2.0",
     "@eslint/js": "^9.39.2",
+    "@libs/chaos": "workspace:*",
     "@libs/shared": "workspace:*",
     "@nestjs/schematics": "^11.0.9",
     "@nestjs/testing": "^11.1.10",

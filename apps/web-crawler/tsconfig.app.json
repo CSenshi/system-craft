@@ -23,6 +23,9 @@
   "references": [
     {
       "path": "../../libs/shared/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/chaos/tsconfig.lib.json"
     }
   ]
 }

@@ -1,0 +1,27 @@
+services:
+  toxiproxy:
+    image: ghcr.io/shopify/toxiproxy:latest
+    ports:
+      - '8474:8474' # Toxiproxy API
+      - '6380:6380' # Proxy → Redis
+      - '5433:5433' # Proxy → Postgres
+    depends_on:
+      - redis
+      - db
+
+  redis:
+    image: redis/redis-stack:latest
+    # No host port binding — only Toxiproxy needs to reach Redis via Docker DNS.
+    # This prevents port conflicts with the regular docker-compose.yml.
+    expose:
+      - '6379'
+
+  db:
+    image: postgres:17-alpine
+    # No host port binding — only Toxiproxy needs to reach Postgres via Docker DNS.
+    expose:
+      - '5432'
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: app

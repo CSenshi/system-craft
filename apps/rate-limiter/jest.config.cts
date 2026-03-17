@@ -18,5 +18,5 @@ module.exports = {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: 'test-output/jest/coverage',
-  testMatch: ['**/*.spec.ts', '!**/*.int.spec.ts'],
+  testMatch: ['**/*.spec.ts', '!**/*.int.spec.ts', '!**/*.chaos.spec.ts'],
 };
