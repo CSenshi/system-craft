@@ -6,8 +6,10 @@ services:
       - '6380:6380' # Proxy → Redis
       - '5433:5433' # Proxy → Postgres
     depends_on:
-      - redis
-      - db
+      redis:
+        condition: service_healthy
+      db:
+        condition: service_healthy
 
   redis:
     image: redis/redis-stack:latest
@@ -15,6 +17,11 @@ services:
     # This prevents port conflicts with the regular docker-compose.yml.
     expose:
       - '6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 3s
+      timeout: 5s
+      retries: 10
 
   db:
     image: postgres:17-alpine
@@ -25,3 +32,8 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
       POSTGRES_DB: app
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U user -d app']
+      interval: 3s
+      timeout: 5s
+      retries: 10

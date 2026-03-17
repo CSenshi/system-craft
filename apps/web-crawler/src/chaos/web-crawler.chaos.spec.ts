@@ -11,6 +11,25 @@ import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { S3Client } from '@aws-sdk/client-s3';
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 import { AppModule } from '../app.module.js';
+import { ContentRepository } from '../repositories/content-repository/repository';
+
+// === Env vars must be set before AppModule import ===
+// S3Client and DynamoDBDocumentClient in AppModule use useValue with new Client()
+// evaluated at decorator time. AWS SDK reads AWS_ENDPOINT_URL at construction.
+// SqsModule.registerAsync reads env via ConfigService at compile time.
+process.env['AWS_ENDPOINT_URL'] = 'http://localhost:4567';
+process.env['AWS_REGION'] = 'eu-central-1';
+process.env['AWS_ACCESS_KEY_ID'] = 'test';
+process.env['AWS_SECRET_ACCESS_KEY'] = 'test';
+process.env['AWS_S3_CONTENT_BUCKET'] = 'web-crawler-bucket';
+process.env['AWS_DYNAMODB_CRAWL_METADATA_TABLE_NAME'] = 'crawl-metadata-table';
+process.env['AWS_SQS_CONTENT_DISCOVERY_QUEUE_URL'] =
+  'http://localhost:4567/000000000000/content-discovery-queue';
+process.env['AWS_SQS_CONTENT_DISCOVERY_QUEUE_NAME'] = 'content-discovery-queue';
+process.env['AWS_SQS_CONTENT_PROCESSING_QUEUE_NAME'] =
+  'content-processor-queue';
+process.env['AWS_SQS_CONTENT_PROCESSING_QUEUE_URL'] =
+  'http://localhost:4567/000000000000/content-processor-queue';
 
 const TOXIPROXY_API = 'http://localhost:8474';
 const LOCALSTACK_PROXY_LISTEN = '0.0.0.0:4567';
@@ -43,28 +62,11 @@ describe('Web Crawler — Chaos Tests', () => {
     // Reset any leftover state from a previous failed run
     await toxi.reset().catch(() => {});
 
-    await toxi.createProxy({
+    await toxi.ensureProxy({
       name: 'localstack',
       listen: LOCALSTACK_PROXY_LISTEN,
       upstream: LOCALSTACK_UPSTREAM,
     });
-
-    // Set env vars for SQS module config and other services
-    process.env['AWS_ENDPOINT_URL'] = LOCALSTACK_PROXY_URL;
-    process.env['AWS_REGION'] = 'eu-central-1';
-    process.env['AWS_ACCESS_KEY_ID'] = 'test';
-    process.env['AWS_SECRET_ACCESS_KEY'] = 'test';
-    process.env['AWS_S3_CONTENT_BUCKET'] = 'web-crawler-bucket';
-    process.env['AWS_DYNAMODB_CRAWL_METADATA_TABLE_NAME'] =
-      'crawl-metadata-table';
-    process.env['AWS_SQS_CONTENT_DISCOVERY_QUEUE_URL'] =
-      `${LOCALSTACK_PROXY_URL}/000000000000/content-discovery-queue`;
-    process.env['AWS_SQS_CONTENT_DISCOVERY_QUEUE_NAME'] =
-      'content-discovery-queue';
-    process.env['AWS_SQS_CONTENT_PROCESSING_QUEUE_NAME'] =
-      'content-processor-queue';
-    process.env['AWS_SQS_CONTENT_PROCESSING_QUEUE_URL'] =
-      `${LOCALSTACK_PROXY_URL}/000000000000/content-processor-queue`;
 
     // Override AWS SDK providers that are instantiated at module definition
     // time (useValue) before our env vars were set. Create fresh clients
@@ -111,16 +113,16 @@ describe('Web Crawler — Chaos Tests', () => {
 
   /**
    * Verifies the NestJS app is still responsive by checking that the
-   * DI container can resolve providers and the app hasn't fatally exited.
+   * DI container can resolve infrastructure-dependent providers.
    *
    * Limitation: For a queue-driven app, the DI container can survive even
-   * when background SQS consumers have errored. This checks process-level
-   * survival, not consumer-level health. A more thorough check would
-   * require a health-check endpoint or SQS consumer state inspection.
+   * when background SQS consumers have errored. This checks provider-level
+   * survival, not consumer-level health.
    */
   async function assertAppAlive(): Promise<boolean> {
     try {
       app.get(AppModule);
+      app.get(ContentRepository);
       return true;
     } catch {
       return false;

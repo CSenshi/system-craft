@@ -31,7 +31,7 @@ describe('Rate Limiter — Chaos Tests', () => {
     // Reset any leftover state from a previous failed run
     await toxi.reset().catch(() => {});
 
-    await toxi.createProxy({
+    await toxi.ensureProxy({
       name: 'redis',
       listen: REDIS_PROXY_LISTEN,
       upstream: REDIS_UPSTREAM,

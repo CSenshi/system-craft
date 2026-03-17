@@ -8,7 +8,8 @@ services:
       # CLUSTER SLOTS redirect to 127.0.0.1:6379 still routes through Toxiproxy.
       - '6379:6379' # Proxy → Redis Cluster
     depends_on:
-      - redis-cluster
+      redis-cluster:
+        condition: service_healthy
 
   redis-cluster:
     image: docker.io/bitnamilegacy/redis-cluster:8.0
@@ -23,3 +24,8 @@ services:
     # This prevents port conflicts and ensures all traffic goes through Toxiproxy.
     expose:
       - '6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', '-c', 'cluster', 'info']
+      interval: 3s
+      timeout: 5s
+      retries: 20

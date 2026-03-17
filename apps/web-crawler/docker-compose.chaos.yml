@@ -5,7 +5,8 @@ services:
       - '8474:8474' # Toxiproxy API
       - '4567:4567' # Proxy → LocalStack
     depends_on:
-      - localstack
+      localstack:
+        condition: service_healthy
 
   localstack:
     image: localstack/localstack:latest
@@ -21,3 +22,12 @@ services:
       - '4566'
     volumes:
       - './docker/localstack/init-scripts/init-localstack.sh:/etc/localstack/init/ready.d/init-aws.sh'
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'curl -sf http://localhost:4566/_localstack/health | grep -q "running"',
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 30

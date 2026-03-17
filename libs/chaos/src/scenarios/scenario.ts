@@ -34,24 +34,34 @@ export async function runScenario(
   const start = Date.now();
   try {
     const partial = await fn();
-    collector.record({
+    const result: ChaosScenarioResult = {
       scenario: name,
       passed: partial.passed ?? true,
       graceful: partial.graceful ?? true,
       recovery: partial.recovery ?? 'n/a',
       durationMs: Date.now() - start,
       notes: partial.notes ?? '',
-    });
+    };
+    collector.record(result);
+
+    if (!result.passed) {
+      throw new Error(`Chaos scenario "${name}" failed: ${result.notes}`);
+    }
   } catch (error) {
-    // Record the failure but do NOT re-throw — chaos failures are expected
-    // outcomes that should appear in the report, not crash the Jest suite.
-    collector.record({
+    // Re-throw our own failure errors so Jest marks the test red
+    if (error instanceof Error && error.message.startsWith('Chaos scenario')) {
+      throw error;
+    }
+    // Unexpected error — record and throw
+    const result: ChaosScenarioResult = {
       scenario: name,
       passed: false,
       graceful: false,
       recovery: 'n/a',
       durationMs: Date.now() - start,
       notes: `Unexpected error: ${error instanceof Error ? error.message : String(error)}`,
-    });
+    };
+    collector.record(result);
+    throw new Error(`Chaos scenario "${name}" crashed: ${result.notes}`);
   }
 }

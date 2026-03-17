@@ -11,6 +11,12 @@ import {
 import * as request from 'supertest';
 import { AppModule } from '../app.module.js';
 
+// === Env vars must be set before AppModule import ===
+// RedisModule.forRoot() in AppModule reads process.env['REDIS_HOST'] at
+// module decorator evaluation time (import), not at compile() time.
+process.env['REDIS_HOST'] = 'redis://localhost:6380';
+process.env['DATABASE_URL'] = 'postgresql://user:pass@localhost:5433/app';
+
 const TOXIPROXY_API = 'http://localhost:8474';
 const REDIS_PROXY_LISTEN = '0.0.0.0:6380';
 const REDIS_UPSTREAM = 'redis:6379';
@@ -30,20 +36,16 @@ describe('URL Shortener — Chaos Tests', () => {
     // Reset any leftover state from a previous failed run
     await toxi.reset().catch(() => {});
 
-    await toxi.createProxy({
+    await toxi.ensureProxy({
       name: 'redis',
       listen: REDIS_PROXY_LISTEN,
       upstream: REDIS_UPSTREAM,
     });
-    await toxi.createProxy({
+    await toxi.ensureProxy({
       name: 'postgres',
       listen: POSTGRES_PROXY_LISTEN,
       upstream: POSTGRES_UPSTREAM,
     });
-
-    // Point the app at Toxiproxy ports instead of direct infra
-    process.env['REDIS_HOST'] = 'redis://localhost:6380';
-    process.env['DATABASE_URL'] = 'postgresql://user:pass@localhost:5433/app';
 
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule],
@@ -68,6 +70,8 @@ describe('URL Shortener — Chaos Tests', () => {
   });
 
   // ─── Scenario 1: Redis cache down during redirect ──────────────────
+  // Note: CacheModule.register() currently uses in-memory storage, so this
+  // scenario tests Redis outage impact on counter/throttler, not cache lookups.
   it('should handle Redis cache outage during redirect (fall through to Postgres)', async () => {
     const createRes = await request(app.getHttpServer())
       .post('/url')

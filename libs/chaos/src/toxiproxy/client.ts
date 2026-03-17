@@ -117,6 +117,18 @@ export class ToxiproxyClient {
     await this.enableProxy(proxyName);
   }
 
+  async ensureProxy(config: ProxyConfig): Promise<Proxy> {
+    try {
+      return await this.createProxy(config);
+    } catch (error) {
+      if (error instanceof Error && error.message.includes('409')) {
+        await this.resetProxy(config.name);
+        return this.getProxy(config.name);
+      }
+      throw error;
+    }
+  }
+
   async isHealthy(): Promise<boolean> {
     try {
       const response = await fetch(`${this.apiUrl}/version`);

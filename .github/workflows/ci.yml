@@ -75,9 +75,13 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      - name: Generate Prisma client
+        if: matrix.app == 'url-shortener'
+        run: pnpm exec nx run @apps/url-shortener:prisma-generate
+
       - name: Start chaos infrastructure
         run: docker compose -f apps/${{ matrix.app }}/docker-compose.chaos.yml up -d --wait
-        timeout-minutes: 3
+        timeout-minutes: 5
 
       - name: Wait for Toxiproxy
         run: |
@@ -92,8 +96,14 @@ jobs:
           docker compose -f apps/${{ matrix.app }}/docker-compose.chaos.yml logs
           exit 1
 
+      - name: Run Prisma migrations
+        if: matrix.app == 'url-shortener'
+        run: pnpm exec nx run @apps/url-shortener:prisma-deploy
+        env:
+          DATABASE_URL: postgresql://user:pass@localhost:5433/app
+
       - name: Run chaos tests
-        run: npx jest --config apps/${{ matrix.app }}/jest.chaos.config.ts --runInBand --forceExit
+        run: pnpm exec jest --config apps/${{ matrix.app }}/jest.chaos.config.ts --runInBand --forceExit
         timeout-minutes: 5
 
       - name: Teardown

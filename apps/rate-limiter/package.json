@@ -92,7 +92,7 @@
         "options": {
           "commands": [
             "docker compose -f docker-compose.chaos.yml up -d",
-            "npx jest --config jest.chaos.config.ts --runInBand --forceExit",
+            "pnpm exec jest --config jest.chaos.config.ts --runInBand --forceExit",
             "docker compose -f docker-compose.chaos.yml down"
           ],
           "cwd": "apps/rate-limiter",
