@@ -34,7 +34,9 @@ describe('URL Shortener — Chaos Tests', () => {
     await waitForToxiproxy(TOXIPROXY_API, { timeoutMs: 30_000 });
 
     // Reset any leftover state from a previous failed run
-    await toxi.reset().catch(() => {});
+    await toxi.reset().catch(() => {
+      /* ignore */
+    });
 
     await toxi.ensureProxy({
       name: 'redis',
@@ -61,7 +63,9 @@ describe('URL Shortener — Chaos Tests', () => {
     console.log('\n' + reportOutput);
 
     await app?.close();
-    await toxi.reset().catch(() => {});
+    await toxi.reset().catch(() => {
+      /* ignore */
+    });
   });
 
   beforeEach(async () => {

@@ -1,13 +1,14 @@
-import { readFileSync } from 'fs';
+const { readFileSync } = require('fs');
+const { resolve } = require('path');
 
 const swcJestConfig = JSON.parse(
-  readFileSync(`${__dirname}/.spec.swcrc`, 'utf-8'),
+  readFileSync(resolve(__dirname, '.spec.swcrc'), 'utf-8'),
 );
 
 swcJestConfig.swcrc = false;
 
-export default {
-  displayName: '@apps/url-shortener:chaos',
+module.exports = {
+  displayName: '@apps/rate-limiter:chaos',
   preset: '../../jest.preset.js',
   testEnvironment: 'node',
   transform: {

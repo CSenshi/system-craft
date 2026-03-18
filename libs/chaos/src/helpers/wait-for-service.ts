@@ -67,7 +67,7 @@ export async function waitForHttpService(
  * Waits for the Toxiproxy API to be ready.
  */
 export async function waitForToxiproxy(
-  apiUrl: string = 'http://localhost:8474',
+  apiUrl = 'http://localhost:8474',
   options: WaitOptions = {},
 ): Promise<void> {
   return waitForService(

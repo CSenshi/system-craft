@@ -5,6 +5,11 @@ services:
       - '8474:8474' # Toxiproxy API
       - '6380:6380' # Proxy → Redis
       - '5433:5433' # Proxy → Postgres
+    healthcheck:
+      test: ['CMD', '/toxiproxy-cli', 'list']
+      interval: 3s
+      timeout: 5s
+      retries: 10
     depends_on:
       redis:
         condition: service_healthy

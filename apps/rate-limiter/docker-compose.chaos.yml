@@ -7,6 +7,11 @@ services:
       # via REDIS_CLUSTER_ANNOUNCE_IP=127.0.0.1. This ensures the cluster client's
       # CLUSTER SLOTS redirect to 127.0.0.1:6379 still routes through Toxiproxy.
       - '6379:6379' # Proxy → Redis Cluster
+    healthcheck:
+      test: ['CMD', '/toxiproxy-cli', 'list']
+      interval: 3s
+      timeout: 5s
+      retries: 10
     depends_on:
       redis-cluster:
         condition: service_healthy

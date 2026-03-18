@@ -4,6 +4,11 @@ services:
     ports:
       - '8474:8474' # Toxiproxy API
       - '4567:4567' # Proxy → LocalStack
+    healthcheck:
+      test: ['CMD', '/toxiproxy-cli', 'list']
+      interval: 3s
+      timeout: 5s
+      retries: 10
     depends_on:
       localstack:
         condition: service_healthy

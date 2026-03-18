@@ -96,6 +96,16 @@ jobs:
           docker compose -f apps/${{ matrix.app }}/docker-compose.chaos.yml logs
           exit 1
 
+      - name: Create Toxiproxy proxies for migrations
+        if: matrix.app == 'url-shortener'
+        run: |
+          curl -sf -X POST http://localhost:8474/proxies \
+            -H 'Content-Type: application/json' \
+            -d '{"name":"postgres","listen":"0.0.0.0:5433","upstream":"db:5432"}'
+          curl -sf -X POST http://localhost:8474/proxies \
+            -H 'Content-Type: application/json' \
+            -d '{"name":"redis","listen":"0.0.0.0:6380","upstream":"redis:6379"}'
+
       - name: Run Prisma migrations
         if: matrix.app == 'url-shortener'
         run: pnpm exec nx run @apps/url-shortener:prisma-deploy
@@ -103,7 +113,7 @@ jobs:
           DATABASE_URL: postgresql://user:pass@localhost:5433/app
 
       - name: Run chaos tests
-        run: pnpm exec jest --config apps/${{ matrix.app }}/jest.chaos.config.ts --runInBand --forceExit
+        run: pnpm exec jest --config apps/${{ matrix.app }}/jest.chaos.config.js --runInBand --forceExit
         timeout-minutes: 5
 
       - name: Teardown

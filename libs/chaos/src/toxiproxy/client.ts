@@ -1,7 +1,7 @@
 import type { Proxy, ProxyConfig, Toxic, ToxicConfig } from './types.js';
 
 export class ToxiproxyClient {
-  constructor(private readonly apiUrl: string = 'http://localhost:8474') {}
+  constructor(private readonly apiUrl = 'http://localhost:8474') {}
 
   private async request<T>(
     path: string,
