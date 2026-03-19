@@ -29,11 +29,20 @@ export class RateLimitGuard implements CanActivate {
       return true; // Fail-open: allow if client can't be identified
     }
 
-    const result = await this.rateLimiterService.check(clientId, opts.ruleId);
-    this.setRateLimitHeaders(context, result);
+    try {
+      const result = await this.rateLimiterService.check(clientId, opts.ruleId);
+      this.setRateLimitHeaders(context, result);
 
-    if (!result.allowed) {
-      throw new RateLimitExceededException(result);
+      if (!result.allowed) {
+        throw new RateLimitExceededException(result);
+      }
+    } catch (error) {
+      // Re-throw rate limit exceeded so 429 responses still work
+      if (error instanceof RateLimitExceededException) {
+        throw error;
+      }
+      // Fail-open: allow request through when Redis is unavailable
+      return true;
     }
 
     return true;

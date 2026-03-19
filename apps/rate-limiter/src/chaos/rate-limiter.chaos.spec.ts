@@ -1,5 +1,4 @@
 import { INestApplication } from '@nestjs/common';
-import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import {
   ToxiproxyClient,
@@ -8,7 +7,7 @@ import {
   runScenario,
   waitForToxiproxy,
 } from '@libs/chaos';
-import * as request from 'supertest';
+import request from 'supertest';
 import { AppModule } from '../app.module.js';
 
 const TOXIPROXY_API = 'http://localhost:8474';
@@ -46,9 +45,8 @@ describe('Rate Limiter — Chaos Tests', () => {
       imports: [AppModule],
     }).compile();
 
-    app = moduleRef.createNestApplication(new FastifyAdapter());
+    app = moduleRef.createNestApplication();
     await app.init();
-    await app.getHttpAdapter().getInstance().ready();
   }, 60_000);
 
   afterAll(async () => {
