@@ -83,7 +83,7 @@
       "test:int": {
         "executor": "@nx/jest:jest",
         "options": {
-          "jestConfig": "apps/rate-limiter/jest.int.config.ts",
+          "jestConfig": "apps/rate-limiter/jest.int.config.cts",
           "passWithNoTests": true
         }
       },
