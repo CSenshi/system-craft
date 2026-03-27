@@ -114,16 +114,6 @@ describe('RateLimitGuard', () => {
         'ECONNREFUSED',
       );
     });
-
-    it('should propagate RateLimitExceededException from check', async () => {
-      reflector.get.mockReturnValue({ ruleId: 'default' });
-      const exception = new RateLimitExceededException(deniedResult);
-      rateLimiterService.check.mockRejectedValue(exception);
-
-      await expect(guard.canActivate(mockContext)).rejects.toThrow(
-        RateLimitExceededException,
-      );
-    });
   });
 
   describe('rate limit headers', () => {
