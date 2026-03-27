@@ -48,7 +48,7 @@
       "test:int": {
         "executor": "@nx/jest:jest",
         "options": {
-          "jestConfig": "apps/url-shortener/jest.int.config.cts",
+          "jestConfig": "apps/url-shortener/jest.int.config.ts",
           "passWithNoTests": true
         }
       },

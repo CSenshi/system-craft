@@ -1,5 +1,4 @@
-/* eslint-disable */
-const { readFileSync } = require('fs');
+import { readFileSync } from 'fs';
 
 // Reading the SWC compilation config for the spec files
 const swcJestConfig = JSON.parse(
@@ -9,8 +8,8 @@ const swcJestConfig = JSON.parse(
 // Disable .swcrc look-up by SWC core because we're passing in swcJestConfig ourselves
 swcJestConfig.swcrc = false;
 
-module.exports = {
-  displayName: '@apps/rate-limiter',
+export default {
+  displayName: '@apps/url-shortener',
   preset: '../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
@@ -18,5 +17,5 @@ module.exports = {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: 'test-output/jest/coverage',
-  testMatch: ['**/*.int.spec.ts'],
+  testMatch: ['**/*.spec.ts', '!**/*.int.spec.ts'], // exclude integration tests
 };
